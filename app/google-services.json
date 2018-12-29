@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "590626578288",
+    "firebase_url": "https://pecbr-f37f0.firebaseio.com",
+    "project_id": "pecbr-f37f0",
+    "storage_bucket": "pecbr-f37f0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:590626578288:android:731dabf451e159b7",
+        "android_client_info": {
+          "package_name": "com.cesarbassani.pecbr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "590626578288-plk48mqb8dfprm7roco0mmgjlpt5fq3b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cesarbassani.pecbr",
+            "certificate_hash": "e43bda39294b3da04f0766d773a63c95a4fb1e28"
+          }
+        },
+        {
+          "client_id": "590626578288-n27aad77fsb65oq1k0578fvlsokqfuj6.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "590626578288-n27aad77fsb65oq1k0578fvlsokqfuj6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDl0FiYc4KMObY7AnsAXFJ6c_D11-Z1J1g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "590626578288-n27aad77fsb65oq1k0578fvlsokqfuj6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

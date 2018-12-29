@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_resumo_abate"
+            android:icon="@drawable/invite"
+            android:title="@string/resumo_abate" />
+        <item
+            android:id="@+id/nav_escala_abate"
+            android:icon="@drawable/present"
+            android:title="@string/escala_abate" />
+        <item
+            android:id="@+id/nav_relatorios"
+            android:icon="@drawable/grafico"
+            android:title="@string/relatorios" />
+
+        <item
+            android:id="@+id/nav_config"
+            android:icon="@drawable/config"
+            android:title="@string/configuracoes" />
+
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/absent"
+            android:title="@string/sair" />
+    </group>
+
+</menu>

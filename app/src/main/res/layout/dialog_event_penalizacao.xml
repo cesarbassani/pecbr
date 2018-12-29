@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/bt_close"
+                android:layout_width="?android:attr/actionBarSize"
+                android:layout_height="?android:attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                android:tint="@android:color/white"
+                app:srcCompat="@drawable/ic_close" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Penalização"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/bt_save"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingLeft="@dimen/spacing_xsmall"
+                android:paddingRight="@dimen/spacing_xsmall"
+                android:text="@string/SAVE"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:scrollingCache="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_large">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/text_penalizacao_descricao"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="3dp"
+                        android:text="Descrição" />
+
+                    <EditText
+                        android:id="@+id/edit_penalizacao_descricao"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/edit_text_border"
+                        android:inputType="textMultiLine"
+                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
+                        android:scrollbars="vertical"
+                        android:gravity="top|left"
+                        android:lines="4"
+                        android:scrollbarStyle="insideInset"
+                        android:overScrollMode="always"
+                        android:isScrollContainer="true"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_large" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/text_penalizacao_qtd"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="1dp"
+                        android:text="Qtde" />
+
+                    <TextView
+                        android:id="@+id/text_penalizacao_peso"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.8"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="1dp"
+                        android:text="Peso" />
+
+                    <TextView
+                        android:id="@+id/text_penalizacao_desconto"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.2"
+                        android:layout_marginBottom="1dp"
+                        android:layout_gravity="bottom"
+                        android:text="Desconto" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/edit_quantidade_animais_penalizacao"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="0.6"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:background="@drawable/edit_text_border"
+                        android:inputType="number" />
+                    <EditText
+                        android:id="@+id/edit_peso_animais_penalizacao"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="0.8"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/edit_text_border"
+                        android:inputType="numberDecimal" />
+
+                    <EditText
+                        android:id="@+id/edit_penalizacao_desconto"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1.2"
+                        android:background="@drawable/edit_text_border"
+                        android:inputType="numberDecimal" />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_add_parcial_penalizacao"
+                    android:layout_width="100dp"
+                    android:layout_height="35dp"
+                    android:layout_alignStart="@+id/edit_rendimento_carcaca"
+                    android:layout_below="@+id/edit_rendimento_carcaca"
+                    android:layout_marginTop="10dp"
+                    android:background="#C09E56"
+                    android:layout_gravity="right"
+                    android:text="Adicionar"
+                    android:textColor="#FFFFFF" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_large" />
+
+                <ListView
+                    android:id="@+id/listView_penalizacao_parcial"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:scrollbars="vertical"
+                    android:scrollingCache="true" />
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/grey_10" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_large" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_large" />
+
+                <TextView
+                    android:id="@+id/text_penalizacao_observacoes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:text="Observações" />
+
+                <EditText
+                    android:id="@+id/edit_penalizacao_observacoes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_border"
+                    android:gravity="top|left"
+                    android:inputType="textMultiLine"
+                    android:isScrollContainer="true"
+                    android:lines="3"
+                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
+                    android:scrollbars="vertical"
+                    android:overScrollMode="always"
+                    android:scrollbarStyle="insideInset"
+                    android:textSize="18sp" />
+
+                <!--<TextView-->
+                    <!--android:id="@+id/text_bonificacao_total"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginBottom="3dp"-->
+                    <!--android:text="Total" />-->
+
+                <!--<EditText-->
+                    <!--android:id="@+id/edit_penalizacao_total"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:layout_alignParentStart="true"-->
+                    <!--android:layout_below="@+id/text_nome_fazendeiro"-->
+                    <!--android:layout_marginBottom="5dp"-->
+                    <!--android:background="@drawable/edit_text_border"-->
+                    <!--android:inputType="number"-->
+                    <!--android:paddingLeft="10dp"-->
+                    <!--android:paddingStart="10dp"-->
+                    <!--android:enabled="false"-->
+                    <!--android:textSize="18sp" />-->
+
+                <!--<View-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="@dimen/spacing_large" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/text_bonificacao_media_do_lote"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginBottom="3dp"-->
+                    <!--android:text="Media do lote" />-->
+
+                <!--<EditText-->
+                    <!--android:id="@+id/edit_penalizacao_media_do_lote"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:layout_alignParentStart="true"-->
+                    <!--android:layout_below="@+id/text_nome_fazendeiro"-->
+                    <!--android:layout_marginBottom="5dp"-->
+                    <!--android:background="@drawable/edit_text_border"-->
+                    <!--android:inputType="number"-->
+                    <!--android:paddingLeft="10dp"-->
+                    <!--android:paddingStart="10dp"-->
+                    <!--android:enabled="false"-->
+                    <!--android:textSize="18sp" />-->
+
+                <!--<View-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="@dimen/spacing_large" />-->
+
+                <!--<Button-->
+                    <!--android:id="@+id/btn_calcular_penalizacao"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignStart="@+id/edit_rendimento_carcaca"-->
+                    <!--android:layout_below="@+id/edit_rendimento_carcaca"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:background="#C09E56"-->
+                    <!--android:layout_gravity="right"-->
+                    <!--android:text="Calcular"-->
+                    <!--android:textColor="#FFFFFF" />-->
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>

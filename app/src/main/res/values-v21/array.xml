@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="categoria">
+        <item>Machos Inteiros</item>
+        <item>Machos Castrados</item>
+        <item>Machos Imunocastrados</item>
+        <item>Tourunos</item>
+        <item>Vacas</item>
+        <item>Novilhas</item>
+        <item>Vacas e Novilhas</item>
+        <item>Machos Inteiros e Castrados</item>
+        <item>Machos Inteiros e Imunocastrados</item>
+        <item>Machos Castrados e Imunocastrados</item>
+        <item></item>
+    </string-array>
+
+    <string-array name="racial">
+        <item>Nelore</item>
+        <item>Cruzados</item>
+        <item>Angus</item>
+        <item>Nelore e Cruzados</item>
+        <item>Nelore e Angus</item>
+        <item>Angus e Cruzados</item>
+    </string-array>
+
+    <string-array name="pasto">
+        <item>Selecione</item>
+        <item>Sal Mineral</item>
+        <item>Sal Branco</item>
+        <item>Protéico até 0,2% PV</item>
+        <item>Energético até 0,2% PV</item>
+        <item>Semi-Confinamento</item>
+    </string-array>
+
+    <string-array name="grao_inteiro">
+        <item>Selecione</item>
+        <item>1,5%</item>
+        <item>1,6%</item>
+        <item>1,7%</item>
+        <item>1,8%</item>
+        <item>1,9%</item>
+        <item>2,0%</item>
+        <item>2,1%</item>
+        <item>2,2%</item>
+    </string-array>
+
+    <string-array name="convencional">
+        <item>Selecione</item>
+        <item>Alto volumoso (50% volumoso)</item>
+        <item>Alto grão (75% grãos)</item>
+        <item>Grãos úmidos</item>
+    </string-array>
+
+    <string-array name="bonificacao">
+        <item>Trace</item>
+        <item>Hilton</item>
+        <item>Novilho Precoce - PROAPE</item>
+        <item>Sinal Verde</item>
+        <item>Angus</item>
+        <item>PECBR</item>
+        <item>1953</item>
+        <item>Nelore Natural</item>
+        <item>Outros</item>
+    </string-array>
+
+    <string-array name="frigorifico">
+        <item>BOIBRAS</item>
+        <item>JBS CGR 1</item>
+        <item>JBS CGR 2</item>
+        <item>MARFRIG BATAGUASSU</item>
+        <item>MARFRIG PARANAIBA</item>
+        <item>FRIZELO TERENOS</item>
+        <item>FRIZELO JUTI</item>
+        <item>TRICARNE</item>
+    </string-array>
+
+    <string-array name="semi_confinamento">
+        <item>Selecione</item>
+        <item>0,3%</item>
+        <item>0,4%</item>
+        <item>0,5%</item>
+        <item>0,6%</item>
+        <item>0,7%</item>
+        <item>0,8%</item>
+        <item>0,9%</item>
+        <item>1,0%</item>
+        <item>1,1%</item>
+        <item>1,2%</item>
+        <item>1,3%</item>
+        <item>1,4%</item>
+        <item>1,5%</item>
+    </string-array>
+
+    <string-array name="month">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
+
+    <string-array name="tecnico">
+        <item>Caroline Bueno</item>
+        <item>Caiki Fantini</item>
+        <item>Mariana Borges</item>
+        <item>Grazielle Salomão</item>
+        <item>Caio Rossato</item>
+        <item>Allan Canazilles</item>
+        <item>Gabrielle Ricardes</item>
+        <item>João Alvaro Benevenuto</item>
+    </string-array>
+
+</resources>

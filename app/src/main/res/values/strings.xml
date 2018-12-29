@@ -1,0 +1,118 @@
+<resources>
+    <string name="app_name">PECBR</string>
+
+    <string name="navigation_drawer_open">Abrir menu</string>
+    <string name="navigation_drawer_close">Fechar menu</string>
+
+    <string name="configuracoes">Configurações</string>
+    <string name="resumo_abate">Lista de Abates</string>
+    <string name="escala_abate">Escala de Abates</string>
+    <string name="relatorios">Relatórios</string>
+
+    <string name="email">Email</string>
+    <string name="senha">Senha</string>
+    <string name="login">Login</string>
+    <string name="voltar">Voltar</string>
+    <string name="text_reset_password">Informe seu email e clique em Enviar para solicitar uma nova senha</string>
+    <string name="enviar">Enviar</string>
+    <string name="bem_vindo">Bem-vindo</string>
+    <string name="new_password">Digite a nova senha</string>
+    <string name="sair">Sair</string>
+    <string name="cadastrar">Cadastrar</string>
+    <string name="forgot_password">Esqueceu a senha?</string>
+    <string name="registrar">Registrar</string>
+    <string name="ou">OU</string>
+    <string name="HIDE">Ocultar</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="nome">Nome</string>
+    <string name="machos_inteiros">Machos Inteiros</string>
+    <string name="machos_castrados">Machos Castrados</string>
+    <string name="machos_imunocastrados">Machos Imunos Castrados</string>
+    <string name="tourunus">Tourunos</string>
+    <string name="vacas">Vacas</string>
+    <string name="novilhas">Novilhas</string>
+    <string name="bezerros">Bezerros</string>
+    <string name="salvar">Salvar</string>
+    <string name="nome_obrigatorio">Nome é obrigatório!</string>
+    <string name="salvo_com_sucesso">Convidado salvo com sucesso!</string>
+    <string name="erro_ao_salvar">Algo de errado aconteceu!</string>
+    <string name="remover_convidado">Remoção de convidado</string>
+    <string name="deseja_remover">Deseja remover o convidado?</string>
+    <string name="sim">Sim</string>
+    <string name="nao">Não</string>
+    <string name="total">Total</string>
+    <string name="convidado_removido_sucesso">Convidado removido com sucesso!</string>
+    <string name="documento">Documento</string>
+    <string name="gerenciamento_de_convidados">Gerenciamento de convidados</string>
+    <string name="confirmacao">Confirmação</string>
+    <string name="ausente">Ausente</string>
+    <string name="escasso_menos">Escasso Menos</string>
+    <string name="escasso">Escasso</string>
+    <string name="mediano">Mediano</string>
+    <string name="uniforme">Uniforme</string>
+    <string name="excessivo">Excessivo</string>
+    <string name="peso_fazenda">Peso Fazenda</string>
+    <string name="dados_do_rendimento">Dados do Rendimento</string>
+    <string name="dados_do_acabamento">Dados do Acabamento</string>
+    <string name="acabamento">Acabamento</string>
+    <string name="peso_carcaca">Peso Carcaça</string>
+    <string name="rendimento_carcaca">Rendimento Carcaça</string>
+    <string name="maturidade">Maturidade</string>
+    <string name="zero_dentes">Zero Dentes</string>
+    <string name="zero">0 dentes</string>
+    <string name="dois">2 dentes</string>
+    <string name="quatro">4 dentes</string>
+    <string name="seis">6 dentes</string>
+    <string name="oito">8 dentes</string>
+    <string name="acerto">Acerto</string>
+    <string name="arroba_recebida">"@" Recebida</string>
+    <string name="arroba_negociada">"@" Negociada</string>
+    <string name="barra_arroba">/@</string>
+    <string name="a_vista">À vista</string>
+    <string name="a_prazo">A prazo</string>
+    <string name="cliente">Cliente</string>
+    <string name="dias_a_prazo">dias</string>
+    <string name="bonificacao">Bonificação</string>
+    <string name="outros">Outros</string>
+    <string name="angus">Angus</string>
+    <string name="sinal_verde">Sinal Verde</string>
+    <string name="novilho_precoce">Novilho Precoce</string>
+    <string name="hilton">Hilton</string>
+    <string name="trace">Trace</string>
+    <string name="SAVE">SALVAR</string>
+    <string name="pasto">Pasto</string>
+    <string name="tipo_de_pasto">Tipo de Pasto</string>
+    <string name="confinamento">Confinamento</string>
+
+    <!-- Mensagens de erros -->
+    <string name="err_msg_qtde">Informe a quantidade de animais do lote</string>
+    <string name="err_msg_total_bruto">Informe o valor do total bruto!</string>
+    <string name="err_msg_forma_de_pagamento">Informe a forma de pagamento!</string>
+    <string name="err_msg_forma_de_pagamento_dias_a_prazo">Informe o número de dias para pagamento a prazo!</string>
+    <string name="err_msg_rendimento_pesoFazenda">Informe o peso da fazenda</string>
+    <string name="err_msg_rendimento_pesoFrigorifico">Informe o peso do frigorífico</string>
+    <string name="err_msg_qtdeBonificacao">Informe a quantidade de animais bonificados</string>
+    <string name="err_msg_pesoFazenda">Informe o peso da fazenda</string>
+    <string name="err_msg_pesoBonificacao">Informe o peso dos animais bonificados</string>
+    <string name="err_msg_valorBonificacao">Informe o valor da parcial bonificação</string>
+    <string name="err_msg_pesoCarcaca">Informe o peso da carcaça</string>
+    <string name="err_msg_parcialBonificacao">Adicione um tipo de bonificação para calcular!</string>
+    <string name="err_msg_parcialPenalizacao">Adicione um tipo de penalização para salvar!</string>
+    <string name="err_msg_BonificacaoCalculada">Calcule o total e a media no lote!</string>
+    <string name="err_msg_qtde_ParcialBonificacao">Informe a quantidade de animais bonificados para adicionar uma parcial de bonificação!</string>
+    <string name="err_msg_qtde_ParcialBonificacao_excedida">A quantidade de animais bonificados informada é maior que a quantidade de animais do lote!</string>
+    <string name="err_msg_valoresParcialBonificacao">Informe o valor para adicionar uma parcial de bonificação!</string>
+    <string name="err_msg_valoresParcialPenalizacao">Preencha todos os campos para adicionar uma parcial de penalização!</string>
+
+    <string name="confirm_delete">Deseja remover este item da lista?</string>
+    <string name="success_convert_pdf_png">Sucesso! PDF convertido em PNG</string>
+
+    <string name="nome_fazenda">Fazenda São José</string>
+    <string name="lote_quantidade">Lote: 100 animais</string>
+    <string name="nome_frigorifico">Frigorífico BOIBRAS</string>
+    <string name="categoria_racial">Vacas e Novilhas - Nelore</string>
+
+
+</resources>

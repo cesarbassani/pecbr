@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.SignUp">
+
+    <RelativeLayout
+        android:id="@+id/activity_sign_up"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:background="@color/background_tela">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/logo_pecbr"
+            android:scaleType="centerCrop"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"/>
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/signup_nome"
+            android:hint="@string/nome"
+            android:layout_below="@+id/icon"
+            android:inputType="textCapWords"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:met_floatingLabel="normal"
+            app:met_floatingLabelTextSize="10sp"
+            android:textCursorDrawable="@drawable/text_cursor_cyan"/>
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/signup_email"
+            android:hint="@string/email"
+            android:layout_below="@+id/signup_nome"
+            android:inputType="textEmailAddress"
+            app:met_floatingLabel="normal"
+            android:textCursorDrawable="@drawable/text_cursor_cyan"
+            app:met_floatingLabelTextSize="10sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/signup_password"
+            android:hint="@string/senha"
+            android:layout_below="@+id/signup_email"
+            android:inputType="textPassword"
+            app:met_floatingLabel="normal"
+            android:textCursorDrawable="@drawable/text_cursor_cyan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:met_floatingLabelTextSize="10sp"
+            android:layout_marginBottom="5dp"/>
+
+        <Button
+            android:id="@+id/signup_btn_register"
+            android:layout_below="@+id/signup_password"
+            android:text="@string/cadastrar"
+            android:background="#C09E56"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/signup_btn_forgot_pass"
+            android:layout_below="@+id/signup_btn_register"
+            android:layout_centerHorizontal="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:textStyle="bold"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:textColor="@color/colorPrimaryDark"
+            android:text="@string/forgot_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:id="@+id/signup_layout_or"
+            android:layout_below="@+id/signup_btn_forgot_pass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="200dp"
+                android:layout_height="1dp"
+                android:background="#c4c8c9"
+                android:layout_margin="5dp" />
+
+            <TextView
+                android:padding="5dp"
+                android:text="@string/ou"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <View
+                android:layout_width="200dp"
+                android:layout_height="1dp"
+                android:background="#c4c8c9"
+                android:layout_margin="5dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/signup_btn_login"
+            android:layout_below="@+id/signup_layout_or"
+            android:layout_centerHorizontal="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:textStyle="bold"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:textColor="@color/colorPrimaryDark"
+            android:text="Já tem uma conta ? Fazer login !"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+</ScrollView>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:id="@+id/activity_dash_board"
+    android:background="@color/background_tela"
+     tools:context=".views.DashBoard">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/logo_pecbr"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+    
+    <TextView
+        android:id="@+id/dashboard_welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/icon"
+        android:layout_centerHorizontal="true"
+        android:text="@string/bem_vindo"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:textColor="@color/colorPrimaryDark"/>
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/dashboard_new_password"
+        android:hint="@string/new_password"
+        android:layout_below="@+id/dashboard_welcome"
+        android:inputType="textPassword"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="5dp"
+        app:met_floatingLabel="normal"
+        android:textCursorDrawable="@drawable/text_cursor_cyan"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/dashboard_btn_change_pass"
+        android:layout_below="@+id/dashboard_new_password"
+        android:text="@string/enviar"
+        android:background="#C09E56"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/dashboard_btn_logout"
+        android:layout_below="@+id/dashboard_btn_change_pass"
+        android:text="@string/sair"
+        android:layout_marginTop="20dp"
+        android:background="#C09E56"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

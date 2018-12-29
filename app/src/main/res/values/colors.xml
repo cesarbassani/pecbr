@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<color name="colorPrimary">#ffb05c</color>-->
+    <!--<color name="colorPrimaryDark">#fa9f3d</color>-->
+    <!--<color name="colorAccent">#b2d76c</color>-->
+    <color name="colorPrimaryText">#42784b</color>
+    <color name="colorTextPresent">#6ac279</color>
+    <color name="colorTextAbsent">#ff724b</color>
+    <color name="colorTextTotal">#7cbdce</color>
+    <color name="colorTextButton">#ffffff</color>
+    <color name="colorPrimary">#C09E56</color>
+    <color name="colorPrimaryDark">#6E5C52</color>
+    <color name="colorAccent">#BDA780</color>
+    <color name="colorAccent_claro">#e6dfd5</color>
+    <color name="colorOptionMenu">#FFFFFF</color>
+    <color name="cyan_500">#00bcd4</color>
+    <color name="background_tela">#FFFFFF</color>
+    <color name="grey_80">#37474F</color>
+    <color name="grey_10">#e6e6e6</color>
+    <color name="grey_60">#666666</color>
+    <color name="grey_5">#f2f2f2</color>
+    <color name="overlay_light_90">#E6FFFFFF</color>
+    <color name="red_300">#E57373</color>
+    <color name="red_400">#EF5350</color>
+    <color name="cinza_claro">#eeeeee</color>
+    <color name="grey_90">#263238</color>
+    <color name="grey_40">#999999</color>
+
+
+</resources>
