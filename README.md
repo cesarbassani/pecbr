@@ -1,15 +1,7 @@
-# Gerenciador de Convidados
+# Aplicativo de Acompanhamento de Abates - PECBR
 
-Este aplicativo foi criado no curso [Desenvolvedor Android Intermediário](
-https://www.udemy.com/desenvolvedor-android-intermediario/). 
+Este aplicativo gera um relatório em PDF do acompanhamento de abates de um lote de bovinos. É possível listar os abates realizados, filtrar, editar e excluir os abates da listagem. Gerar relatórios com gráficos de redimento e classificação de carcaças. Cada abate tem o acompanhamento de um técnico responsável. 
 
-Este aplicativo faz o gerenciamento de convidados. É possível listar convidados ausentes, presentes ou todos os convidados. Existe também uma tela de cadastro onde é possível informar o nome, documento e a confirmação do convidado.
+É feita utilização de alguns conceitos, como Banco de dados, NavigationDrawer, Cursor, FloatingActionButton, integração com Firebase.
 
-É feita utilização de alguns conceitos, como Banco de dados, NavigationDrawer, Cursor, FloatingActionButton.
-
-[![](https://github.com/DevMasterTeam/GerenciadorDeConvidados/blob/master/presentation/Image1.png)](https://github.com/DevMasterTeam/GerenciadorDeConvidados/blob/master/presentation/Image1.png)
-
-[![](https://github.com/DevMasterTeam/GerenciadorDeConvidados/blob/master/presentation/Image2.png)](https://github.com/DevMasterTeam/GerenciadorDeConvidados/blob/master/presentation/Image2.png)
-
-[![](https://github.com/DevMasterTeam/GerenciadorDeConvidados/blob/master/presentation/Image3.png)](https://github.com/DevMasterTeam/GerenciadorDeConvidados/blob/master/presentation/Image3.png)
 # pecbr
