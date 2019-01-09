@@ -833,6 +833,12 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         this.mViewHolder.mEditFazenda.setText(abate.getLote().getPropriedade());
         this.mViewHolder.mQtdeAnimais.setText(abate.getLote().getQtdeAnimaisLote());
 
+        for (int i=0; i < spinnerFrigorifico.getCount(); i++) {
+            if (spinnerFrigorifico.getItemAtPosition(i).toString().equals(abate.getFrigorifico())) {
+                spinnerFrigorifico.setSelection(i);
+            }
+        }
+
         //Rendimento
         this.mViewHolder.pesoCarcaca.setText(abate.getRendimento().getPesoCarcacaKilo());
 
@@ -921,7 +927,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
                 adapterBonificacao.notifyDataSetChanged();
                 setListViewHeightBasedOnChildren(listViewBonificacao);
 
-                atualizaTotalBonificacao();
+                atualizaTotalBonificacao(abate);
             }
         }
 
@@ -2301,6 +2307,30 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
             totalBonificacao = Double.valueOf(String.format(Locale.US, "%.2f", totalBonificacao));
             mediaTotalLote = Double.valueOf(String.format(Locale.US, "%.2f", mediaTotalLote));
 
+            bonificacaoTotal.setText(totalBonificacao + " (+ R$ " + mediaTotalLote + "/@)");
+        } else
+            bonificacaoTotal.setText("-");
+
+        valorTotalBonificacao = 0.0;
+    }
+
+    private void atualizaTotalBonificacao(Abate abate) {
+        Double totalBonificacao = 0.0;
+
+        for (Bonificacao bonificacaoRetornada : bonificacoes) {
+            if (bonificacaoRetornada.getTotal() != null)
+                totalBonificacao += Double.valueOf(bonificacaoRetornada.getTotal());
+        }
+
+        if (!totalBonificacao.equals(0.0)) {
+            totalBonificacao = Double.valueOf(String.format(Locale.US, "%.2f", totalBonificacao));
+
+            mediaTotalLote = Double.valueOf(String.format(Locale.US, "%.2f", mediaTotalLote));
+            if (mediaTotalLote.equals(0.0)) {
+                mediaTotalLote = totalBonificacao / (Double.parseDouble(abate.getRendimento().getPesoCarcacaArroba()) * Integer.parseInt(abate.getLote().getQtdeAnimaisLote()));
+                mediaTotalBonificacao = valorTotalBonificacao / pesoTotalDoLote;
+                mediaTotalLote = Double.valueOf(String.format(Locale.US, "%.2f", mediaTotalLote));
+            }
             bonificacaoTotal.setText(totalBonificacao + " (+ R$ " + mediaTotalLote + "/@)");
         } else
             bonificacaoTotal.setText("-");
