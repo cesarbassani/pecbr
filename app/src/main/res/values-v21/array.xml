@@ -66,8 +66,9 @@
 
     <string-array name="frigorifico">
         <item>BOIBRAS</item>
-        <item>JBS CGR 1</item>
+        <item>JBS CGR 1</item>frigorifico
         <item>JBS CGR 2</item>
+        <item>JBS Ponta Porã</item>
         <item>MARFRIG BATAGUASSU</item>
         <item>MARFRIG PARANAIBA</item>
         <item>FRIZELO TERENOS</item>
