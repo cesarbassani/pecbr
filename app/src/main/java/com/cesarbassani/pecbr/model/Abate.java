@@ -30,6 +30,7 @@ public class Abate implements Serializable, Parcelable {
     private Acerto acerto;
     private String observacoes;
     private String dataAbate;
+    private String fotoLote;
 
     public Abate() {
     }
@@ -39,6 +40,7 @@ public class Abate implements Serializable, Parcelable {
         frigorifico = in.readString();
         observacoes = in.readString();
         dataAbate = in.readString();
+        fotoLote = in.readString();
         tecnico = in.readParcelable(Usuario.class.getClassLoader());
         lote = in.readParcelable(Lote.class.getClassLoader());
         categoria = in.readParcelable(Categoria.class.getClassLoader());
@@ -96,6 +98,7 @@ public class Abate implements Serializable, Parcelable {
         abateMap.put("penalizacoes", getPenalizacoes());
         abateMap.put("acerto", getAcerto());
         abateMap.put("observacoes", getObservacoes());
+        abateMap.put("fotoLote", getFotoLote());
 
         return abateMap;
     }
@@ -204,6 +207,14 @@ public class Abate implements Serializable, Parcelable {
         this.dataAbate = dataAbate;
     }
 
+    public String getFotoLote() {
+        return fotoLote;
+    }
+
+    public void setFotoLote(String fotoLote) {
+        this.fotoLote = fotoLote;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -215,6 +226,7 @@ public class Abate implements Serializable, Parcelable {
         dest.writeString(frigorifico);
         dest.writeString(observacoes);
         dest.writeString(dataAbate);
+        dest.writeString(fotoLote);
         dest.writeParcelable(tecnico, flags);
         dest.writeParcelable(lote, flags);
         dest.writeParcelable(categoria, flags);

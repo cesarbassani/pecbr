@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import com.cesarbassani.pecbr.R;
 import com.cesarbassani.pecbr.config.ConfiguracaoFirebase;
 import com.cesarbassani.pecbr.config.GlideApp;
+import com.cesarbassani.pecbr.constants.DataBaseConstants;
 import com.cesarbassani.pecbr.helper.Permissao;
 import com.cesarbassani.pecbr.helper.UsuarioFirebase;
 import com.cesarbassani.pecbr.model.Usuario;
@@ -47,8 +48,6 @@ public class ConfigFragment extends Fragment {
     };
 
     private ImageButton imageButtonCamera, imageButtonGaleria;
-    private static final int SELECAO_CAMERA = 100;
-    private static final int SELECAO_GALERIA = 200;
     private CircleImageView circularImageViewPerfil;
     private EditText editPerfilNome;
     private ImageView imageAtualizarNome;
@@ -103,7 +102,7 @@ public class ConfigFragment extends Fragment {
             public void onClick(View v) {
                 Intent intentCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (intentCamera.resolveActivity(getActivity().getPackageManager()) != null) {
-                    startActivityForResult(intentCamera, SELECAO_CAMERA);
+                    startActivityForResult(intentCamera, DataBaseConstants.SELECAO_CAMERA);
                 }
             }
         });
@@ -113,7 +112,7 @@ public class ConfigFragment extends Fragment {
             public void onClick(View v) {
                 Intent intentGaleria = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 if (intentGaleria.resolveActivity(getActivity().getPackageManager()) != null) {
-                    startActivityForResult(intentGaleria, SELECAO_GALERIA);
+                    startActivityForResult(intentGaleria, DataBaseConstants.SELECAO_GALERIA);
                 }
             }
         });
@@ -147,10 +146,10 @@ public class ConfigFragment extends Fragment {
 
             try {
                 switch (requestCode) {
-                    case SELECAO_CAMERA:
+                    case DataBaseConstants.SELECAO_CAMERA:
                         imagem = (Bitmap) data.getExtras().get("data");
                         break;
-                    case SELECAO_GALERIA:
+                    case DataBaseConstants.SELECAO_GALERIA:
                         Uri localImagemSelecionada = data.getData();
                         imagem = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), localImagemSelecionada);
                         break;

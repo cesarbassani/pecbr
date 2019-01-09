@@ -1,18 +1,35 @@
 package com.cesarbassani.pecbr.repository;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.cesarbassani.pecbr.R;
+import com.cesarbassani.pecbr.config.ConfiguracaoFirebase;
+import com.cesarbassani.pecbr.config.GlideApp;
+import com.cesarbassani.pecbr.constants.GuestConstants;
 import com.cesarbassani.pecbr.model.Abate;
 import com.cesarbassani.pecbr.model.Bonificacao;
 import com.cesarbassani.pecbr.model.Penalizacao;
 import com.cesarbassani.pecbr.views.ViewPDFActivity;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
@@ -59,6 +76,7 @@ public class TemplatePDF extends PdfPageEventHelper {
     private Font fText = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
     private Font fHighText = new Font(Font.FontFamily.HELVETICA, 15, Font.BOLD, BaseColor.RED);
     private Image image;
+    private Image imageLote;
     private Font ffont = new Font(Font.FontFamily.UNDEFINED, 5, Font.ITALIC);
     private String header;
     private String title;
@@ -69,6 +87,9 @@ public class TemplatePDF extends PdfPageEventHelper {
     private Double totalPenalizacao = 0.0;
     private Double mediaTotalPenalizacao = 0.0;
     private String tecnicoResponsavel;
+
+    private StorageReference storageReference;
+
 
     /***
      * Variables for further use....
@@ -149,6 +170,8 @@ public class TemplatePDF extends PdfPageEventHelper {
     }
 
     public void addFormulario(Abate abate) throws DocumentException {
+
+        storageReference = ConfiguracaoFirebase.getFirebaseStorage();
 
         if (abate.getTecnico().getNome() != null)
             tecnicoResponsavel = abate.getTecnico().getNome();
@@ -335,7 +358,7 @@ public class TemplatePDF extends PdfPageEventHelper {
 
             document.add(p);
 
-        } else if (abate.getCategoria().getCategoria().equals("Vacas") || abate.getCategoria().getCategoria().equals("Novilhas") || abate.getCategoria().getCategoria().equals("Vacas e Novilhas")){
+        } else if (abate.getCategoria().getCategoria().equals("Vacas") || abate.getCategoria().getCategoria().equals("Novilhas") || abate.getCategoria().getCategoria().equals("Vacas e Novilhas")) {
             Paragraph bezerros = new Paragraph(new Chunk("Bezerros", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
             document.add(bezerros);
             Paragraph semBezerros = new Paragraph(new Chunk("Nenhum bezerro", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
@@ -411,7 +434,7 @@ public class TemplatePDF extends PdfPageEventHelper {
 
                 if (!penalizacao.getObservacoes().equals("")) {
 
-                    Paragraph observacoesPenalizacao= new Paragraph(new Chunk(penalizacao.getObservacoes(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                    Paragraph observacoesPenalizacao = new Paragraph(new Chunk(penalizacao.getObservacoes(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
                     document.add(observacoesPenalizacao);
                 }
 
@@ -476,9 +499,43 @@ public class TemplatePDF extends PdfPageEventHelper {
             document.add(observacoesAbate);
         }
 
+//        abateRef.child("lote/lote_" + abate.getLote().getPropriedade() + ".jpeg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//            @Override
+//            public void onSuccess(Uri uri) {
+//                Toast.makeText(context, uri.toString(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
+
+        if (imageLote != null) {
+            document.add(Chunk.NEXTPAGE);
+            document.add(new Paragraph(""));
+            document.add(new Paragraph(""));
+            Paragraph fotosLote = new Paragraph(new Chunk("FOTOS DO ABATE", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            document.add(fotosLote);
+
+            document.add(imageLote);
+        }
+    }
+
 //        document.add(new Paragraph(""));
 //        document.add(new Chunk(lineSeparator));
 //        document.add(new Paragraph(""));
+
+    public void carregaImagemDoLote(Bitmap imagemLote) {
+
+        try {
+            if (imagemLote != null) {
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                imagemLote.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                imageLote = Image.getInstance(stream.toByteArray());
+                imageLote.scaleToFit(525, 525);
+            }
+        } catch (BadElementException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public Image addImage(Context context) {

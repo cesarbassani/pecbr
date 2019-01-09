@@ -18,7 +18,6 @@ public class Usuario implements Parcelable {
     private String nome;
     private String email;
     private String senha;
-
     private String foto;
 
     public Usuario() {

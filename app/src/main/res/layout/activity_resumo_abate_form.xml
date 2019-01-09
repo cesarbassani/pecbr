@@ -1916,6 +1916,24 @@
                     android:scrollbarStyle="insideInset"
                     android:textSize="18sp" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_large" />
+
+                <ImageView
+                    android:id="@+id/image_lote"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/padrao_boi"/>
+
+                <!--<ImageButton-->
+                    <!--android:id="@+id/imageButtonGaleria"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:src="@drawable/ic_photo_cinza_24dp"/>-->
+
             </LinearLayout>
 
             <View

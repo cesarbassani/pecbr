@@ -4,8 +4,14 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -35,6 +41,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -48,7 +55,10 @@ import com.cesarbassani.pecbr.adapter.AdapterParciaisPenalizacoesPersonalizado;
 import com.cesarbassani.pecbr.adapter.AdapterPenalizacoesPersonalizado;
 import com.cesarbassani.pecbr.business.GuestBusiness;
 import com.cesarbassani.pecbr.config.ConfiguracaoFirebase;
+import com.cesarbassani.pecbr.config.GlideApp;
+import com.cesarbassani.pecbr.constants.DataBaseConstants;
 import com.cesarbassani.pecbr.constants.GuestConstants;
+import com.cesarbassani.pecbr.helper.UsuarioFirebase;
 import com.cesarbassani.pecbr.model.Abate;
 import com.cesarbassani.pecbr.model.Acabamento;
 import com.cesarbassani.pecbr.model.Acerto;
@@ -64,12 +74,18 @@ import com.cesarbassani.pecbr.model.Penalizacao;
 import com.cesarbassani.pecbr.model.Rendimento;
 import com.cesarbassani.pecbr.model.Usuario;
 import com.cesarbassani.pecbr.repository.TemplatePDF;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.itextpdf.text.DocumentException;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -208,6 +224,13 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
     private Abate abate = new Abate();
 
+    private ImageView image_lote;
+    private StorageReference storageReference;
+    private DatabaseReference abateRef;
+
+    private Bitmap imagemLote;
+    private boolean fotoDoAbate = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -307,6 +330,18 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         btn_maturidade = findViewById(R.id.btn_maturidade);
         btn_calcular_acerto = findViewById(R.id.btn_calcular_acerto);
 
+        image_lote = findViewById(R.id.image_lote);
+
+        image_lote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentGaleria = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                if (intentGaleria.resolveActivity(AbateFormActivity.this.getPackageManager()) != null) {
+                    startActivityForResult(intentGaleria, DataBaseConstants.SELECAO_GALERIA);
+                }
+            }
+        });
+
 //        String[] tiposDePastos = getResources().getStringArray(R.array.pasto);
 //        final ArrayAdapter<String> arrayPasto = new ArrayAdapter<>(this, R.layout.simple_spinner_item, tiposDePastos);
 //        arrayPasto.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
@@ -391,8 +426,82 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            imagemLote = null;
+
+            try {
+                switch (requestCode) {
+                    case DataBaseConstants.SELECAO_GALERIA:
+                        Uri localImagemSelecionada = data.getData();
+                        imagemLote = MediaStore.Images.Media.getBitmap(AbateFormActivity.this.getContentResolver(), localImagemSelecionada);
+                        break;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            if (imagemLote != null) {
+                image_lote.setImageBitmap(imagemLote);
+
+                //Recuperar os dados da imagem para o Firebase
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                imagemLote.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+                byte[] dadosDaImagem = baos.toByteArray();
+
+                //Salvar imagem no Firebase
+                final StorageReference imagemRef = storageReference
+                        .child("imagens")
+                        .child("lote")
+//                        .child(identificadorUsuario)
+                        .child("lote_" + this.mViewHolder.mEditFazenda.getText().toString() + ".jpeg");
+
+                UploadTask uploadTask = imagemRef.putBytes(dadosDaImagem);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Snackbar snackbar = Snackbar.make(parent_view, "Erro ao fazer upload da imagem!", Snackbar.LENGTH_SHORT);
+                        snackbar.show();
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Snackbar snackbar = Snackbar.make(parent_view, "Sucesso ao fazer upload da imagem!", Snackbar.LENGTH_SHORT);
+                        snackbar.show();
+
+                        Task<Uri> url = taskSnapshot.getStorage().getDownloadUrl();
+                        url.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                atualizaFotoLote(uri);
+                            }
+                        });
+                    }
+                });
+            } else {
+                fotoDoAbate = false;
+            }
+        }
+    }
+
+    private void atualizaFotoLote(Uri uri) {
+        abate.setFotoLote(uri.toString());
+//        abate.atualizar();
+
+        Snackbar snackbar = Snackbar.make(parent_view, "Sua foto foi alterada com sucesso!", Snackbar.LENGTH_SHORT);
+        snackbar.show();
+    }
+
     private void initComponent() {
+
         usuarioRef = ConfiguracaoFirebase.getFirebaseDatabase().child("usuarios");
+
+        storageReference = ConfiguracaoFirebase.getFirebaseStorage();
+
+        abateRef = ConfiguracaoFirebase.getFirebaseDatabase().child("abates");
 
         spinnerTecnico = findViewById(R.id.spn_nome_tecnico);
         usuariosAdapter = new ArrayAdapter<>(AbateFormActivity.this, R.layout.simple_spinner_item, usuarios);
@@ -447,7 +556,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         if (abate.getTecnico() != null) {
             int posicaoArray = 0;
 
-            for (int i = 0; (i <= usuarios.size() -1); i++) {
+            for (int i = 0; (i <= usuarios.size() - 1); i++) {
 
                 if (usuarios.get(i).getNome().equals(abate.getTecnico().getNome())) {
                     posicaoArray = i;
@@ -578,8 +687,13 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         templatePDF.openDocument();
         templatePDF.addTitles("RESUMO DE ABATE - PECBR", "Data: ", dateString);
 //        templatePDF.onStartPage();
+        if (imagemLote == null && fotoDoAbate) {
+//            image_lote.invalidate();
+            BitmapDrawable drawable = (BitmapDrawable) image_lote.getDrawable();
+            imagemLote = drawable.getBitmap();
+        }
+        templatePDF.carregaImagemDoLote(imagemLote);
         templatePDF.addFormulario(abate);
-//        templatePDF.onEndPage();
         templatePDF.closeDocument();
         templatePDF.viewPDF();
     }
@@ -857,6 +971,38 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
         if (!abate.getObservacoes().equals(""))
             edit_observacoes.setText(abate.getObservacoes());
+
+        storageReference.child("imagens")
+                .child("lote")
+                .child("lote_" + this.mViewHolder.mEditFazenda.getText().toString() + ".jpeg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        if (uri != null) {
+//            Uri url = abate.getFotoLote();
+
+//            if (url != null) {
+
+                            GlideApp.with(AbateFormActivity.this.getApplicationContext())
+                                    .load(uri.toString())
+                                    .into(image_lote);
+                        } else {
+                            image_lote.setImageResource(R.drawable.padrao_boi);
+                        }
+                    }
+                });
+
+//        if (downloadUrl != null) {
+////            Uri url = abate.getFotoLote();
+//
+////            if (url != null) {
+//
+//            GlideApp.with(this.getApplicationContext())
+//                    .load(downloadUrl)
+//                    .into(image_lote);
+//        } else {
+//            image_lote.setImageResource(R.drawable.padrao_boi);
+//        }
+//        }
 
     }
 

@@ -4,11 +4,19 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -24,28 +32,38 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
 import com.cesarbassani.pecbr.R;
 import com.cesarbassani.pecbr.adapter.ListaAbatesAdapter;
 import com.cesarbassani.pecbr.config.ConfiguracaoFirebase;
+import com.cesarbassani.pecbr.config.GlideApp;
 import com.cesarbassani.pecbr.constants.GuestConstants;
 import com.cesarbassani.pecbr.data.DataGenerator;
 import com.cesarbassani.pecbr.helper.PDFHelper;
 import com.cesarbassani.pecbr.listener.OnAbateListenerInteractionListener;
 import com.cesarbassani.pecbr.listener.RecyclerItemClickListener;
 import com.cesarbassani.pecbr.model.Abate;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 import com.itextpdf.text.DocumentException;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryTextListener {
 
@@ -58,6 +76,13 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
     private Abate abate;
     private SearchView searchView;
     private ProgressDialog progressDialog;
+    private LinearLayout lyt_no_result;
+
+    private StorageReference storageReference;
+    private ContentResolver contentResolver;
+
+    private Bitmap imagemLote;
+    private Uri path;
 
     private OnAbateListenerInteractionListener mOnAbateListenerInteractionListener;
 
@@ -97,7 +122,14 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
     }
 
     private void initComponent(View view) {
+
+        contentResolver = getActivity().getContentResolver();
+
+        storageReference = ConfiguracaoFirebase.getFirebaseStorage();
+
         abateRef = ConfiguracaoFirebase.getFirebaseDatabase().child("abates");
+
+        lyt_no_result = view.findViewById(R.id.lyt_no_result);
 
         recyclerViewListaAbates = view.findViewById(R.id.recycler_lista_abates);
         LinearLayoutManager layout_manager = new LinearLayoutManager(context);
@@ -124,29 +156,29 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
                 alertDialog.setCancelable(false);
 
 
-                alertDialog.setPositiveButton("PDF", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        progressDialog = new ProgressDialog(context);
-                        progressDialog.setMessage("Aguarde..."); // Setting Message
-                        progressDialog.setTitle("Gerando PDF"); // Setting Title
-                        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
-                        progressDialog.show(); // Display Progress Dialog
-                        progressDialog.setCancelable(false);
-                        new Thread(new Runnable() {
-                            public void run() {
-                                try {
-                                    Thread.sleep(10000);
-                                    Abate abateListado = abates.get(position);
-                                    PDFHelper.pdfView(abateListado, context);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                progressDialog.cancel();
-                            }
-                        }).start();
-                    }
-                });
+//                alertDialog.setPositiveButton("PDF", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        progressDialog = new ProgressDialog(context);
+//                        progressDialog.setMessage("Aguarde..."); // Setting Message
+//                        progressDialog.setTitle("Gerando PDF"); // Setting Title
+//                        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
+//                        progressDialog.show(); // Display Progress Dialog
+//                        progressDialog.setCancelable(false);
+//                        new Thread(new Runnable() {
+//                            public void run() {
+//                                try {
+//                                    Thread.sleep(10000);
+//                                    Abate abateListado = abates.get(position);
+//                                    PDFHelper.pdfView(abateListado, context);
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+//                                progressDialog.cancel();
+//                            }
+//                        }).start();
+//                    }
+//                });
 
                 alertDialog.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     @Override
@@ -155,12 +187,12 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
                     }
                 });
 
-                alertDialog.setNeutralButton("Editar", new DialogInterface.OnClickListener() {
+                alertDialog.setPositiveButton("Editar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        if(abates.size()>position){
-                            if (abates.get(position)!= null){
+                        if (abates.size() > position) {
+                            if (abates.get(position) != null) {
                                 Abate abate = new Abate();
                                 abate = abates.get(position);
                                 Intent intent = new Intent(getActivity(), AbateFormActivity.class);
@@ -324,11 +356,14 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
             pesquisarAbates(textoDigitado);
         } else {
             recuperarAbates();
+            lyt_no_result.setVisibility(View.GONE);
         }
         return true;
     }
 
     private void pesquisarAbates(String textoDigitado) {
+
+        lyt_no_result.setVisibility(View.GONE);
 
         //Limpar lista de abates
         abates.clear();
@@ -340,26 +375,33 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
                     .startAt(textoDigitado)
                     .endAt(textoDigitado + "\uf8ff");
 
-            queryFrigorifico.addListenerForSingleValueEvent(new ValueEventListener() {
+            Query queryNomeCliente = abateRef.orderByChild("lote/nomeCliente")
+                    .startAt(textoDigitado)
+                    .endAt(textoDigitado + "\uf8ff");
+
+            queryNomeCliente.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                     //Limpar a lista
                     abates.clear();
 
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        abates.add(ds.getValue(Abate.class));
-                    }
+                    if (!dataSnapshot.exists()) {
+                        lyt_no_result.setVisibility(View.VISIBLE);
+                    } else {
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            abates.add(ds.getValue(Abate.class));
+                        }
 
 //                    int total = abates.size();
 //                    Log.i("totalAbates", "Total de abates: " + total);
+                    }
 
                     adapter.notifyDataSetChanged();
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
                 }
             });
         }

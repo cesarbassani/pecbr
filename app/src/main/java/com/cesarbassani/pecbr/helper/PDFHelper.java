@@ -1,6 +1,10 @@
 package com.cesarbassani.pecbr.helper;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 
 import com.cesarbassani.pecbr.model.Abate;
 import com.cesarbassani.pecbr.repository.TemplatePDF;
