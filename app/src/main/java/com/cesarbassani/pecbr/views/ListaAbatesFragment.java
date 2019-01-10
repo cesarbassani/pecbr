@@ -10,13 +10,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -35,15 +30,10 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.Target;
 import com.cesarbassani.pecbr.R;
 import com.cesarbassani.pecbr.adapter.ListaAbatesAdapter;
 import com.cesarbassani.pecbr.config.ConfiguracaoFirebase;
-import com.cesarbassani.pecbr.config.GlideApp;
 import com.cesarbassani.pecbr.constants.GuestConstants;
-import com.cesarbassani.pecbr.data.DataGenerator;
-import com.cesarbassani.pecbr.helper.PDFHelper;
 import com.cesarbassani.pecbr.listener.OnAbateListenerInteractionListener;
 import com.cesarbassani.pecbr.listener.RecyclerItemClickListener;
 import com.cesarbassani.pecbr.model.Abate;
@@ -54,16 +44,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
-import com.itextpdf.text.DocumentException;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryTextListener {
 
@@ -79,6 +61,8 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
     private LinearLayout lyt_no_result;
 
     private StorageReference storageReference;
+    private StorageReference imagens;
+    private StorageReference imageRef;
     private ContentResolver contentResolver;
 
     private Bitmap imagemLote;
@@ -126,6 +110,8 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
         contentResolver = getActivity().getContentResolver();
 
         storageReference = ConfiguracaoFirebase.getFirebaseStorage();
+
+        imagens = storageReference.child("imagens").child("lote");
 
         abateRef = ConfiguracaoFirebase.getFirebaseDatabase().child("abates");
 
@@ -274,6 +260,16 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
 
                 abateRef.child(abate.getId()).removeValue();
                 adapter.notifyItemRemoved(position);
+
+                imageRef = imagens
+                        .child("lote_" + abate.getLote().getPropriedade() + ".jpeg");
+
+                imageRef.delete().addOnSuccessListener(getActivity(), new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.i("storage", "Imagem excluída com sucesso do Firebase Storage!");
+                    }
+                });
             }
         });
 
