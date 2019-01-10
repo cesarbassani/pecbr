@@ -229,7 +229,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
     private DatabaseReference abateRef;
 
     private Bitmap imagemLote;
-    private boolean fotoDoAbate = true;
+    private boolean fotoDoAbate = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -477,6 +477,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
                             @Override
                             public void onSuccess(Uri uri) {
                                 atualizaFotoLote(uri);
+                                fotoDoAbate = true;
                             }
                         });
                     }
@@ -991,6 +992,8 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
                             GlideApp.with(AbateFormActivity.this.getApplicationContext())
                                     .load(uri.toString())
                                     .into(image_lote);
+
+                            fotoDoAbate = true;
                         } else {
                             image_lote.setImageResource(R.drawable.padrao_boi);
                         }
