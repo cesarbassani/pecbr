@@ -58,6 +58,7 @@ import com.cesarbassani.pecbr.config.ConfiguracaoFirebase;
 import com.cesarbassani.pecbr.config.GlideApp;
 import com.cesarbassani.pecbr.constants.DataBaseConstants;
 import com.cesarbassani.pecbr.constants.GuestConstants;
+import com.cesarbassani.pecbr.helper.Permissao;
 import com.cesarbassani.pecbr.helper.UsuarioFirebase;
 import com.cesarbassani.pecbr.model.Abate;
 import com.cesarbassani.pecbr.model.Acabamento;
@@ -424,6 +425,17 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         if (dados != null) {
             abate = dados.getParcelable("abate");
             this.loadDataFromActivity(abate);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        for (int permissaoResultado : grantResults) {
+            if (permissaoResultado == PackageManager.PERMISSION_DENIED) {
+                Permissao.alertaValidacaoPermissao(this);
+            }
         }
     }
 

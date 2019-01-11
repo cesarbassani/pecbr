@@ -216,25 +216,25 @@ public class ConfigFragment extends Fragment {
 
         for (int permissaoResultado : grantResults) {
             if (permissaoResultado == PackageManager.PERMISSION_DENIED) {
-                alertaValidacaoPermissao();
+                Permissao.alertaValidacaoPermissao(getActivity());
             }
         }
     }
 
-    private void alertaValidacaoPermissao() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
-        builder.setTitle("Permissões Negadas");
-        builder.setCancelable(false);
-        builder.setMessage("Para utilizar o app é necessário aceitar as permissões");
-        builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                getActivity().finish();
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
+//    private void alertaValidacaoPermissao() {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+//        builder.setTitle("Permissões Negadas");
+//        builder.setCancelable(false);
+//        builder.setMessage("Para utilizar o app é necessário aceitar as permissões");
+//        builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                getActivity().finish();
+//            }
+//        });
+//
+//        AlertDialog dialog = builder.create();
+//        dialog.show();
+//    }
 
 }

@@ -1,6 +1,8 @@
 package com.cesarbassani.pecbr.helper;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v13.app.FragmentCompat;
@@ -41,5 +43,21 @@ public class Permissao {
         }
 
         return true;
+    }
+
+    public static void alertaValidacaoPermissao(final Activity activity) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Permissões Negadas");
+        builder.setCancelable(false);
+        builder.setMessage("Para utilizar o app é necessário aceitar as permissões");
+        builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                activity.finish();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
