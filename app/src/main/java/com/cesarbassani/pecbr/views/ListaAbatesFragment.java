@@ -349,7 +349,7 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
     public boolean onQueryTextChange(String newText) {
         if (newText.length() > 0) {
             String textoDigitado = newText.toUpperCase();
-            pesquisarAbates(textoDigitado);
+            pesquisarAbates(newText);
         } else {
             recuperarAbates();
             lyt_no_result.setVisibility(View.GONE);
@@ -368,8 +368,8 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
         if (textoDigitado.length() > 0) {
 
             Query queryFrigorifico = abateRef.orderByChild("frigorifico")
-                    .startAt(textoDigitado)
-                    .endAt(textoDigitado + "\uf8ff");
+                    .startAt(textoDigitado.toUpperCase())
+                    .endAt(textoDigitado.toLowerCase() + "\uf8ff");
 
             Query queryNomeCliente = abateRef.orderByChild("lote/nomeCliente")
                     .startAt(textoDigitado)
