@@ -499,14 +499,6 @@ public class TemplatePDF extends PdfPageEventHelper {
             document.add(observacoesAbate);
         }
 
-//        abateRef.child("lote/lote_" + abate.getLote().getPropriedade() + ".jpeg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//            @Override
-//            public void onSuccess(Uri uri) {
-//                Toast.makeText(context, uri.toString(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
-
         if (imageLote != null) {
             document.add(Chunk.NEXTPAGE);
             document.add(new Paragraph(""));

@@ -262,7 +262,7 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
                 adapter.notifyItemRemoved(position);
 
                 imageRef = imagens
-                        .child("lote_" + abate.getLote().getPropriedade() + ".jpeg");
+                        .child(abate.getFotoLote() + ".jpeg");
 
                 imageRef.delete().addOnSuccessListener(getActivity(), new OnSuccessListener<Void>() {
                     @Override

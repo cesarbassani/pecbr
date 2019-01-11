@@ -91,6 +91,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -453,11 +454,18 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
                 byte[] dadosDaImagem = baos.toByteArray();
 
                 //Salvar imagem no Firebase
-                final StorageReference imagemRef = storageReference
+                final StorageReference imagemRef;
+                final String nomeArquivo;
+                if (abate.getId() == null) {
+                     nomeArquivo = UUID.randomUUID().toString();
+                } else {
+                    nomeArquivo = abate.getFotoLote();
+                }
+
+                imagemRef = storageReference
                         .child("imagens")
                         .child("lote")
-//                        .child(identificadorUsuario)
-                        .child("lote_" + this.mViewHolder.mEditFazenda.getText().toString() + ".jpeg");
+                        .child(nomeArquivo + ".jpeg");
 
                 UploadTask uploadTask = imagemRef.putBytes(dadosDaImagem);
                 uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -476,7 +484,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
                         url.addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                atualizaFotoLote(uri);
+                                atualizaFotoLote(nomeArquivo);
                                 fotoDoAbate = true;
                             }
                         });
@@ -488,8 +496,8 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    private void atualizaFotoLote(Uri uri) {
-        abate.setFotoLote(uri.toString());
+    private void atualizaFotoLote(String nomeArquivo) {
+        abate.setFotoLote(nomeArquivo);
 //        abate.atualizar();
 
         Snackbar snackbar = Snackbar.make(parent_view, "Sua foto foi alterada com sucesso!", Snackbar.LENGTH_SHORT);
@@ -981,7 +989,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
         storageReference.child("imagens")
                 .child("lote")
-                .child("lote_" + this.mViewHolder.mEditFazenda.getText().toString() + ".jpeg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                .child(abate.getFotoLote() + ".jpeg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
                         if (uri != null) {
