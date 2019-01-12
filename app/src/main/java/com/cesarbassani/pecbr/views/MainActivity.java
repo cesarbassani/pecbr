@@ -27,7 +27,6 @@ import com.cesarbassani.pecbr.config.GlideApp;
 import com.cesarbassani.pecbr.model.Abate;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
@@ -37,6 +36,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     private ViewHolder mViewHolder = new ViewHolder();
+    FloatingActionButton fabBtn;
     private FirebaseAuth auth;
     private SearchView searchView;
     private List<Abate> listaAbates;
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FirebaseDatabase database = ConfiguracaoFirebase.getDatabase();
         database.getReference("abates").keepSynced(true);
 
-        this.mViewHolder.mFloatAddGuest = findViewById(R.id.float_add_guest);
+        fabBtn = findViewById(R.id.float_add_guest);
         this.mViewHolder.mActionBar = getSupportActionBar();
 
         this.mViewHolder.mAuth = FirebaseAuth.getInstance();
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void setListeners() {
-        mViewHolder.mFloatAddGuest.setOnClickListener(this);
+        fabBtn.setOnClickListener(this);
     }
 
     private void startDefaultFragment() {
@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_escala_abate) {
             fragmentClass = PresentFragment.class;
         } else if (id == R.id.nav_relatorios) {
-            fragmentClass = AbsentFragment.class;
+            fragmentClass = CotacoesFragment.class;
         } else if (id == R.id.nav_config) {
             fragmentClass = ConfigFragment.class;
         }
@@ -242,6 +242,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    public FloatingActionButton getFloatingActionButton() {
+        return fabBtn;
+    }
+
     private void logoutUser() {
         auth.signOut();
         if (auth.getCurrentUser() == null) {
@@ -265,7 +269,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //    }
 
     private static class ViewHolder {
-        FloatingActionButton mFloatAddGuest;
         private ActionBar mActionBar;
         private TextView mEmail;
         private TextView mName;

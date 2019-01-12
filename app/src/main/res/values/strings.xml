@@ -8,6 +8,7 @@
     <string name="resumo_abate">Lista de Abates</string>
     <string name="escala_abate">Escala de Abates</string>
     <string name="relatorios">Relatórios</string>
+    <string name="cotacoes">Cotações</string>
 
     <string name="email">Email</string>
     <string name="senha">Senha</string>
@@ -114,5 +115,12 @@
     <string name="nome_frigorifico">Frigorífico BOIBRAS</string>
     <string name="categoria_racial">Vacas e Novilhas - Nelore</string>
 
+    <string name="lorem_ipsum">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam efficitur ipsum in placerat molestie.  Fusce quis mauris a enim sollicitudin
+        \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam efficitur ipsum in placerat molestie.  Fusce quis mauris a enim sollicitudin
+    </string>
 
+    <string name="invoice_address">
+        Terry M Smith\n(904) 246-1297\n207 Cherry St, Neptune Beach, FL, 32266
+    </string>
 </resources>

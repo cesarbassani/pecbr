@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -69,6 +70,8 @@ public class ConfigFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_config, container, false);
 
         final Context context = view.getContext();
+
+        initComponent(view);
 
         imageButtonCamera = view.findViewById(R.id.imageButtonCamera);
         imageButtonGaleria = view.findViewById(R.id.imageButtonGaleria);
@@ -135,6 +138,14 @@ public class ConfigFragment extends Fragment {
 
 
         return view;
+    }
+
+    private void initComponent(View view) {
+        FloatingActionButton floatingActionButton = ((MainActivity) getActivity()).getFloatingActionButton();
+
+        if (floatingActionButton != null) {
+            floatingActionButton.hide();
+        }
     }
 
     @Override

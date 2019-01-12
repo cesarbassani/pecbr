@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -106,6 +107,12 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
     }
 
     private void initComponent(View view) {
+
+        FloatingActionButton floatingActionButton = ((MainActivity) getActivity()).getFloatingActionButton();
+
+        if (floatingActionButton != null) {
+            floatingActionButton.show();
+        }
 
         contentResolver = getActivity().getContentResolver();
 
