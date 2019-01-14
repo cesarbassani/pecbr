@@ -137,6 +137,7 @@
                         android:textColor="@color/grey_40" />
 
                     <TextView
+                        android:id="@+id/dataCotacao"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/spacing_large"
@@ -275,6 +276,7 @@
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
 
                     <TextView
+                        android:id="@+id/bezerro_a_prazo"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
@@ -283,6 +285,7 @@
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
 
                     <TextView
+                        android:id="@+id/bezerro_a_vista"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
@@ -330,6 +333,7 @@
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
 
                     <TextView
+                        android:id="@+id/boi_gordo_a_prazo"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
@@ -338,6 +342,7 @@
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
 
                     <TextView
+                        android:id="@+id/boi_gordo_a_vista"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
@@ -384,6 +389,7 @@
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
 
                     <TextView
+                        android:id="@+id/boi_magro_a_prazo"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
@@ -392,6 +398,7 @@
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
 
                     <TextView
+                        android:id="@+id/boi_magro_a_vista"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
@@ -437,6 +444,7 @@
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
 
                     <TextView
+                        android:id="@+id/vaca_gorda_a_prazo"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
@@ -445,6 +453,7 @@
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
 
                     <TextView
+                        android:id="@+id/vaca_gorda_a_vista"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"

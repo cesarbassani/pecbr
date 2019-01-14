@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cesarbassani.pecbr.R;
+import com.cesarbassani.pecbr.model.Cotacao;
 import com.cesarbassani.pecbr.utils.Tools;
 import com.cesarbassani.pecbr.utils.ViewAnimation;
 
@@ -27,6 +28,9 @@ public class CotacoesFragment extends Fragment {
     private ImageButton bt_toggle_items, bt_toggle_address, bt_toggle_description;
     private View lyt_expand_items, lyt_expand_address, lyt_expand_description;
     private NestedScrollView nested_scroll_view;
+    private Cotacao cotacao = new Cotacao();
+    private String dataCotacao;
+    private TextView bezerroAPrazo, bezerroAVista, boiGordoAPrazo, boiGordoAVista, boiMagroAPrazo, boiMagroAVista, vacaGordaAPrazo, vacaGordaAVista, txtDataCotacao;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +71,17 @@ public class CotacoesFragment extends Fragment {
 
         // nested scrollview
         nested_scroll_view = (NestedScrollView) view.findViewById(R.id.nested_scroll_view);
+        bezerroAPrazo = view.findViewById(R.id.bezerro_a_prazo);
+        bezerroAVista = view.findViewById(R.id.bezerro_a_vista);
+        boiGordoAPrazo = view.findViewById(R.id.boi_gordo_a_prazo);
+        boiGordoAVista = view.findViewById(R.id.boi_gordo_a_vista);
+        boiMagroAPrazo = view.findViewById(R.id.boi_magro_a_prazo);
+        boiMagroAVista = view.findViewById(R.id.boi_magro_a_vista);
+        vacaGordaAPrazo = view.findViewById(R.id.vaca_gorda_a_prazo);
+        vacaGordaAVista = view.findViewById(R.id.vaca_gorda_a_vista);
+        txtDataCotacao = view.findViewById(R.id.dataCotacao);
+
+        cotacao = inicializaCotacao();
 
         // section items
         bt_toggle_items = (ImageButton) view.findViewById(R.id.bt_toggle_items);
@@ -108,6 +123,21 @@ public class CotacoesFragment extends Fragment {
             }
         });
 
+    }
+
+    private Cotacao inicializaCotacao() {
+
+        cotacao.setBezerroAPrazo(bezerroAPrazo.getText().toString());
+        cotacao.setBezerroAVista(bezerroAVista.getText().toString());
+        cotacao.setBoiGordoAPrazo(boiGordoAPrazo.getText().toString());
+        cotacao.setBoiGordoAVista(boiGordoAVista.getText().toString());
+        cotacao.setBoiMagroAPrazo(boiMagroAPrazo.getText().toString());
+        cotacao.setBoiMagroAVista(boiMagroAVista.getText().toString());
+        cotacao.setVacaGordaAPrazo(vacaGordaAPrazo.getText().toString());
+        cotacao.setVacaGordaAVista(vacaGordaAVista.getText().toString());
+        cotacao.setDataCotacao(vacaGordaAVista.getText().toString());
+        cotacao.setDataCotacao(txtDataCotacao.getText().toString());
+        return cotacao;
     }
 
     private void toggleSection(View bt, final View lyt) {

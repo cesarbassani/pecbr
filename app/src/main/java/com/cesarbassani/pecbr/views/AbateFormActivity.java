@@ -468,7 +468,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
                 //Salvar imagem no Firebase
                 final StorageReference imagemRef;
                 final String nomeArquivo;
-                if (abate.getId() == null) {
+                if (abate.getId() == null || abate.getFotoLote() == null) {
                      nomeArquivo = UUID.randomUUID().toString();
                 } else {
                     nomeArquivo = abate.getFotoLote();
