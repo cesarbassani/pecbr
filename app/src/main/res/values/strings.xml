@@ -94,6 +94,7 @@
     <string name="err_msg_forma_de_pagamento_dias_a_prazo">Informe o número de dias para pagamento a prazo!</string>
     <string name="err_msg_rendimento_pesoFazenda">Informe o peso da fazenda</string>
     <string name="err_msg_rendimento_pesoFrigorifico">Informe o peso do frigorífico</string>
+    <string name="err_msg_rendimento_carcaca">Calule o Rendimento de Carcaça</string>
     <string name="err_msg_qtdeBonificacao">Informe a quantidade de animais bonificados</string>
     <string name="err_msg_pesoFazenda">Informe o peso da fazenda</string>
     <string name="err_msg_pesoBonificacao">Informe o peso dos animais bonificados</string>

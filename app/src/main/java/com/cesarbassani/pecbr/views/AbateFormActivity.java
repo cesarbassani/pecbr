@@ -670,7 +670,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
                             Thread.sleep(10000);
                             Abate abateGerado = inicializaAbate();
 
-                            if (validaQtdeAnimaisDoLote() && validaRendimento()) {
+                            if (validaQtdeAnimaisDoLote() && validaRendimento() && validaRendimentoCalculado()) {
                                 pdfView(abateGerado);
                                 if (abateGerado.getId() == null) {
                                     abateGerado.salvar();
@@ -1047,9 +1047,19 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
     private boolean validaRendimento() {
 
-        if (this.mViewHolder.pesoCarcaca.getText().toString().trim().isEmpty()) {
+        if (this.mViewHolder.pesoCarcaca.getText().toString().trim().isEmpty() || this.mViewHolder.pesoCarcaca.getText().toString().trim().equals("0.0")) {
             Snackbar.make(parent_view, R.string.err_msg_rendimento_pesoFrigorifico, Snackbar.LENGTH_SHORT).show();
             requestFocus(this.mViewHolder.pesoCarcaca);
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean validaRendimentoCalculado() {
+        if (this.mViewHolder.rendimentoCarcaca.getText().toString().trim().isEmpty() || this.mViewHolder.rendimentoCarcaca.getText().toString().trim().equals("%")) {
+            Snackbar.make(parent_view, R.string.err_msg_rendimento_carcaca, Snackbar.LENGTH_SHORT).show();
+            requestFocus(this.mViewHolder.rendimentoCarcaca);
             return false;
         }
 
@@ -1063,7 +1073,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 //            return false;
 //        }
 
-        if (this.mViewHolder.pesoCarcaca.getText().toString().trim().isEmpty()) {
+        if (this.mViewHolder.pesoCarcaca.getText().toString().trim().isEmpty() || this.mViewHolder.pesoCarcaca.getText().toString().trim().equals("0.0")) {
             Snackbar.make(parent_view, R.string.err_msg_pesoCarcaca, Snackbar.LENGTH_SHORT).show();
             requestFocus(this.mViewHolder.pesoCarcaca);
             return false;
