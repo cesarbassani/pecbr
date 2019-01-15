@@ -1057,7 +1057,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
     }
 
     private boolean validaRendimentoCalculado() {
-        if (this.mViewHolder.rendimentoCarcaca.getText().toString().trim().isEmpty() || this.mViewHolder.rendimentoCarcaca.getText().toString().trim().equals("%")) {
+        if (this.mViewHolder.rendimentoCarcaca.getText().toString().trim().isEmpty()) {
             Snackbar.make(parent_view, R.string.err_msg_rendimento_carcaca, Snackbar.LENGTH_SHORT).show();
             requestFocus(this.mViewHolder.rendimentoCarcaca);
             return false;
@@ -1250,7 +1250,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
                 resultadoPesoCarcacaArroba = pesoCarcacaKilo / CALCULOPESOCARCACA;
                 String textArrobaCarcaca = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", resultadoPesoCarcacaArroba)));
                 this.mViewHolder.text_arroba_carcaca.setText(String.valueOf(textArrobaCarcaca + "@"));
-                this.mViewHolder.rendimentoCarcaca.setText(String.valueOf(""));
+                this.mViewHolder.rendimentoCarcaca.setText(String.valueOf("%"));
                 qtdeAnimais = Integer.parseInt(this.mViewHolder.mQtdeAnimais.getText().toString());
                 pesoTotalDoLote = resultadoPesoCarcacaArroba * qtdeAnimais;
 
@@ -2360,7 +2360,12 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
             mediaTotalLote = Double.valueOf(String.format(Locale.US, "%.2f", mediaTotalLote));
             if (mediaTotalLote.equals(0.0)) {
-                mediaTotalLote = totalBonificacao / (Double.parseDouble(abate.getRendimento().getPesoCarcacaArroba()) * Integer.parseInt(abate.getLote().getQtdeAnimaisLote()));
+                pesoCarcacaKilo = (Double.valueOf(this.mViewHolder.pesoCarcaca.getText().toString()));
+                resultadoPesoCarcacaArroba = pesoCarcacaKilo / CALCULOPESOCARCACA;
+                qtdeAnimais = Integer.parseInt(abate.getLote().getQtdeAnimaisLote());
+                pesoTotalDoLote = resultadoPesoCarcacaArroba * qtdeAnimais;
+
+                mediaTotalLote = totalBonificacao / pesoTotalDoLote;
                 mediaTotalBonificacao = valorTotalBonificacao / pesoTotalDoLote;
                 mediaTotalLote = Double.valueOf(String.format(Locale.US, "%.2f", mediaTotalLote));
             }
