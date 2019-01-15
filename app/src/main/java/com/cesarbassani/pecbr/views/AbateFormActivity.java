@@ -233,6 +233,10 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
     private Bitmap imagemLote;
     private boolean fotoDoAbate = false;
 
+    double totalAnimaisAcabamento = 0.0;
+
+    double totalAnimaisMaturidade = 0.0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -867,6 +871,8 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
             this.mViewHolder.pesoFazenda.setText(abate.getRendimento().getPesoFazendaKilo());
         }
 
+        calculaRendimento();
+
         //Categoria
         this.mViewHolder.txtCategoria.setText(abate.getCategoria().getCategoria());
         this.mViewHolder.txtRacial.setText(abate.getCategoria().getRacial());
@@ -885,61 +891,81 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         }
 
         //Acabamento
+        int qtdAcabamento = 0;
+
         if (Integer.parseInt(abate.getAcabamento().getQtdeAusente()) > 0) {
             check_ausente.setChecked(true);
             this.mViewHolder.edit_quantidade_ausente.setText(abate.getAcabamento().getQtdeAusente());
+            qtdAcabamento++;
         }
 
         if (Integer.parseInt(abate.getAcabamento().getQtdeEscassoMenos()) > 0) {
             check_escasso_menos.setChecked(true);
             this.mViewHolder.edit_quantidade_escasso_menos.setText(abate.getAcabamento().getQtdeEscassoMenos());
+            qtdAcabamento++;
         }
 
         if (Integer.parseInt(abate.getAcabamento().getQtdeEscasso()) > 0) {
             check_escasso.setChecked(true);
             this.mViewHolder.edit_quantidade_escasso.setText(abate.getAcabamento().getQtdeEscasso());
+            qtdAcabamento++;
         }
 
         if (Integer.parseInt(abate.getAcabamento().getQtdeMediano()) > 0) {
             check_mediano.setChecked(true);
             this.mViewHolder.edit_quantidade_mediano.setText(abate.getAcabamento().getQtdeMediano());
+            qtdAcabamento++;
         }
 
         if (Integer.parseInt(abate.getAcabamento().getQtdeUniforme()) > 0) {
             check_uniforme.setChecked(true);
             this.mViewHolder.edit_quantidade_uniforme.setText(abate.getAcabamento().getQtdeUniforme());
+            qtdAcabamento++;
         }
 
         if (Integer.parseInt(abate.getAcabamento().getQtdeExcessivo()) > 0) {
             check_excessivo.setChecked(true);
             this.mViewHolder.edit_quantidade_excessivo.setText(abate.getAcabamento().getQtdeExcessivo());
+            qtdAcabamento++;
         }
 
+        if (qtdAcabamento > 0)
+            calcularAcabamento();
+
         //Maturidade
+        int qtdMaturidade = 0;
         if (Integer.parseInt(abate.getMaturidade().getQtdeZeroDentes()) > 0) {
             check_0_dentes.setChecked(true);
             this.mViewHolder.edit_quantidade_0_dentes.setText(abate.getMaturidade().getQtdeZeroDentes());
+            qtdMaturidade++;
         }
 
         if (Integer.parseInt(abate.getMaturidade().getQtdeDoisDentes()) > 0) {
             check_2_dentes.setChecked(true);
             this.mViewHolder.edit_quantidade_2_dentes.setText(abate.getMaturidade().getQtdeDoisDentes());
+            qtdMaturidade++;
         }
 
         if (Integer.parseInt(abate.getMaturidade().getQtdeQuatroDentes()) > 0) {
             check_4_dentes.setChecked(true);
             this.mViewHolder.edit_quantidade_4_dentes.setText(abate.getMaturidade().getQtdeQuatroDentes());
+            qtdMaturidade++;
         }
 
         if (Integer.parseInt(abate.getMaturidade().getQtdeSeisDentes()) > 0) {
             check_6_dentes.setChecked(true);
             this.mViewHolder.edit_quantidade_6_dentes.setText(abate.getMaturidade().getQtdeSeisDentes());
+            qtdMaturidade++;
         }
 
         if (Integer.parseInt(abate.getMaturidade().getQtdeOitoDentes()) > 0) {
             check_8_dentes.setChecked(true);
             this.mViewHolder.edit_quantidade_8_dentes.setText(abate.getMaturidade().getQtdeOitoDentes());
+            qtdMaturidade++;
         }
+
+        if (qtdMaturidade > 0)
+            calcularMaturidade();
 
         //Bonificações
         if (abate.getBonificacoes().size() > 0) {
@@ -1171,10 +1197,6 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View view) {
         int id = view.getId();
 
-        double totalAnimaisAcabamento = 0.0;
-
-        double totalAnimaisMaturidade = 0.0;
-
         if (id == R.id.btn_dialog_categorias) {
             showCategoriasDialog(this.mViewHolder.txtCategoria.toString(), this.mViewHolder.txtRacial.toString());
         }
@@ -1199,168 +1221,17 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
         if (id == R.id.btn_rendimento_carcaca) {
 
-            validaDadosDoRendimento();
-
-            try {
-                pesoFazendaKilo = (Double.valueOf(this.mViewHolder.pesoFazenda.getText().toString()));
-                pesoCarcacaKilo = (Double.valueOf(this.mViewHolder.pesoCarcaca.getText().toString()));
-            } catch (NumberFormatException e) {
-                pesoFazendaKilo = 0.0;
-                pesoCarcacaKilo = 0.0;
-            }
-
-            if (pesoFazendaKilo != 0.0 && pesoCarcacaKilo != 0.0) {
-                if (validaQtdeAnimaisDoLote()) {
-                    resultadoPesoFazendaArroba = pesoFazendaKilo / CALCULOPESOFAZENDA;
-                    String textArrobaFazenda = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", resultadoPesoFazendaArroba)));
-
-                    resultadoPesoCarcacaArroba = pesoCarcacaKilo / CALCULOPESOCARCACA;
-                    String textArrobaCarcaca = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", resultadoPesoCarcacaArroba)));
-                    qtdeAnimais = Integer.parseInt(this.mViewHolder.mQtdeAnimais.getText().toString());
-                    pesoTotalDoLote = resultadoPesoCarcacaArroba * qtdeAnimais;
-
-                    this.mViewHolder.text_arroba_fazenda.setText(String.valueOf(textArrobaFazenda + "@"));
-                    this.mViewHolder.text_arroba_carcaca.setText(String.valueOf(textArrobaCarcaca + "@"));
-
-                    resultadoRendimentoCarcaca = (pesoCarcacaKilo / pesoFazendaKilo) * 100;
-                    String textREndimentoCarcaca = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", resultadoRendimentoCarcaca)));
-
-                    this.mViewHolder.rendimentoCarcaca.setText(String.valueOf(textREndimentoCarcaca + "%"));
-
-                    if (!this.mViewHolder.txtCategoria.getText().toString().trim().isEmpty()) {
-                        Double somaPesoBezerros;
-                        if (abate.getId() == null) {
-                            somaPesoBezerros = (Double.valueOf(edt_pequeno.getText().toString()) * 8) + (Double.valueOf(edt_medio.getText().toString()) * 16) + (Double.valueOf(edt_grande.getText().toString()) * 32);
-                        } else {
-                            somaPesoBezerros = (Double.valueOf(((TextView) findViewById(R.id.tv_bezerros_pequeno)).getText().toString()) * 8) + (Double.valueOf(((TextView) findViewById(R.id.tv_bezerros_medio)).getText().toString()) * 16) + (Double.valueOf(((TextView) findViewById(R.id.tv_bezerros_grande)).getText().toString()) * 32);
-                        }
-
-                        if (somaPesoBezerros > 0) {
-                            Double pesoFazendaKiloEstimado = (pesoFazendaKilo - (somaPesoBezerros / qtdeAnimais));
-
-                            Double resultadoRendimentoCarcacaEstimado = (pesoCarcacaKilo / pesoFazendaKiloEstimado) * 100;
-                            String textREndimentoCarcacaEstimado = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", resultadoRendimentoCarcacaEstimado)));
-
-                            txt_rendimento_estimado.setText(String.valueOf(textREndimentoCarcacaEstimado + "%"));
-                        }
-                    }
-                }
-            } else if (!this.mViewHolder.pesoCarcaca.getText().toString().equals("")) {
-                pesoCarcacaKilo = (Double.valueOf(this.mViewHolder.pesoCarcaca.getText().toString()));
-                resultadoPesoCarcacaArroba = pesoCarcacaKilo / CALCULOPESOCARCACA;
-                String textArrobaCarcaca = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", resultadoPesoCarcacaArroba)));
-                this.mViewHolder.text_arroba_carcaca.setText(String.valueOf(textArrobaCarcaca + "@"));
-                this.mViewHolder.rendimentoCarcaca.setText("%");
-                qtdeAnimais = Integer.parseInt(this.mViewHolder.mQtdeAnimais.getText().toString());
-                pesoTotalDoLote = resultadoPesoCarcacaArroba * qtdeAnimais;
-
-                txt_rendimento_estimado.setText("-");
-
-            }
+            calculaRendimento();
         }
 
         if (id == R.id.btn_dados_acabamento) {
 
-            try {
-                Double percentualAusente = Double.valueOf(this.mViewHolder.edit_quantidade_ausente.getText().toString());
-                Double percentualEscassoMenos = Double.valueOf(this.mViewHolder.edit_quantidade_escasso_menos.getText().toString());
-                Double percentualEscasso = Double.valueOf(this.mViewHolder.edit_quantidade_escasso.getText().toString());
-                Double percentualMediano = Double.valueOf(this.mViewHolder.edit_quantidade_mediano.getText().toString());
-                Double percentualUniforme = Double.valueOf(this.mViewHolder.edit_quantidade_uniforme.getText().toString());
-                Double percentualExcessivo = Double.valueOf(this.mViewHolder.edit_quantidade_excessivo.getText().toString());
-
-                qtdeAnimais = Integer.parseInt(this.mViewHolder.mQtdeAnimais.getText().toString());
-
-                totalAnimaisAcabamento = percentualAusente + percentualEscassoMenos + percentualEscasso + percentualMediano +
-                        percentualUniforme + percentualExcessivo;
-
-                if (totalAnimaisAcabamento == qtdeAnimais) {
-
-                    percentualAusente = (percentualAusente / qtdeAnimais) * 100;
-                    percentualEscassoMenos = (percentualEscassoMenos / qtdeAnimais) * 100;
-                    percentualEscasso = (percentualEscasso / qtdeAnimais) * 100;
-                    percentualMediano = (percentualMediano / qtdeAnimais) * 100;
-                    percentualUniforme = (percentualUniforme / qtdeAnimais) * 100;
-                    percentualExcessivo = (percentualExcessivo / qtdeAnimais) * 100;
-
-                    String resultadoPercentualAusente = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", percentualAusente)));
-                    String resultadoPercentualEscassoMenos = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", percentualEscassoMenos)));
-                    String resultadoPercentualEscasso = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", percentualEscasso)));
-                    String resultadoPercentualMediano = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", percentualMediano)));
-                    String resultadoPercentualUniforme = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", percentualUniforme)));
-                    String resultadoPercentualExcessivo = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", percentualExcessivo)));
-
-                    this.mViewHolder.edit_percentual_ausente.setText(resultadoPercentualAusente + "%");
-                    this.mViewHolder.edit_percentual_escasso_menos.setText(resultadoPercentualEscassoMenos + "%");
-                    this.mViewHolder.edit_percentual_escasso.setText(resultadoPercentualEscasso + "%");
-                    this.mViewHolder.edit_percentual_mediano.setText(resultadoPercentualMediano + "%");
-                    this.mViewHolder.edit_percentual_uniforme.setText(resultadoPercentualUniforme + "%");
-                    this.mViewHolder.edit_percentual_excessivo.setText(resultadoPercentualExcessivo + "%");
-                } else if (totalAnimaisAcabamento < qtdeAnimais) {
-                    Toast.makeText(this, "Erro: A quantidade de animais informada no Acabamento é menor que a quantidades de animais do lote!", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(this, "Erro: A quantidade de animais informada no Acabamento é maior que a quantidades de animais do lote!", Toast.LENGTH_LONG).show();
-                }
-
-            } catch (NumberFormatException e) {
-
-                if (this.mViewHolder.mQtdeAnimais.getText().toString().equals("")) {
-                    Toast.makeText(this, "Favor informar o número de animais do lote!", Toast.LENGTH_LONG).show();
-                    this.mViewHolder.mQtdeAnimais.setFocusable(true);
-                    this.mViewHolder.mQtdeAnimais.setText("");
-                    this.mViewHolder.mQtdeAnimais.requestFocus();
-                }
-            }
+            calcularAcabamento();
         }
 
         if (id == R.id.btn_maturidade) {
 
-            try {
-                Double percentualZeroDentes = Double.valueOf(this.mViewHolder.edit_quantidade_0_dentes.getText().toString());
-                Double percentualDoisDentes = Double.valueOf(this.mViewHolder.edit_quantidade_2_dentes.getText().toString());
-                Double percentualQuatroDentes = Double.valueOf(this.mViewHolder.edit_quantidade_4_dentes.getText().toString());
-                Double percentualSeisDentes = Double.valueOf(this.mViewHolder.edit_quantidade_6_dentes.getText().toString());
-                Double percentualOitoDentes = Double.valueOf(this.mViewHolder.edit_quantidade_8_dentes.getText().toString());
-
-                qtdeAnimais = Integer.parseInt(this.mViewHolder.mQtdeAnimais.getText().toString());
-
-                totalAnimaisMaturidade = percentualZeroDentes + percentualDoisDentes + percentualQuatroDentes + percentualSeisDentes + percentualOitoDentes;
-
-                if (totalAnimaisMaturidade == qtdeAnimais) {
-
-                    percentualZeroDentes = (percentualZeroDentes / qtdeAnimais) * 100;
-                    percentualDoisDentes = (percentualDoisDentes / qtdeAnimais) * 100;
-                    percentualQuatroDentes = (percentualQuatroDentes / qtdeAnimais) * 100;
-                    percentualSeisDentes = (percentualSeisDentes / qtdeAnimais) * 100;
-                    percentualOitoDentes = (percentualOitoDentes / qtdeAnimais) * 100;
-
-                    String resultadoPercentualZeroDentes = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", percentualZeroDentes)));
-                    String resultadoPercentualDoisDentes = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", percentualDoisDentes)));
-                    String resultadoPercentualQuatroDentes = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", percentualQuatroDentes)));
-                    String resultadoPercentualSeisDentes = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", percentualSeisDentes)));
-                    String resultadoPercentualOitoDentes = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", percentualOitoDentes)));
-
-                    this.mViewHolder.edit_percentual_0_dentes.setText(resultadoPercentualZeroDentes + "%");
-                    this.mViewHolder.edit_percentual_2_dentes.setText(resultadoPercentualDoisDentes + "%");
-                    this.mViewHolder.edit_percentual_4_dentes.setText(resultadoPercentualQuatroDentes + "%");
-                    this.mViewHolder.edit_percentual_6_dentes.setText(resultadoPercentualSeisDentes + "%");
-                    this.mViewHolder.edit_percentual_8_dentes.setText(resultadoPercentualOitoDentes + "%");
-
-                } else if (totalAnimaisAcabamento < qtdeAnimais) {
-                    Toast.makeText(this, "Erro: A quantidade de animais informada no Acabamento é menor que a quantidades de animais do lote!", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(this, "Erro: A quantidade de animais informada no Acabamento é maior que a quantidades de animais do lote!", Toast.LENGTH_LONG).show();
-                }
-
-            } catch (NumberFormatException e) {
-
-                if (this.mViewHolder.mQtdeAnimais.getText().toString().equals("")) {
-                    Toast.makeText(this, "Favor informar o número de animais do lote!", Toast.LENGTH_LONG).show();
-                    this.mViewHolder.mQtdeAnimais.setFocusable(true);
-                    this.mViewHolder.mQtdeAnimais.setText("");
-                    this.mViewHolder.mQtdeAnimais.requestFocus();
-                }
-            }
+            calcularMaturidade();
         }
 
         if (id == R.id.btn_calcular_acerto) {
@@ -1431,6 +1302,169 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
             }
         }
 
+    }
+
+    private void calcularMaturidade() {
+        try {
+            Double percentualZeroDentes = Double.valueOf(this.mViewHolder.edit_quantidade_0_dentes.getText().toString());
+            Double percentualDoisDentes = Double.valueOf(this.mViewHolder.edit_quantidade_2_dentes.getText().toString());
+            Double percentualQuatroDentes = Double.valueOf(this.mViewHolder.edit_quantidade_4_dentes.getText().toString());
+            Double percentualSeisDentes = Double.valueOf(this.mViewHolder.edit_quantidade_6_dentes.getText().toString());
+            Double percentualOitoDentes = Double.valueOf(this.mViewHolder.edit_quantidade_8_dentes.getText().toString());
+
+            qtdeAnimais = Integer.parseInt(this.mViewHolder.mQtdeAnimais.getText().toString());
+
+            totalAnimaisMaturidade = percentualZeroDentes + percentualDoisDentes + percentualQuatroDentes + percentualSeisDentes + percentualOitoDentes;
+
+            if (totalAnimaisMaturidade == qtdeAnimais) {
+
+                percentualZeroDentes = (percentualZeroDentes / qtdeAnimais) * 100;
+                percentualDoisDentes = (percentualDoisDentes / qtdeAnimais) * 100;
+                percentualQuatroDentes = (percentualQuatroDentes / qtdeAnimais) * 100;
+                percentualSeisDentes = (percentualSeisDentes / qtdeAnimais) * 100;
+                percentualOitoDentes = (percentualOitoDentes / qtdeAnimais) * 100;
+
+                String resultadoPercentualZeroDentes = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", percentualZeroDentes)));
+                String resultadoPercentualDoisDentes = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", percentualDoisDentes)));
+                String resultadoPercentualQuatroDentes = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", percentualQuatroDentes)));
+                String resultadoPercentualSeisDentes = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", percentualSeisDentes)));
+                String resultadoPercentualOitoDentes = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", percentualOitoDentes)));
+
+                this.mViewHolder.edit_percentual_0_dentes.setText(resultadoPercentualZeroDentes + "%");
+                this.mViewHolder.edit_percentual_2_dentes.setText(resultadoPercentualDoisDentes + "%");
+                this.mViewHolder.edit_percentual_4_dentes.setText(resultadoPercentualQuatroDentes + "%");
+                this.mViewHolder.edit_percentual_6_dentes.setText(resultadoPercentualSeisDentes + "%");
+                this.mViewHolder.edit_percentual_8_dentes.setText(resultadoPercentualOitoDentes + "%");
+
+            } else if (totalAnimaisAcabamento < qtdeAnimais) {
+                Toast.makeText(this, "Erro: A quantidade de animais informada no Acabamento é menor que a quantidades de animais do lote!", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Erro: A quantidade de animais informada no Acabamento é maior que a quantidades de animais do lote!", Toast.LENGTH_LONG).show();
+            }
+
+        } catch (NumberFormatException e) {
+
+            if (this.mViewHolder.mQtdeAnimais.getText().toString().equals("")) {
+                Toast.makeText(this, "Favor informar o número de animais do lote!", Toast.LENGTH_LONG).show();
+                this.mViewHolder.mQtdeAnimais.setFocusable(true);
+                this.mViewHolder.mQtdeAnimais.setText("");
+                this.mViewHolder.mQtdeAnimais.requestFocus();
+            }
+        }
+    }
+
+    private void calcularAcabamento() {
+        try {
+            Double percentualAusente = Double.valueOf(this.mViewHolder.edit_quantidade_ausente.getText().toString());
+            Double percentualEscassoMenos = Double.valueOf(this.mViewHolder.edit_quantidade_escasso_menos.getText().toString());
+            Double percentualEscasso = Double.valueOf(this.mViewHolder.edit_quantidade_escasso.getText().toString());
+            Double percentualMediano = Double.valueOf(this.mViewHolder.edit_quantidade_mediano.getText().toString());
+            Double percentualUniforme = Double.valueOf(this.mViewHolder.edit_quantidade_uniforme.getText().toString());
+            Double percentualExcessivo = Double.valueOf(this.mViewHolder.edit_quantidade_excessivo.getText().toString());
+
+            qtdeAnimais = Integer.parseInt(this.mViewHolder.mQtdeAnimais.getText().toString());
+
+            totalAnimaisAcabamento = percentualAusente + percentualEscassoMenos + percentualEscasso + percentualMediano +
+                    percentualUniforme + percentualExcessivo;
+
+            if (totalAnimaisAcabamento == qtdeAnimais) {
+
+                percentualAusente = (percentualAusente / qtdeAnimais) * 100;
+                percentualEscassoMenos = (percentualEscassoMenos / qtdeAnimais) * 100;
+                percentualEscasso = (percentualEscasso / qtdeAnimais) * 100;
+                percentualMediano = (percentualMediano / qtdeAnimais) * 100;
+                percentualUniforme = (percentualUniforme / qtdeAnimais) * 100;
+                percentualExcessivo = (percentualExcessivo / qtdeAnimais) * 100;
+
+                String resultadoPercentualAusente = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", percentualAusente)));
+                String resultadoPercentualEscassoMenos = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", percentualEscassoMenos)));
+                String resultadoPercentualEscasso = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", percentualEscasso)));
+                String resultadoPercentualMediano = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", percentualMediano)));
+                String resultadoPercentualUniforme = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", percentualUniforme)));
+                String resultadoPercentualExcessivo = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", percentualExcessivo)));
+
+                this.mViewHolder.edit_percentual_ausente.setText(resultadoPercentualAusente + "%");
+                this.mViewHolder.edit_percentual_escasso_menos.setText(resultadoPercentualEscassoMenos + "%");
+                this.mViewHolder.edit_percentual_escasso.setText(resultadoPercentualEscasso + "%");
+                this.mViewHolder.edit_percentual_mediano.setText(resultadoPercentualMediano + "%");
+                this.mViewHolder.edit_percentual_uniforme.setText(resultadoPercentualUniforme + "%");
+                this.mViewHolder.edit_percentual_excessivo.setText(resultadoPercentualExcessivo + "%");
+            } else if (totalAnimaisAcabamento < qtdeAnimais) {
+                Toast.makeText(this, "Erro: A quantidade de animais informada no Acabamento é menor que a quantidades de animais do lote!", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Erro: A quantidade de animais informada no Acabamento é maior que a quantidades de animais do lote!", Toast.LENGTH_LONG).show();
+            }
+
+        } catch (NumberFormatException e) {
+
+            if (this.mViewHolder.mQtdeAnimais.getText().toString().equals("")) {
+                Toast.makeText(this, "Favor informar o número de animais do lote!", Toast.LENGTH_LONG).show();
+                this.mViewHolder.mQtdeAnimais.setFocusable(true);
+                this.mViewHolder.mQtdeAnimais.setText("");
+                this.mViewHolder.mQtdeAnimais.requestFocus();
+            }
+        }
+    }
+
+    private void calculaRendimento() {
+        validaDadosDoRendimento();
+
+        try {
+            pesoFazendaKilo = (Double.valueOf(this.mViewHolder.pesoFazenda.getText().toString()));
+            pesoCarcacaKilo = (Double.valueOf(this.mViewHolder.pesoCarcaca.getText().toString()));
+        } catch (NumberFormatException e) {
+            pesoFazendaKilo = 0.0;
+            pesoCarcacaKilo = 0.0;
+        }
+
+        if (pesoFazendaKilo != 0.0 && pesoCarcacaKilo != 0.0) {
+            if (validaQtdeAnimaisDoLote()) {
+                resultadoPesoFazendaArroba = pesoFazendaKilo / CALCULOPESOFAZENDA;
+                String textArrobaFazenda = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", resultadoPesoFazendaArroba)));
+
+                resultadoPesoCarcacaArroba = pesoCarcacaKilo / CALCULOPESOCARCACA;
+                String textArrobaCarcaca = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", resultadoPesoCarcacaArroba)));
+                qtdeAnimais = Integer.parseInt(this.mViewHolder.mQtdeAnimais.getText().toString());
+                pesoTotalDoLote = resultadoPesoCarcacaArroba * qtdeAnimais;
+
+                this.mViewHolder.text_arroba_fazenda.setText(String.valueOf(textArrobaFazenda + "@"));
+                this.mViewHolder.text_arroba_carcaca.setText(String.valueOf(textArrobaCarcaca + "@"));
+
+                resultadoRendimentoCarcaca = (pesoCarcacaKilo / pesoFazendaKilo) * 100;
+                String textREndimentoCarcaca = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", resultadoRendimentoCarcaca)));
+
+                this.mViewHolder.rendimentoCarcaca.setText(String.valueOf(textREndimentoCarcaca + "%"));
+
+                if (!this.mViewHolder.txtCategoria.getText().toString().trim().isEmpty()) {
+                    Double somaPesoBezerros;
+                    if (abate.getId() == null) {
+                        somaPesoBezerros = (Double.valueOf(edt_pequeno.getText().toString()) * 8) + (Double.valueOf(edt_medio.getText().toString()) * 16) + (Double.valueOf(edt_grande.getText().toString()) * 32);
+                    } else {
+                        somaPesoBezerros = (Double.valueOf(((TextView) findViewById(R.id.tv_bezerros_pequeno)).getText().toString()) * 8) + (Double.valueOf(((TextView) findViewById(R.id.tv_bezerros_medio)).getText().toString()) * 16) + (Double.valueOf(((TextView) findViewById(R.id.tv_bezerros_grande)).getText().toString()) * 32);
+                    }
+
+                    if (somaPesoBezerros > 0) {
+                        Double pesoFazendaKiloEstimado = (pesoFazendaKilo - (somaPesoBezerros / qtdeAnimais));
+
+                        Double resultadoRendimentoCarcacaEstimado = (pesoCarcacaKilo / pesoFazendaKiloEstimado) * 100;
+                        String textREndimentoCarcacaEstimado = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", resultadoRendimentoCarcacaEstimado)));
+
+                        txt_rendimento_estimado.setText(String.valueOf(textREndimentoCarcacaEstimado + "%"));
+                    }
+                }
+            }
+        } else if (!this.mViewHolder.pesoCarcaca.getText().toString().equals("")) {
+            pesoCarcacaKilo = (Double.valueOf(this.mViewHolder.pesoCarcaca.getText().toString()));
+            resultadoPesoCarcacaArroba = pesoCarcacaKilo / CALCULOPESOCARCACA;
+            String textArrobaCarcaca = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", resultadoPesoCarcacaArroba)));
+            this.mViewHolder.text_arroba_carcaca.setText(String.valueOf(textArrobaCarcaca + "@"));
+            this.mViewHolder.rendimentoCarcaca.setText("%");
+            qtdeAnimais = Integer.parseInt(this.mViewHolder.mQtdeAnimais.getText().toString());
+            pesoTotalDoLote = resultadoPesoCarcacaArroba * qtdeAnimais;
+
+            txt_rendimento_estimado.setText("-");
+
+        }
     }
 
     @Override
