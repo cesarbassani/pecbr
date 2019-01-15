@@ -1057,7 +1057,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
     }
 
     private boolean validaRendimentoCalculado() {
-        if (this.mViewHolder.rendimentoCarcaca.getText().toString().trim().isEmpty()) {
+        if (this.mViewHolder.text_arroba_carcaca.getText().equals(" @ ")) {
             Snackbar.make(parent_view, R.string.err_msg_rendimento_carcaca, Snackbar.LENGTH_SHORT).show();
             requestFocus(this.mViewHolder.rendimentoCarcaca);
             return false;
@@ -1250,7 +1250,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
                 resultadoPesoCarcacaArroba = pesoCarcacaKilo / CALCULOPESOCARCACA;
                 String textArrobaCarcaca = String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", resultadoPesoCarcacaArroba)));
                 this.mViewHolder.text_arroba_carcaca.setText(String.valueOf(textArrobaCarcaca + "@"));
-                this.mViewHolder.rendimentoCarcaca.setText(String.valueOf("%"));
+                this.mViewHolder.rendimentoCarcaca.setText("%");
                 qtdeAnimais = Integer.parseInt(this.mViewHolder.mQtdeAnimais.getText().toString());
                 pesoTotalDoLote = resultadoPesoCarcacaArroba * qtdeAnimais;
 

@@ -140,6 +140,9 @@ public class ViewPDFActivity extends AppCompatActivity {
             case R.id.enviar:
                 enviarWhatsapp();
                 return true;
+            case R.id.compartilhar:
+                compartilhar();
+                return true;
 //            case R.id.gerar_png:
 //                uriImages = new ArrayList<>();
 //                ArrayList<Bitmap> bitmaps = pdfToBitmap(file);
@@ -263,5 +266,20 @@ public class ViewPDFActivity extends AppCompatActivity {
         startActivity(share);
 
 //        }
+    }
+
+    private void compartilhar() {
+        Uri uri = FileProvider.getUriForFile(
+                ViewPDFActivity.this,
+                "com.cesarbassani.pecbr",
+                file);
+
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.setType("application/pdf");
+//        String texto = "Olá sou um texto compartilhado"
+        sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
+//        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
     }
 }

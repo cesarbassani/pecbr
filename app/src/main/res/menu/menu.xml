@@ -6,6 +6,11 @@
         android:title="enviar"
         app:showAsAction="always" />
 
+    <item android:id="@+id/compartilhar"
+        android:icon="@drawable/ic_share_black_24dp"
+        android:title="compartilhar"
+        app:showAsAction="always" />
+
     <!--<item android:id="@+id/gerar_png"-->
         <!--android:title="Gerar PNG"-->
         <!--app:showAsAction="never" />-->
