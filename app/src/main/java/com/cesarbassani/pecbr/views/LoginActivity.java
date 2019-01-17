@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -18,6 +19,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+
+import static com.cesarbassani.pecbr.utils.Tools.hideSoftKeyboard;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -68,27 +71,35 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             startActivity(new Intent(this, SignUp.class));
             finish();
         } else if (id == R.id.login_btn_login) {
+            hideSoftKeyboard(LoginActivity.this);
             loginUser(input_email.getText().toString(), input_password.getText().toString());
         }
-
-        progressBar.setVisibility(View.VISIBLE);
     }
 
     private void loginUser(String email, final String password) {
-        auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressBar.setVisibility(View.GONE);
-                        if (!task.isSuccessful()) {
-                            if (password.length() > 6) {
-                                Snackbar snackbar = Snackbar.make(activity_main, "Password length must be over 6", Snackbar.LENGTH_SHORT);
+        if (!email.isEmpty() && !password.isEmpty()) {
+            progressBar.setVisibility(View.VISIBLE);
+            auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            progressBar.setVisibility(View.GONE);
+                            if (!task.isSuccessful()) {
+                                Snackbar snackbar = Snackbar.make(activity_main, "Erro de autenticação. Verifique seu email e senha!", Snackbar.LENGTH_SHORT);
                                 snackbar.show();
+                            } else {
+                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             }
-                        } else {
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         }
-                    }
-                });
+                    });
+        } else {
+            Snackbar snackbar = Snackbar.make(activity_main, "Informe email e senha para fazer o login!", Snackbar.LENGTH_SHORT);
+            snackbar.show();
+
+            input_email.requestFocus();
+            progressBar.setVisibility(View.GONE);
+        }
     }
+
+
 }

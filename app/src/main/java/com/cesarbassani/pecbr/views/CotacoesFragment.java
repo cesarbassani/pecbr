@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,6 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +38,8 @@ import com.cesarbassani.pecbr.constants.GuestConstants;
 import com.cesarbassani.pecbr.model.Cotacao;
 import com.cesarbassani.pecbr.utils.Tools;
 import com.cesarbassani.pecbr.utils.ViewAnimation;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -67,6 +71,8 @@ public class CotacoesFragment extends Fragment {
     private ArrayAdapter<String> cotacoesAdapter;
     private Context context;
     private Button btn_consultar_cotacao;
+
+    private FirebaseAuth auth;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,6 +119,10 @@ public class CotacoesFragment extends Fragment {
 
     private void initComponent(View view) {
 
+        //Init Firebase
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+
         cotacaoRef = ConfiguracaoFirebase.getFirebaseDatabase().child("cotacoes");
 
         FloatingActionButton floatingActionButton = ((MainActivity) getActivity()).getFloatingActionButton();
@@ -136,6 +146,12 @@ public class CotacoesFragment extends Fragment {
         txtDataCotacao.setText(Tools.getFormattedDateSimple(new Date().getTime()));
 
         bt_nova_cotacao = view.findViewById(R.id.bt_nova_cotacao);
+        RelativeLayout layout_bt_nova_cotacao = view.findViewById(R.id.layout_bt_nova_cotacao);
+
+        //check already session, if ok-> Dashboard
+        if (user.getEmail().equals("joaoalvaro@pecbr.com") || user.getEmail().equals("cesarbassani.dev@gmail.com")) {
+            layout_bt_nova_cotacao.setVisibility(View.VISIBLE);
+        }
 
         datePickerCotacao = view.findViewById(R.id.datePickerCotacao);
 

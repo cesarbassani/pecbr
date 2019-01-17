@@ -574,6 +574,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onStart() {
         super.onStart();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         recuperaUsuarios();
     }
 

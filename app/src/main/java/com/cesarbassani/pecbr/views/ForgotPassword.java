@@ -16,6 +16,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
+import static com.cesarbassani.pecbr.utils.Tools.hideSoftKeyboard;
+
 public class ForgotPassword extends AppCompatActivity implements View.OnClickListener {
 
     private EditText input_email;
@@ -43,6 +45,10 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
+    public void onBackPressed() {
+    }
+
+    @Override
     public void onClick(View v) {
         int id = v.getId();
 
@@ -50,6 +56,7 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         } else if (id == R.id.forgot_btn_reset) {
+            hideSoftKeyboard(ForgotPassword.this);
             resetPassword(input_email.getText().toString());
         }
     }

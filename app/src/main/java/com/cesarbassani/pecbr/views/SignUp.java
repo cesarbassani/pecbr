@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -26,6 +27,8 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+
+import static com.cesarbassani.pecbr.utils.Tools.hideSoftKeyboard;
 
 public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
@@ -75,8 +78,19 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
             startActivity(new Intent(this, ForgotPassword.class));
             finish();
         } else if (id == R.id.signup_btn_register) {
+            hideSoftKeyboard(SignUp.this);
             validarCadastroUsuario();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     public void validarCadastroUsuario() {

@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -36,6 +37,8 @@ import com.cesarbassani.pecbr.R;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class Tools {
 
@@ -284,6 +287,25 @@ public class Tools {
     public static String formatDecimal(Double valor) {
         DecimalFormat df = new DecimalFormat("#,###,##0.00");
         return df.format(valor);
+    }
+
+    /**
+     * Esconda o teclado
+     */
+    public static void hideSoftKeyboard(Activity activity) {
+        if(activity.getCurrentFocus()!=null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+        }
+    }
+
+    /**
+     * Mostre o teclado
+     */
+    public static void showSoftKeyboard(View view, Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(INPUT_METHOD_SERVICE);
+        view.requestFocus();
+        inputMethodManager.showSoftInput(view, 0);
     }
 
 }

@@ -78,8 +78,10 @@
                     </LinearLayout>
 
                     <RelativeLayout
+                        android:id="@+id/layout_bt_nova_cotacao"
                         android:layout_width="@dimen/spacing_xmlarge"
-                        android:layout_height="@dimen/spacing_xmlarge">
+                        android:layout_height="@dimen/spacing_xmlarge"
+                        android:visibility="invisible">
 
                         <ImageView
                             android:layout_width="match_parent"
