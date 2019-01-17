@@ -32,6 +32,8 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.cesarbassani.pecbr.config.GlideApp;
 import com.google.android.gms.maps.GoogleMap;
 import com.cesarbassani.pecbr.R;
+
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -119,7 +121,7 @@ public class Tools {
     }
 
     public static String getFormattedDateSimple(Long dateTime) {
-        SimpleDateFormat newFormat = new SimpleDateFormat("MMMM dd, yyyy");
+        SimpleDateFormat newFormat = new SimpleDateFormat("dd MMMM yyyy");
         return newFormat.format(new Date(dateTime));
     }
 
@@ -277,6 +279,11 @@ public class Tools {
             index += period;
         }
         return builder.toString();
+    }
+
+    public static String formatDecimal(Double valor) {
+        DecimalFormat df = new DecimalFormat("#,###,##0.00");
+        return df.format(valor);
     }
 
 }

@@ -3,7 +3,10 @@ package com.cesarbassani.pecbr.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.cesarbassani.pecbr.config.ConfiguracaoFirebase;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -53,6 +56,25 @@ public class Cotacao implements Serializable, Parcelable {
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public void salvar() {
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("cotacoes");
+        String id = databaseReference.push().getKey();
+        databaseReference.child(id).setValue(this);
+    }
+
+    public void atualizar() {
+//        String identificadorAbate = UsuarioFirebase.getIdentificadorUsuario();
+        DatabaseReference database = ConfiguracaoFirebase.getFirebaseDatabase();
+
+        DatabaseReference cotacoesRef = database.child("cotacoes")
+                .child(getId());
+
+        Map<String, Object> valoresCotacao = converterParaMap();
+
+        cotacoesRef.updateChildren(valoresCotacao);
     }
 
     @Override
@@ -164,5 +186,10 @@ public class Cotacao implements Serializable, Parcelable {
 
     public void setDataCotacao(String dataCotacao) {
         this.dataCotacao = dataCotacao;
+    }
+
+    @Override
+    public String toString() {
+        return dataCotacao;
     }
 }

@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/bt_close"
+                android:layout_width="?android:attr/actionBarSize"
+                android:layout_height="?android:attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                android:tint="@android:color/white"
+                app:srcCompat="@drawable/ic_close" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Cotação"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/bt_save"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingLeft="@dimen/spacing_xsmall"
+                android:paddingRight="@dimen/spacing_xsmall"
+                android:text="@string/SAVE"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:scrollingCache="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_large">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/text_data_cotacao"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="3dp"
+                        android:text="Data da cotação" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/spacing_large" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/dataCotacaoResult"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="10 de Janeiro de 2019"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                            android:textColor="@color/grey_60"
+                            android:layout_gravity="center"
+                            android:textStyle="bold" />
+
+                        <ImageButton
+                            android:id="@+id/datePicker"
+                            android:layout_width="0dp"
+                            android:layout_weight="0.1"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="@color/transparent"
+                            android:src="@drawable/ic_event"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_large" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/text_produto"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginBottom="1dp"
+                        android:textStyle="bold"
+                        android:layout_weight="0.6"
+                        android:text="Produto" />
+
+                    <TextView
+                        android:id="@+id/text_a_prazo"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginBottom="1dp"
+                        android:textStyle="bold"
+                        android:layout_weight="1"
+                        android:text="A prazo" />
+
+                    <TextView
+                        android:id="@+id/text_a_vista"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="1dp"
+                        android:textStyle="bold"
+                        android:layout_weight="1"
+                        android:text="À vista" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/text_bezerro"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.6"
+                        android:text="Bezerro" />
+
+                    <EditText
+                        android:id="@+id/edit_bezerro_a_prazo"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:nextFocusDown="@+id/edit_bezerro_a_vista"
+                        android:background="@drawable/edit_text_border"
+                        android:text=" "
+                        android:textAlignment="center"
+                        android:textColor="@color/grey_60"
+                        android:inputType="numberDecimal" />
+
+                    <EditText
+                        android:id="@+id/edit_bezerro_a_vista"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:text=" "
+                        android:textAlignment="center"
+                        android:textColor="@color/grey_60"
+                        android:nextFocusDown="@+id/edit_boi_gordo_a_prazo"
+                        android:background="@drawable/edit_text_border"
+                        android:inputType="numberDecimal" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_middle" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/text_boi_gordo"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.6"
+                        android:text="Boi Gordo"
+                        android:inputType="number" />
+
+                    <EditText
+                        android:id="@+id/edit_boi_gordo_a_prazo"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:text=" "
+                        android:textAlignment="center"
+                        android:textColor="@color/grey_60"
+                        android:nextFocusDown="@+id/edit_boi_gordo_a_vista"
+                        android:background="@drawable/edit_text_border"
+                        android:inputType="numberDecimal" />
+
+                    <EditText
+                        android:id="@+id/edit_boi_gordo_a_vista"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:text=" "
+                        android:textAlignment="center"
+                        android:textColor="@color/grey_60"
+                        android:nextFocusDown="@+id/edit_boi_magro_a_prazo"
+                        android:background="@drawable/edit_text_border"
+                        android:inputType="numberDecimal" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_middle" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/text_boi_magro"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.6"
+                        android:text="Boi Magro"
+                        android:inputType="number" />
+
+                    <EditText
+                        android:id="@+id/edit_boi_magro_a_prazo"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:text=" "
+                        android:textAlignment="center"
+                        android:textColor="@color/grey_60"
+                        android:nextFocusDown="@+id/edit_boi_magro_a_vista"
+                        android:background="@drawable/edit_text_border"
+                        android:inputType="numberDecimal" />
+
+                    <EditText
+                        android:id="@+id/edit_boi_magro_a_vista"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:text=" "
+                        android:textAlignment="center"
+                        android:textColor="@color/grey_60"
+                        android:nextFocusDown="@+id/edit_vaca_gorda_a_prazo"
+                        android:background="@drawable/edit_text_border"
+                        android:inputType="numberDecimal" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_middle" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/text_vaca_gorda"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.6"
+                        android:text="Vaca Gorda"
+                        android:inputType="number" />
+
+                    <EditText
+                        android:id="@+id/edit_vaca_gorda_a_prazo"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:text=" "
+                        android:textAlignment="center"
+                        android:textColor="@color/grey_60"
+                        android:nextFocusDown="@+id/edit_vaca_gorda_a_vista"
+                        android:background="@drawable/edit_text_border"
+                        android:inputType="numberDecimal" />
+
+                    <EditText
+                        android:id="@+id/edit_vaca_gorda_a_vista"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:text=" "
+                        android:textAlignment="center"
+                        android:textColor="@color/grey_60"
+                        android:background="@drawable/edit_text_border"
+                        android:inputType="numberDecimal" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_mlarge" />
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/grey_10" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>

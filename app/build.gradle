@@ -53,6 +53,7 @@ dependencies {
     implementation 'com.github.pchmn:MaterialChipsInput:1.0.5'         // material chip
     implementation 'com.hootsuite.android:nachos:1.1.1'                // material chips
     implementation 'com.google.android:flexbox:0.3.2'                  // google flexible box
+    implementation 'com.wdullaer:materialdatetimepicker:3.2.0'         // date & time picker
     implementation 'com.google.firebase:firebase-core:16.0.6'
     implementation 'com.google.firebase:firebase-auth:16.1.0'
     implementation 'com.google.firebase:firebase-storage:16.0.5'
