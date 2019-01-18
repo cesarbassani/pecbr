@@ -124,4 +124,6 @@
     <string name="invoice_address">
         Terry M Smith\n(904) 246-1297\n207 Cherry St, Neptune Beach, FL, 32266
     </string>
+
+    <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
 </resources>

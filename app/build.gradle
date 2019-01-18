@@ -80,6 +80,7 @@ dependencies {
     //Biblioteca Android About Page
     implementation 'com.github.medyo:android-about-page:1.2.4'
 
+//    implementation 'com.google.firebase:firebase-messaging:17.0.0:15.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -42,6 +42,10 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class Tools {
 
+    public static boolean needRequestPermission() {
+        return (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1);
+    }
+
     public static void setSystemBarColor(Activity act) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = act.getWindow();

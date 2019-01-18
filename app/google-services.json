@@ -23,8 +23,12 @@
           }
         },
         {
-          "client_id": "590626578288-n27aad77fsb65oq1k0578fvlsokqfuj6.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "590626578288-nahbhupd8gvc2asttvh4u8knofumadu2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cesarbassani.pecbr",
+            "certificate_hash": "ef9923b705e030572832e80502ae323d1f8bae79"
+          }
         },
         {
           "client_id": "590626578288-n27aad77fsb65oq1k0578fvlsokqfuj6.apps.googleusercontent.com",

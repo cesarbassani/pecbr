@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -101,7 +102,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         this.setListeners();
 
-        this.startDefaultFragment();
+        String menuFragment = getIntent().getStringExtra("menuFragment");
+        abrirFragmentNotification(menuFragment);
     }
 
     private void setListeners() {
@@ -275,5 +277,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         private FirebaseAuth mAuth;
         private LinearLayout navigationHeaderView;
         private CircleImageView avatar;
+    }
+
+    private void abrirFragmentNotification(String menuFragment) {
+
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        // If menuFragment is defined, then this activity was launched with a fragment selection
+        if (menuFragment != null) {
+
+            // Here we can decide what do to -- perhaps load other parameters from the intent extras such as IDs, etc
+            if (menuFragment.equals("CotacoesFragment")) {
+                Fragment fragment = null;
+                Class fragmentClass = CotacoesFragment.class;
+
+                try {
+                    fragment = (Fragment) fragmentClass.newInstance();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                }
+
+//                CotacoesFragment cotacoesFragment = new CotacoesFragment();
+                fragmentTransaction.replace(android.R.id.content, fragment).commit();
+            }
+        } else {
+            // Activity was not launched with a menuFragment selected -- continue as if this activity was opened from a launcher (for example)
+//            ListaAbatesFragment listaAbatesFragment = new ListaAbatesFragment();
+//            fragmentTransaction.replace(android.R.id.content, listaAbatesFragment);
+
+            this.startDefaultFragment();
+        }
     }
 }
