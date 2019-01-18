@@ -2346,6 +2346,9 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
                 listViewBonificacao.setAdapter(adapterBonificacao);
                 setListViewHeightBasedOnChildren(listViewBonificacao);
 
+                if (bonificacao.getMediaLote() != null)
+                    mediaTotalLote -= Double.valueOf(bonificacao.getMediaLote());
+
                 atualizaTotalBonificacao();
 
                 dialog.dismiss();
@@ -2394,16 +2397,16 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
             totalBonificacao = Double.valueOf(String.format(Locale.US, "%.2f", totalBonificacao));
 
             mediaTotalLote = Double.valueOf(String.format(Locale.US, "%.2f", mediaTotalLote));
-            if (mediaTotalLote.equals(0.0)) {
+//            if (mediaTotalLote.equals(0.0)) {
                 pesoCarcacaKilo = (Double.valueOf(this.mViewHolder.pesoCarcaca.getText().toString()));
                 resultadoPesoCarcacaArroba = pesoCarcacaKilo / CALCULOPESOCARCACA;
                 qtdeAnimais = Integer.parseInt(abate.getLote().getQtdeAnimaisLote());
                 pesoTotalDoLote = resultadoPesoCarcacaArroba * qtdeAnimais;
 
                 mediaTotalLote = totalBonificacao / pesoTotalDoLote;
-                mediaTotalBonificacao = valorTotalBonificacao / pesoTotalDoLote;
-                mediaTotalLote = Double.valueOf(String.format(Locale.US, "%.2f", mediaTotalLote));
-            }
+                mediaTotalBonificacao = totalBonificacao / pesoTotalDoLote;
+                mediaTotalLote = Double.valueOf(String.format(Locale.US, "%.2f", mediaTotalBonificacao));
+//            }
             bonificacaoTotal.setText(totalBonificacao + " (+ R$ " + mediaTotalLote + "/@)");
         } else
             bonificacaoTotal.setText("-");
