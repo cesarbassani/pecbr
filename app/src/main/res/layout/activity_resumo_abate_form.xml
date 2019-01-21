@@ -13,814 +13,1255 @@
         android:layout_height="?android:attr/actionBarSize"
         android:background="@color/colorPrimary"
         android:minHeight="?android:attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:contentInsetLeft="0dp"
         app:contentInsetStart="0dp"
-        app:contentInsetStartWithNavigation="0dp" />
+        app:contentInsetStartWithNavigation="0dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/nested_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="18dp">
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/text_nome_tecnico"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:text="Técnico" />
-
-            <android.support.v7.widget.AppCompatSpinner
-                android:id="@+id/spn_nome_tecnico"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_below="@+id/text_nome_tecnico"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/edit_text_border"
-                android:spinnerMode="dialog" />
-
-            <TextView
-                android:id="@+id/text_nome_frigorifico"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/spn_nome_tecnico"
-                android:text="Frigorífico" />
-
-            <android.support.v7.widget.AppCompatSpinner
-                android:id="@+id/spn_nome_frigorifico"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_below="@+id/text_nome_frigorifico"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/edit_text_border"
-                android:spinnerMode="dialog" />
-
-            <TextView
-                android:id="@+id/text_cadastro"
+            <android.support.design.widget.AppBarLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/spn_nome_frigorifico"
-                android:layout_marginBottom="5dp"
-                android:text="@string/cliente"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:background="@color/colorPrimary"
+                android:visibility="visible">
 
-            <TextView
-                android:id="@+id/text_nome_fazendeiro"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/text_cadastro"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:text="Nome" />
 
-            <EditText
-                android:id="@+id/edit_nome_cliente"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/spacing_smlarge"
+                    android:paddingTop="@dimen/spacing_medium"
+                    android:paddingRight="@dimen/spacing_smlarge"
+                    android:paddingBottom="@dimen/spacing_smlarge">
+
+                    <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="R$ 139,98"-->
+                    <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Display2"-->
+                    <!--android:textColor="@android:color/white" />-->
+
+                    <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="Boi Gordo à vista"-->
+                    <!--android:textAppearance="@style/TextAppearance.AppCompat.Small"-->
+                    <!--android:textColor="@android:color/white" />-->
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/spacing_middle" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_invoice_code"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Resumo de Abate"
+                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                                android:textColor="@android:color/white"
+                                android:textStyle="bold" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/txt_data_abate"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1.1"
+                                    android:layout_height="wrap_content"
+                                    android:text="Data: 21/01/2019"
+                                    android:layout_gravity="center"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                                    android:textColor="@android:color/white" />
+
+                                <ImageButton
+                                    android:id="@+id/datePickerAbate"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.1"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:background="@color/transparent"
+                                    android:src="@drawable/ic_data_abate"/>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <!--<RelativeLayout-->
+                            <!--android:id="@+id/layout_bt_nova_cotacao"-->
+                            <!--android:layout_width="@dimen/spacing_xmlarge"-->
+                            <!--android:layout_height="@dimen/spacing_xmlarge">-->
+
+                            <!--<ImageView-->
+                                <!--android:layout_width="match_parent"-->
+                                <!--android:layout_height="match_parent"-->
+                                <!--android:src="@drawable/shape_circle"-->
+                                <!--android:tint="@android:color/white" />-->
+
+                            <!--<ImageButton-->
+                                <!--android:id="@+id/bt_gerar_pdf"-->
+                                <!--android:layout_width="match_parent"-->
+                                <!--android:layout_height="match_parent"-->
+                                <!--android:background="@android:color/transparent"-->
+                                <!--android:tint="@color/colorPrimary"-->
+                                <!--app:srcCompat="@drawable/ic_description" />-->
+
+                        <!--</RelativeLayout>-->
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </android.support.design.widget.AppBarLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_below="@+id/text_nome_fazendeiro"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/edit_text_border"
-                android:inputType="text"
-                android:paddingStart="10dp"
-                android:paddingLeft="10dp"
-                android:textSize="18sp" />
-
-            <LinearLayout
-                android:id="@+id/layout_text_fazenda_qtde"
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/edit_nome_cliente"
-                android:orientation="horizontal">
+                android:padding="18dp">
 
                 <TextView
-                    android:id="@+id/text_fazenda"
-                    android:layout_width="0dp"
+                    android:id="@+id/text_nome_tecnico"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:text="Propriedade" />
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:text="Técnico" />
 
-                <TextView
-                    android:id="@+id/text_quantidade"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.95"
-                    android:text="Qtde" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_fazenda_qtde"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/layout_text_fazenda_qtde"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/edit_fazenda"
-                    android:layout_width="0dp"
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/spn_nome_tecnico"
+                    android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="3"
+                    android:layout_below="@+id/text_nome_tecnico"
+                    android:layout_marginBottom="10dp"
                     android:background="@drawable/edit_text_border"
-                    android:inputType="text" />
-
-                <EditText
-                    android:id="@+id/edit_quantidade_animais"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_alignTop="@+id/edit_fazenda"
-                    android:layout_weight="1"
-                    android:background="@drawable/edit_text_border"
-                    android:gravity="center"
-                    android:inputType="number" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_categoria_titulo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/layout_fazenda_qtde"
-                android:orientation="horizontal">
+                    android:spinnerMode="dialog" />
 
                 <TextView
-                    android:id="@+id/text_categoria"
-                    android:layout_width="100dp"
+                    android:id="@+id/text_nome_frigorifico"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/layout_fazenda_qtde"
-                    android:layout_marginTop="10dp"
+                    android:layout_below="@+id/spn_nome_tecnico"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:text="Frigorífico" />
+
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/spn_nome_frigorifico"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/text_nome_frigorifico"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/edit_text_border"
+                    android:spinnerMode="dialog" />
+
+                <TextView
+                    android:id="@+id/text_cadastro"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/spn_nome_frigorifico"
                     android:layout_marginBottom="5dp"
-                    android:text="Categoria"
+                    android:text="@string/cliente"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <Button
-                    android:id="@+id/btn_dialog_categorias"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/buttonshape"
-                    android:text="+"
-                    android:textColor="#FFFFFF"
-                    android:textSize="16sp" />
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/text_nome_fazendeiro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_cadastro"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:text="Nome" />
 
-            <LinearLayout
-                android:id="@+id/layout_categoria"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/layout_categoria_titulo"
-                android:orientation="vertical">
+                <EditText
+                    android:id="@+id/edit_nome_cliente"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/text_nome_fazendeiro"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/edit_text_border"
+                    android:inputType="text"
+                    android:paddingStart="10dp"
+                    android:paddingLeft="10dp"
+                    android:textSize="18sp" />
 
                 <LinearLayout
+                    android:id="@+id/layout_text_fazenda_qtde"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/edit_nome_cliente"
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/text_fazenda"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Categoria" />
+                        android:layout_weight="3"
+                        android:text="Propriedade" />
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="  :  " />
-
-                    <TextView
-                        android:id="@+id/tv_categoria"
+                        android:id="@+id/text_quantidade"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2.5" />
-
+                        android:layout_weight="0.95"
+                        android:text="Qtde" />
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/spacing_large" />
-
                 <LinearLayout
+                    android:id="@+id/layout_fazenda_qtde"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/layout_text_fazenda_qtde"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/edit_fazenda"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="3"
+                        android:background="@drawable/edit_text_border"
+                        android:inputType="text" />
+
+                    <EditText
+                        android:id="@+id/edit_quantidade_animais"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_alignTop="@+id/edit_fazenda"
+                        android:layout_weight="1"
+                        android:background="@drawable/edit_text_border"
+                        android:gravity="center"
+                        android:inputType="number" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_categoria_titulo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/layout_fazenda_qtde"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="0dp"
+                        android:id="@+id/text_categoria"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Racial" />
+                        android:layout_below="@+id/layout_fazenda_qtde"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="Categoria"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="  :  " />
+                    <Button
+                        android:id="@+id/btn_dialog_categorias"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/buttonshape"
+                        android:text="+"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp" />
+                </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/tv_racial"
-                        android:layout_width="0dp"
+                <LinearLayout
+                    android:id="@+id/layout_categoria"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/layout_categoria_titulo"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2.5" />
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Categoria" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="  :  " />
+
+                        <TextView
+                            android:id="@+id/tv_categoria"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2.5" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/spacing_large" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Racial" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="  :  " />
+
+                        <TextView
+                            android:id="@+id/tv_racial"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2.5" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/spacing_large" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_bz"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Bezerros"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:id="@+id/layout_bz_grande"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.8"
+                                android:text="Grande" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="  :  " />
+
+                            <TextView
+                                android:id="@+id/tv_bezerros_grande"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:text="0" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_bz_medio"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.8"
+                                android:text="Médio" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="  :  " />
+
+                            <TextView
+                                android:id="@+id/tv_bezerros_medio"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:text="0" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_bz_pequeno"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.8"
+                                android:text="Pequeno" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="  :  " />
+
+                            <TextView
+                                android:id="@+id/tv_bezerros_pequeno"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:text="0" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/spacing_large" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Rendimento estimado:"
+                            android:textColor="@color/colorTextAbsent"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txt_rendimento_estimado"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.9"
+                            android:text="-"
+                            android:textColor="@color/colorTextAbsent"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/spacing_large" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/grey_10" />
 
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/spacing_large" />
+                <!--<LinearLayout-->
+                <!--android:id="@+id/layout_sistema_de_terminacao"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/layout_categoria"-->
+                <!--android:orientation="vertical">-->
 
-                <LinearLayout
-                    android:id="@+id/layout_bz"
+                <!--<TextView-->
+                <!--android:id="@+id/text_sistema_de_terminacao"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/layout_categoria"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:text="Sistema de Terminação"-->
+                <!--android:textSize="16sp"-->
+                <!--android:textStyle="bold" />-->
+
+                <!--<CheckBox-->
+                <!--android:id="@+id/check_pasto"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/pasto"-->
+                <!--android:textSize="16sp" />-->
+
+                <!--<android.support.v7.widget.AppCompatSpinner-->
+                <!--android:id="@+id/spn_pasto"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="40dp"-->
+                <!--android:background="@drawable/edit_text_border"-->
+                <!--android:spinnerMode="dialog" />-->
+
+                <!--</LinearLayout>-->
+
+                <!--<LinearLayout-->
+                <!--android:id="@+id/layout_terminacao"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/layout_categoria"-->
+                <!--android:orientation="vertical">-->
+
+                <!--<TextView-->
+                <!--android:id="@+id/text_sistema_de_terminacao"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/layout_categoria"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:text="Sistema de Terminação"-->
+                <!--android:textSize="16sp"-->
+                <!--android:textStyle="bold" />-->
+
+                <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="50dp"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:minHeight="?android:attr/actionBarSize"-->
+                <!--android:orientation="horizontal">-->
+
+                <!--<View-->
+                <!--android:layout_width="@dimen/spacing_large"-->
+                <!--android:layout_height="wrap_content" />-->
+
+                <!--<TextView-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:text="Pasto"-->
+                <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
+                <!--android:textSize="14sp"-->
+                <!--android:textStyle="bold" />-->
+
+                <!--<ImageButton-->
+                <!--android:id="@+id/bt_toggle_input_pasto"-->
+                <!--android:layout_width="?android:attr/actionBarSize"-->
+                <!--android:layout_height="50dp"-->
+                <!--android:background="?android:attr/selectableItemBackground"-->
+                <!--android:tint="@color/grey_80"-->
+                <!--app:srcCompat="@drawable/ic_expand_arrow" />-->
+
+                <!--</LinearLayout>-->
+
+                <!--<LinearLayout-->
+                <!--android:id="@+id/lyt_expand_pasto"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="vertical">-->
+
+                <!--<RadioGroup-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="@dimen/spacing_large"-->
+                <!--android:layout_marginTop="@dimen/spacing_medium">-->
+
+                <!--<android.support.v7.widget.AppCompatRadioButton-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Pastagem convencional" />-->
+
+                <!--<android.support.v7.widget.AppCompatRadioButton-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Integração lavoura/pecuária" />-->
+
+                <!--<android.support.v7.widget.AppCompatRadioButton-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Integração lavoura/pecuária/floresta" />-->
+
+                <!--</RadioGroup>-->
+
+                <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="@dimen/spacing_large"-->
+                <!--android:text="Ração/Dieta"-->
+                <!--android:textStyle="bold" />-->
+
+                <!--<android.support.v7.widget.AppCompatSpinner-->
+                <!--android:id="@+id/spn_pasto_racao"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="40dp"-->
+                <!--android:spinnerMode="dialog" />-->
+
+                <!--<CheckBox-->
+                <!--android:id="@+id/check_semi_confinamento"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Semi-confinamento"-->
+                <!--android:textSize="16sp" />-->
+
+
+                <!--<android.support.v7.widget.AppCompatSpinner-->
+                <!--android:id="@+id/spn_semi_confinamento"-->
+                <!--android:layout_width="200dp"-->
+                <!--android:layout_height="40dp"-->
+                <!--android:spinnerMode="dialog" />-->
+
+                <!--</LinearLayout>-->
+
+                <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="50dp"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:minHeight="?android:attr/actionBarSize"-->
+                <!--android:orientation="horizontal">-->
+
+                <!--<View-->
+                <!--android:layout_width="@dimen/spacing_large"-->
+                <!--android:layout_height="wrap_content" />-->
+
+                <!--<TextView-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:text="@string/confinamento"-->
+                <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
+                <!--android:textSize="14sp"-->
+                <!--android:textStyle="bold" />-->
+
+                <!--<ImageButton-->
+                <!--android:id="@+id/bt_toggle_input_confinamento"-->
+                <!--android:layout_width="?android:attr/actionBarSize"-->
+                <!--android:layout_height="50dp"-->
+                <!--android:background="?android:attr/selectableItemBackground"-->
+                <!--android:tint="@color/grey_80"-->
+                <!--app:srcCompat="@drawable/ic_expand_arrow" />-->
+
+                <!--</LinearLayout>-->
+
+                <!--<LinearLayout-->
+                <!--android:id="@+id/lyt_expand_confinamento"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="vertical">-->
+
+                <!--<RadioGroup-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="@dimen/spacing_large"-->
+                <!--android:layout_marginTop="@dimen/spacing_medium">-->
+
+                <!--<android.support.v7.widget.AppCompatRadioButton-->
+                <!--android:id="@+id/check_grao_inteiro"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Grão Inteiro" />-->
+
+                <!--<android.support.v7.widget.AppCompatSpinner-->
+                <!--android:id="@+id/spn_grao_inteiro"-->
+                <!--android:layout_width="200dp"-->
+                <!--android:layout_height="40dp"-->
+                <!--android:spinnerMode="dialog" />-->
+
+                <!--<android.support.v7.widget.AppCompatRadioButton-->
+                <!--android:id="@+id/check_convencional"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Convencional" />-->
+
+                <!--<android.support.v7.widget.AppCompatSpinner-->
+                <!--android:id="@+id/spn_convencional"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="45dp"-->
+                <!--android:spinnerMode="dialog" />-->
+
+                <!--</RadioGroup>-->
+
+                <!--</LinearLayout>-->
+
+                <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Aditivo"-->
+                <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
+                <!--android:textSize="14sp"-->
+                <!--android:textStyle="bold" />-->
+
+                <!--<RadioGroup-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="@dimen/spacing_large"-->
+                <!--android:layout_marginTop="@dimen/spacing_medium">-->
+
+                <!--<android.support.v7.widget.AppCompatRadioButton-->
+                <!--android:id="@+id/check_aditivo_sim"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Sim" />-->
+
+                <!--<android.support.v7.widget.AppCompatRadioButton-->
+                <!--android:id="@+id/check_aditivo_nao"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Não" />-->
+                <!--</RadioGroup>-->
+
+                <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:background="@color/grey_10" />-->
+
+                <!--</LinearLayout>-->
+
+                <TextView
+                    android:id="@+id/text_dados_rendimento"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/layout_categoria"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/dados_do_rendimento"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <RelativeLayout
+                    android:id="@+id/layout_rendimento_pesos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_dados_rendimento"
                     android:orientation="vertical">
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:id="@+id/text_peso_fazenda"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Bezerros"
-                        android:textStyle="bold" />
+                        android:text="@string/peso_fazenda" />
 
-                    <LinearLayout
-                        android:id="@+id/layout_bz_grande"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                    <EditText
+                        android:id="@+id/edit_peso_fazenda"
+                        android:layout_width="100dp"
+                        android:layout_height="35dp"
+                        android:layout_below="@+id/text_peso_fazenda"
                         android:layout_marginBottom="5dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.8"
-                            android:text="Grande" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="  :  " />
-
-                        <TextView
-                            android:id="@+id/tv_bezerros_grande"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2"
-                            android:text="0" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layout_bz_medio"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.8"
-                            android:text="Médio" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="  :  " />
-
-                        <TextView
-                            android:id="@+id/tv_bezerros_medio"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2"
-                            android:text="0" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layout_bz_pequeno"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.8"
-                            android:text="Pequeno" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="  :  " />
-
-                        <TextView
-                            android:id="@+id/tv_bezerros_pequeno"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2"
-                            android:text="0" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/spacing_large" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                        android:background="@drawable/edit_text_border"
+                        android:inputType="numberDecimal"
+                        android:paddingStart="10dp"
+                        android:paddingLeft="10dp"
+                        android:textAlignment="center"
+                        android:textSize="18sp" />
 
                     <TextView
-                        android:layout_width="0dp"
+                        android:id="@+id/text_arroba_carcaca"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Rendimento estimado:"
-                        android:textColor="@color/colorTextAbsent"
+                        android:layout_below="@+id/text_peso_carcaca"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toEndOf="@+id/edit_peso_carcaca"
+                        android:paddingTop="6dp"
+                        android:text=" @ "
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/txt_rendimento_estimado"
+                        android:id="@+id/text_peso_carcaca"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/edit_peso_fazenda"
+                        android:text="@string/peso_carcaca" />
+
+                    <EditText
+                        android:id="@+id/edit_peso_carcaca"
+                        android:layout_width="100dp"
+                        android:layout_height="35dp"
+                        android:layout_below="@+id/text_peso_carcaca"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/edit_text_border"
+                        android:inputType="numberDecimal"
+                        android:paddingStart="10dp"
+                        android:paddingLeft="10dp"
+                        android:textAlignment="center"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/text_arroba_fazenda"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/text_peso_fazenda"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toEndOf="@+id/edit_peso_carcaca"
+                        android:paddingTop="6dp"
+                        android:text=" @ "
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_rendimento_carcaca"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/text_peso_fazenda"
+                        android:layout_marginLeft="30dp"
+                        android:layout_toEndOf="@+id/text_arroba_fazenda"
+                        android:paddingTop="5dp"
+                        android:text="@string/rendimento_carcaca"
+                        android:textAlignment="center" />
+
+                    <EditText
+                        android:id="@+id/edit_rendimento_carcaca"
+                        android:layout_width="100dp"
+                        android:layout_height="35dp"
+                        android:layout_below="@+id/text_rendimento_carcaca"
+                        android:layout_marginLeft="40dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_toEndOf="@+id/text_arroba_fazenda"
+                        android:background="@drawable/edit_text_border"
+                        android:focusable="false"
+                        android:inputType="numberDecimal"
+                        android:text="%"
+                        android:textAlignment="center"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btn_rendimento_carcaca"
+                        android:layout_width="100dp"
+                        android:layout_height="35dp"
+                        android:layout_below="@+id/edit_rendimento_carcaca"
+                        android:layout_alignStart="@+id/edit_rendimento_carcaca"
+                        android:layout_marginTop="10dp"
+                        android:background="#C09E56"
+                        android:text="Calcular"
+                        android:textColor="#FFFFFF" />
+
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/barra_rendimento"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/layout_rendimento_pesos"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@color/grey_10" />
+
+                <LinearLayout
+                    android:id="@+id/layout_rendimento_maturidade"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/barra_rendimento"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.6"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/text_dados_acabamento"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="5dp"
+                            android:text="@string/dados_do_acabamento"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/text_acabamento_titulo"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/text_dados_acabamento"
+                                android:layout_weight="0.9"
+                                android:text="@string/acabamento" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="10dp"
+                                android:layout_weight="0.4"
+                                android:text="Qtde"
+                                android:textAlignment="center" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.5"
+                                android:text="% do lote"
+                                android:textAlignment="center" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_acabamento_dados_acabamento"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/layout_rendimento_maturidade"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/layout_acabamento"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.6"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:orientation="horizontal">
+
+                            <CheckBox
+                                android:id="@+id/check_ausente"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.9"
+                                android:text="@string/ausente"
+                                android:textSize="16sp" />
+
+                            <EditText
+                                android:id="@+id/edit_quantidade_ausente"
+                                android:layout_width="0dp"
+                                android:layout_height="35dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_weight="0.4"
+                                android:background="@drawable/edit_text_border"
+                                android:enabled="false"
+                                android:gravity="center"
+                                android:inputType="number"
+                                android:text="0" />
+
+                            <EditText
+                                android:id="@+id/edit_percentual_ausente"
+                                android:layout_width="0dp"
+                                android:layout_height="35dp"
+                                android:layout_weight="0.5"
+                                android:background="@drawable/edit_text_border"
+                                android:focusable="false"
+                                android:gravity="center"
+                                android:inputType="number"
+                                android:text="%"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:orientation="horizontal">
+
+                            <CheckBox
+                                android:id="@+id/check_escasso_menos"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/check_ausente"
+                                android:layout_weight="0.9"
+                                android:text="@string/escasso_menos"
+                                android:textSize="16sp" />
+
+                            <EditText
+                                android:id="@+id/edit_quantidade_escasso_menos"
+                                android:layout_width="0dp"
+                                android:layout_height="35dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_weight="0.4"
+                                android:background="@drawable/edit_text_border"
+                                android:enabled="false"
+                                android:gravity="center"
+                                android:inputType="number"
+                                android:text="0" />
+
+                            <EditText
+                                android:id="@+id/edit_percentual_escasso_menos"
+                                android:layout_width="0dp"
+                                android:layout_height="35dp"
+                                android:layout_weight="0.5"
+                                android:background="@drawable/edit_text_border"
+                                android:focusable="false"
+                                android:gravity="center"
+                                android:inputType="number"
+                                android:text="%"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:orientation="horizontal">
+
+                            <CheckBox
+                                android:id="@+id/check_escasso"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/check_escasso_menos"
+                                android:layout_weight="0.9"
+                                android:text="@string/escasso"
+                                android:textSize="16sp" />
+
+                            <EditText
+                                android:id="@+id/edit_quantidade_escasso"
+                                android:layout_width="0dp"
+                                android:layout_height="35dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_weight="0.4"
+                                android:background="@drawable/edit_text_border"
+                                android:enabled="false"
+                                android:gravity="center"
+                                android:inputType="number"
+                                android:text="0" />
+
+                            <EditText
+                                android:id="@+id/edit_percentual_escasso"
+                                android:layout_width="0dp"
+                                android:layout_height="35dp"
+                                android:layout_weight="0.5"
+                                android:background="@drawable/edit_text_border"
+                                android:focusable="false"
+                                android:gravity="center"
+                                android:inputType="number"
+                                android:text="%"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:orientation="horizontal">
+
+                            <CheckBox
+                                android:id="@+id/check_mediano"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/check_escasso"
+                                android:layout_weight="0.9"
+                                android:text="@string/mediano"
+                                android:textSize="16sp" />
+
+                            <EditText
+                                android:id="@+id/edit_quantidade_mediano"
+                                android:layout_width="0dp"
+                                android:layout_height="35dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_weight="0.4"
+                                android:background="@drawable/edit_text_border"
+                                android:enabled="false"
+                                android:gravity="center"
+                                android:inputType="number"
+                                android:text="0" />
+
+                            <EditText
+                                android:id="@+id/edit_percentual_mediano"
+                                android:layout_width="0dp"
+                                android:layout_height="35dp"
+                                android:layout_weight="0.5"
+                                android:background="@drawable/edit_text_border"
+                                android:focusable="false"
+                                android:gravity="center"
+                                android:inputType="number"
+                                android:text="%"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:orientation="horizontal">
+
+                            <CheckBox
+                                android:id="@+id/check_uniforme"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/check_mediano"
+                                android:layout_weight="0.9"
+                                android:text="@string/uniforme"
+                                android:textSize="16sp" />
+
+                            <EditText
+                                android:id="@+id/edit_quantidade_uniforme"
+                                android:layout_width="0dp"
+                                android:layout_height="35dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_weight="0.4"
+                                android:background="@drawable/edit_text_border"
+                                android:enabled="false"
+                                android:gravity="center"
+                                android:inputType="number"
+                                android:text="0" />
+
+                            <EditText
+                                android:id="@+id/edit_percentual_uniforme"
+                                android:layout_width="0dp"
+                                android:layout_height="35dp"
+                                android:layout_weight="0.5"
+                                android:background="@drawable/edit_text_border"
+                                android:focusable="false"
+                                android:gravity="center"
+                                android:inputType="number"
+                                android:text="%"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:orientation="horizontal">
+
+                            <CheckBox
+                                android:id="@+id/check_excessivo"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/check_uniforme"
+                                android:layout_weight="0.9"
+                                android:text="@string/excessivo"
+                                android:textSize="16sp" />
+
+                            <EditText
+                                android:id="@+id/edit_quantidade_excessivo"
+                                android:layout_width="0dp"
+                                android:layout_height="35dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_weight="0.4"
+                                android:background="@drawable/edit_text_border"
+                                android:enabled="false"
+                                android:gravity="center"
+                                android:inputType="number"
+                                android:text="0" />
+
+                            <EditText
+                                android:id="@+id/edit_percentual_excessivo"
+                                android:layout_width="0dp"
+                                android:layout_height="35dp"
+                                android:layout_weight="0.5"
+                                android:background="@drawable/edit_text_border"
+                                android:focusable="false"
+                                android:gravity="center"
+                                android:inputType="number"
+                                android:text="%"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp">
+
+                            <Button
+                                android:id="@+id/btn_dados_acabamento"
+                                android:layout_width="165dp"
+                                android:layout_height="35dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginTop="10dp"
+                                android:background="#C09E56"
+                                android:text="Calcular"
+                                android:textColor="#FFFFFF" />
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/barra_dados_rendimento"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/layout_acabamento_dados_acabamento"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@color/grey_10" />
+
+                <TextView
+                    android:id="@+id/text_maturidade"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/barra_dados_rendimento"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/maturidade"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/subtitulo_maturidade"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_maturidade"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/text_zero_dentes"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.9"
-                        android:text="-"
-                        android:textColor="@color/colorTextAbsent"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/spacing_large" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/grey_10" />
-
-            </LinearLayout>
-
-            <!--<LinearLayout-->
-            <!--android:id="@+id/layout_sistema_de_terminacao"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_below="@+id/layout_categoria"-->
-            <!--android:orientation="vertical">-->
-
-            <!--<TextView-->
-            <!--android:id="@+id/text_sistema_de_terminacao"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_below="@+id/layout_categoria"-->
-            <!--android:layout_marginBottom="5dp"-->
-            <!--android:layout_marginTop="10dp"-->
-            <!--android:text="Sistema de Terminação"-->
-            <!--android:textSize="16sp"-->
-            <!--android:textStyle="bold" />-->
-
-            <!--<CheckBox-->
-            <!--android:id="@+id/check_pasto"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="@string/pasto"-->
-            <!--android:textSize="16sp" />-->
-
-            <!--<android.support.v7.widget.AppCompatSpinner-->
-            <!--android:id="@+id/spn_pasto"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="40dp"-->
-            <!--android:background="@drawable/edit_text_border"-->
-            <!--android:spinnerMode="dialog" />-->
-
-            <!--</LinearLayout>-->
-
-            <!--<LinearLayout-->
-            <!--android:id="@+id/layout_terminacao"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_below="@+id/layout_categoria"-->
-            <!--android:orientation="vertical">-->
-
-            <!--<TextView-->
-            <!--android:id="@+id/text_sistema_de_terminacao"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_below="@+id/layout_categoria"-->
-            <!--android:layout_marginBottom="5dp"-->
-            <!--android:layout_marginTop="10dp"-->
-            <!--android:text="Sistema de Terminação"-->
-            <!--android:textSize="16sp"-->
-            <!--android:textStyle="bold" />-->
-
-            <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="50dp"-->
-            <!--android:gravity="center_vertical"-->
-            <!--android:minHeight="?android:attr/actionBarSize"-->
-            <!--android:orientation="horizontal">-->
-
-            <!--<View-->
-            <!--android:layout_width="@dimen/spacing_large"-->
-            <!--android:layout_height="wrap_content" />-->
-
-            <!--<TextView-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="1"-->
-            <!--android:text="Pasto"-->
-            <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
-            <!--android:textSize="14sp"-->
-            <!--android:textStyle="bold" />-->
-
-            <!--<ImageButton-->
-            <!--android:id="@+id/bt_toggle_input_pasto"-->
-            <!--android:layout_width="?android:attr/actionBarSize"-->
-            <!--android:layout_height="50dp"-->
-            <!--android:background="?android:attr/selectableItemBackground"-->
-            <!--android:tint="@color/grey_80"-->
-            <!--app:srcCompat="@drawable/ic_expand_arrow" />-->
-
-            <!--</LinearLayout>-->
-
-            <!--<LinearLayout-->
-            <!--android:id="@+id/lyt_expand_pasto"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="vertical">-->
-
-            <!--<RadioGroup-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_margin="@dimen/spacing_large"-->
-            <!--android:layout_marginTop="@dimen/spacing_medium">-->
-
-            <!--<android.support.v7.widget.AppCompatRadioButton-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Pastagem convencional" />-->
-
-            <!--<android.support.v7.widget.AppCompatRadioButton-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Integração lavoura/pecuária" />-->
-
-            <!--<android.support.v7.widget.AppCompatRadioButton-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Integração lavoura/pecuária/floresta" />-->
-
-            <!--</RadioGroup>-->
-
-            <!--<TextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_margin="@dimen/spacing_large"-->
-            <!--android:text="Ração/Dieta"-->
-            <!--android:textStyle="bold" />-->
-
-            <!--<android.support.v7.widget.AppCompatSpinner-->
-            <!--android:id="@+id/spn_pasto_racao"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="40dp"-->
-            <!--android:spinnerMode="dialog" />-->
-
-            <!--<CheckBox-->
-            <!--android:id="@+id/check_semi_confinamento"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Semi-confinamento"-->
-            <!--android:textSize="16sp" />-->
-
-
-            <!--<android.support.v7.widget.AppCompatSpinner-->
-            <!--android:id="@+id/spn_semi_confinamento"-->
-            <!--android:layout_width="200dp"-->
-            <!--android:layout_height="40dp"-->
-            <!--android:spinnerMode="dialog" />-->
-
-            <!--</LinearLayout>-->
-
-            <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="50dp"-->
-            <!--android:gravity="center_vertical"-->
-            <!--android:minHeight="?android:attr/actionBarSize"-->
-            <!--android:orientation="horizontal">-->
-
-            <!--<View-->
-            <!--android:layout_width="@dimen/spacing_large"-->
-            <!--android:layout_height="wrap_content" />-->
-
-            <!--<TextView-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="1"-->
-            <!--android:text="@string/confinamento"-->
-            <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
-            <!--android:textSize="14sp"-->
-            <!--android:textStyle="bold" />-->
-
-            <!--<ImageButton-->
-            <!--android:id="@+id/bt_toggle_input_confinamento"-->
-            <!--android:layout_width="?android:attr/actionBarSize"-->
-            <!--android:layout_height="50dp"-->
-            <!--android:background="?android:attr/selectableItemBackground"-->
-            <!--android:tint="@color/grey_80"-->
-            <!--app:srcCompat="@drawable/ic_expand_arrow" />-->
-
-            <!--</LinearLayout>-->
-
-            <!--<LinearLayout-->
-            <!--android:id="@+id/lyt_expand_confinamento"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="vertical">-->
-
-            <!--<RadioGroup-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_margin="@dimen/spacing_large"-->
-            <!--android:layout_marginTop="@dimen/spacing_medium">-->
-
-            <!--<android.support.v7.widget.AppCompatRadioButton-->
-            <!--android:id="@+id/check_grao_inteiro"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Grão Inteiro" />-->
-
-            <!--<android.support.v7.widget.AppCompatSpinner-->
-            <!--android:id="@+id/spn_grao_inteiro"-->
-            <!--android:layout_width="200dp"-->
-            <!--android:layout_height="40dp"-->
-            <!--android:spinnerMode="dialog" />-->
-
-            <!--<android.support.v7.widget.AppCompatRadioButton-->
-            <!--android:id="@+id/check_convencional"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Convencional" />-->
-
-            <!--<android.support.v7.widget.AppCompatSpinner-->
-            <!--android:id="@+id/spn_convencional"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="45dp"-->
-            <!--android:spinnerMode="dialog" />-->
-
-            <!--</RadioGroup>-->
-
-            <!--</LinearLayout>-->
-
-            <!--<TextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Aditivo"-->
-            <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
-            <!--android:textSize="14sp"-->
-            <!--android:textStyle="bold" />-->
-
-            <!--<RadioGroup-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_margin="@dimen/spacing_large"-->
-            <!--android:layout_marginTop="@dimen/spacing_medium">-->
-
-            <!--<android.support.v7.widget.AppCompatRadioButton-->
-            <!--android:id="@+id/check_aditivo_sim"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Sim" />-->
-
-            <!--<android.support.v7.widget.AppCompatRadioButton-->
-            <!--android:id="@+id/check_aditivo_nao"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Não" />-->
-            <!--</RadioGroup>-->
-
-            <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="1dp"-->
-            <!--android:background="@color/grey_10" />-->
-
-            <!--</LinearLayout>-->
-
-            <TextView
-                android:id="@+id/text_dados_rendimento"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/layout_categoria"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="5dp"
-                android:text="@string/dados_do_rendimento"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <RelativeLayout
-                android:id="@+id/layout_rendimento_pesos"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/text_dados_rendimento"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/text_peso_fazenda"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/peso_fazenda" />
-
-                <EditText
-                    android:id="@+id/edit_peso_fazenda"
-                    android:layout_width="100dp"
-                    android:layout_height="35dp"
-                    android:layout_below="@+id/text_peso_fazenda"
-                    android:layout_marginBottom="5dp"
-                    android:background="@drawable/edit_text_border"
-                    android:inputType="numberDecimal"
-                    android:paddingStart="10dp"
-                    android:paddingLeft="10dp"
-                    android:textAlignment="center"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/text_arroba_carcaca"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/text_peso_carcaca"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toEndOf="@+id/edit_peso_carcaca"
-                    android:paddingTop="6dp"
-                    android:text=" @ "
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/text_peso_carcaca"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/edit_peso_fazenda"
-                    android:text="@string/peso_carcaca" />
-
-                <EditText
-                    android:id="@+id/edit_peso_carcaca"
-                    android:layout_width="100dp"
-                    android:layout_height="35dp"
-                    android:layout_below="@+id/text_peso_carcaca"
-                    android:layout_marginBottom="5dp"
-                    android:background="@drawable/edit_text_border"
-                    android:inputType="numberDecimal"
-                    android:paddingStart="10dp"
-                    android:paddingLeft="10dp"
-                    android:textAlignment="center"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/text_arroba_fazenda"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/text_peso_fazenda"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toEndOf="@+id/edit_peso_carcaca"
-                    android:paddingTop="6dp"
-                    android:text=" @ "
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/text_rendimento_carcaca"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/text_peso_fazenda"
-                    android:layout_marginLeft="30dp"
-                    android:layout_toEndOf="@+id/text_arroba_fazenda"
-                    android:paddingTop="5dp"
-                    android:text="@string/rendimento_carcaca"
-                    android:textAlignment="center" />
-
-                <EditText
-                    android:id="@+id/edit_rendimento_carcaca"
-                    android:layout_width="100dp"
-                    android:layout_height="35dp"
-                    android:layout_below="@+id/text_rendimento_carcaca"
-                    android:layout_marginLeft="40dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_toEndOf="@+id/text_arroba_fazenda"
-                    android:background="@drawable/edit_text_border"
-                    android:focusable="false"
-                    android:inputType="numberDecimal"
-                    android:text="%"
-                    android:textAlignment="center"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <Button
-                    android:id="@+id/btn_rendimento_carcaca"
-                    android:layout_width="100dp"
-                    android:layout_height="35dp"
-                    android:layout_below="@+id/edit_rendimento_carcaca"
-                    android:layout_alignStart="@+id/edit_rendimento_carcaca"
-                    android:layout_marginTop="10dp"
-                    android:background="#C09E56"
-                    android:text="Calcular"
-                    android:textColor="#FFFFFF" />
-
-            </RelativeLayout>
-
-            <View
-                android:id="@+id/barra_rendimento"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/layout_rendimento_pesos"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp"
-                android:background="@color/grey_10" />
-
-            <LinearLayout
-                android:id="@+id/layout_rendimento_maturidade"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/barra_rendimento"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.6"
-                    android:orientation="vertical">
+                        android:text="@string/zero_dentes" />
 
                     <TextView
-                        android:id="@+id/text_dados_acabamento"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="5dp"
-                        android:text="@string/dados_do_acabamento"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="0.4"
+                        android:text="Qtde"
+                        android:textAlignment="center" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/text_acabamento_titulo"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/text_dados_acabamento"
-                            android:layout_weight="0.9"
-                            android:text="@string/acabamento" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="10dp"
-                            android:layout_weight="0.4"
-                            android:text="Qtde"
-                            android:textAlignment="center" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.5"
-                            android:text="% do lote"
-                            android:textAlignment="center" />
-
-                    </LinearLayout>
+                        android:layout_weight="0.5"
+                        android:text="% do lote"
+                        android:textAlignment="center" />
 
                 </LinearLayout>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_acabamento_dados_acabamento"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/layout_rendimento_maturidade"
-                android:orientation="horizontal">
-
                 <LinearLayout
-                    android:id="@+id/layout_acabamento"
-                    android:layout_width="0dp"
+                    android:id="@+id/layout_zero_dentes"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.6"
+                    android:layout_below="@+id/subtitulo_maturidade"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -830,15 +1271,15 @@
                         android:orientation="horizontal">
 
                         <CheckBox
-                            android:id="@+id/check_ausente"
+                            android:id="@+id/check_0_dentes"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.9"
-                            android:text="@string/ausente"
+                            android:text="@string/zero"
                             android:textSize="16sp" />
 
                         <EditText
-                            android:id="@+id/edit_quantidade_ausente"
+                            android:id="@+id/edit_quantidade_0_dentes"
                             android:layout_width="0dp"
                             android:layout_height="35dp"
                             android:layout_marginRight="10dp"
@@ -850,7 +1291,7 @@
                             android:text="0" />
 
                         <EditText
-                            android:id="@+id/edit_percentual_ausente"
+                            android:id="@+id/edit_percentual_0_dentes"
                             android:layout_width="0dp"
                             android:layout_height="35dp"
                             android:layout_weight="0.5"
@@ -870,16 +1311,16 @@
                         android:orientation="horizontal">
 
                         <CheckBox
-                            android:id="@+id/check_escasso_menos"
+                            android:id="@+id/check_2_dentes"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/check_ausente"
                             android:layout_weight="0.9"
-                            android:text="@string/escasso_menos"
+                            android:text="@string/dois"
                             android:textSize="16sp" />
 
                         <EditText
-                            android:id="@+id/edit_quantidade_escasso_menos"
+                            android:id="@+id/edit_quantidade_2_dentes"
                             android:layout_width="0dp"
                             android:layout_height="35dp"
                             android:layout_marginRight="10dp"
@@ -891,7 +1332,7 @@
                             android:text="0" />
 
                         <EditText
-                            android:id="@+id/edit_percentual_escasso_menos"
+                            android:id="@+id/edit_percentual_2_dentes"
                             android:layout_width="0dp"
                             android:layout_height="35dp"
                             android:layout_weight="0.5"
@@ -911,16 +1352,16 @@
                         android:orientation="horizontal">
 
                         <CheckBox
-                            android:id="@+id/check_escasso"
+                            android:id="@+id/check_4_dentes"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/check_escasso_menos"
                             android:layout_weight="0.9"
-                            android:text="@string/escasso"
+                            android:text="@string/quatro"
                             android:textSize="16sp" />
 
                         <EditText
-                            android:id="@+id/edit_quantidade_escasso"
+                            android:id="@+id/edit_quantidade_4_dentes"
                             android:layout_width="0dp"
                             android:layout_height="35dp"
                             android:layout_marginRight="10dp"
@@ -932,7 +1373,7 @@
                             android:text="0" />
 
                         <EditText
-                            android:id="@+id/edit_percentual_escasso"
+                            android:id="@+id/edit_percentual_4_dentes"
                             android:layout_width="0dp"
                             android:layout_height="35dp"
                             android:layout_weight="0.5"
@@ -952,16 +1393,16 @@
                         android:orientation="horizontal">
 
                         <CheckBox
-                            android:id="@+id/check_mediano"
+                            android:id="@+id/check_6_dentes"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/check_escasso"
                             android:layout_weight="0.9"
-                            android:text="@string/mediano"
+                            android:text="@string/seis"
                             android:textSize="16sp" />
 
                         <EditText
-                            android:id="@+id/edit_quantidade_mediano"
+                            android:id="@+id/edit_quantidade_6_dentes"
                             android:layout_width="0dp"
                             android:layout_height="35dp"
                             android:layout_marginRight="10dp"
@@ -973,7 +1414,7 @@
                             android:text="0" />
 
                         <EditText
-                            android:id="@+id/edit_percentual_mediano"
+                            android:id="@+id/edit_percentual_6_dentes"
                             android:layout_width="0dp"
                             android:layout_height="35dp"
                             android:layout_weight="0.5"
@@ -993,16 +1434,17 @@
                         android:orientation="horizontal">
 
                         <CheckBox
-                            android:id="@+id/check_uniforme"
+                            android:id="@+id/check_8_dentes"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/check_mediano"
                             android:layout_weight="0.9"
-                            android:text="@string/uniforme"
+                            android:text="@string/oito"
                             android:textSize="16sp" />
 
+
                         <EditText
-                            android:id="@+id/edit_quantidade_uniforme"
+                            android:id="@+id/edit_quantidade_8_dentes"
                             android:layout_width="0dp"
                             android:layout_height="35dp"
                             android:layout_marginRight="10dp"
@@ -1014,48 +1456,7 @@
                             android:text="0" />
 
                         <EditText
-                            android:id="@+id/edit_percentual_uniforme"
-                            android:layout_width="0dp"
-                            android:layout_height="35dp"
-                            android:layout_weight="0.5"
-                            android:background="@drawable/edit_text_border"
-                            android:focusable="false"
-                            android:gravity="center"
-                            android:inputType="number"
-                            android:text="%"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:orientation="horizontal">
-
-                        <CheckBox
-                            android:id="@+id/check_excessivo"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/check_uniforme"
-                            android:layout_weight="0.9"
-                            android:text="@string/excessivo"
-                            android:textSize="16sp" />
-
-                        <EditText
-                            android:id="@+id/edit_quantidade_excessivo"
-                            android:layout_width="0dp"
-                            android:layout_height="35dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_weight="0.4"
-                            android:background="@drawable/edit_text_border"
-                            android:enabled="false"
-                            android:gravity="center"
-                            android:inputType="number"
-                            android:text="0" />
-
-                        <EditText
-                            android:id="@+id/edit_percentual_excessivo"
+                            android:id="@+id/edit_percentual_8_dentes"
                             android:layout_width="0dp"
                             android:layout_height="35dp"
                             android:layout_weight="0.5"
@@ -1074,7 +1475,7 @@
                         android:layout_marginBottom="10dp">
 
                         <Button
-                            android:id="@+id/btn_dados_acabamento"
+                            android:id="@+id/btn_maturidade"
                             android:layout_width="165dp"
                             android:layout_height="35dp"
                             android:layout_alignParentEnd="true"
@@ -1085,870 +1486,588 @@
 
                     </RelativeLayout>
 
-                </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/spacing_large" />
 
-            </LinearLayout>
-
-            <View
-                android:id="@+id/barra_dados_rendimento"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/layout_acabamento_dados_acabamento"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp"
-                android:background="@color/grey_10" />
-
-            <TextView
-                android:id="@+id/text_maturidade"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/barra_dados_rendimento"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="5dp"
-                android:text="@string/maturidade"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:id="@+id/subtitulo_maturidade"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/text_maturidade"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/text_zero_dentes"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.9"
-                    android:text="@string/zero_dentes" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="0.4"
-                    android:text="Qtde"
-                    android:textAlignment="center" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:text="% do lote"
-                    android:textAlignment="center" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_zero_dentes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/subtitulo_maturidade"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:orientation="horizontal">
-
-                    <CheckBox
-                        android:id="@+id/check_0_dentes"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.9"
-                        android:text="@string/zero"
-                        android:textSize="16sp" />
-
-                    <EditText
-                        android:id="@+id/edit_quantidade_0_dentes"
-                        android:layout_width="0dp"
-                        android:layout_height="35dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_weight="0.4"
-                        android:background="@drawable/edit_text_border"
-                        android:enabled="false"
-                        android:gravity="center"
-                        android:inputType="number"
-                        android:text="0" />
-
-                    <EditText
-                        android:id="@+id/edit_percentual_0_dentes"
-                        android:layout_width="0dp"
-                        android:layout_height="35dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/edit_text_border"
-                        android:focusable="false"
-                        android:gravity="center"
-                        android:inputType="number"
-                        android:text="%"
-                        android:textStyle="bold" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/grey_10" />
 
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/layout_bonificacao_titulo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
+                    android:layout_below="@+id/layout_zero_dentes"
                     android:orientation="horizontal">
 
-                    <CheckBox
-                        android:id="@+id/check_2_dentes"
-                        android:layout_width="0dp"
+                    <TextView
+                        android:id="@+id/text_bonificacao_titulo"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/check_ausente"
-                        android:layout_weight="0.9"
-                        android:text="@string/dois"
-                        android:textSize="16sp" />
-
-                    <EditText
-                        android:id="@+id/edit_quantidade_2_dentes"
-                        android:layout_width="0dp"
-                        android:layout_height="35dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_weight="0.4"
-                        android:background="@drawable/edit_text_border"
-                        android:enabled="false"
-                        android:gravity="center"
-                        android:inputType="number"
-                        android:text="0" />
-
-                    <EditText
-                        android:id="@+id/edit_percentual_2_dentes"
-                        android:layout_width="0dp"
-                        android:layout_height="35dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/edit_text_border"
-                        android:focusable="false"
-                        android:gravity="center"
-                        android:inputType="number"
-                        android:text="%"
+                        android:layout_below="@+id/layout_fazenda_qtde"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="Bonificação"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:orientation="horizontal">
-
-                    <CheckBox
-                        android:id="@+id/check_4_dentes"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/check_escasso_menos"
-                        android:layout_weight="0.9"
-                        android:text="@string/quatro"
-                        android:textSize="16sp" />
-
-                    <EditText
-                        android:id="@+id/edit_quantidade_4_dentes"
-                        android:layout_width="0dp"
-                        android:layout_height="35dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_weight="0.4"
-                        android:background="@drawable/edit_text_border"
-                        android:enabled="false"
-                        android:gravity="center"
-                        android:inputType="number"
-                        android:text="0" />
-
-                    <EditText
-                        android:id="@+id/edit_percentual_4_dentes"
-                        android:layout_width="0dp"
-                        android:layout_height="35dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/edit_text_border"
-                        android:focusable="false"
-                        android:gravity="center"
-                        android:inputType="number"
-                        android:text="%"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:orientation="horizontal">
-
-                    <CheckBox
-                        android:id="@+id/check_6_dentes"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/check_escasso"
-                        android:layout_weight="0.9"
-                        android:text="@string/seis"
-                        android:textSize="16sp" />
-
-                    <EditText
-                        android:id="@+id/edit_quantidade_6_dentes"
-                        android:layout_width="0dp"
-                        android:layout_height="35dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_weight="0.4"
-                        android:background="@drawable/edit_text_border"
-                        android:enabled="false"
-                        android:gravity="center"
-                        android:inputType="number"
-                        android:text="0" />
-
-                    <EditText
-                        android:id="@+id/edit_percentual_6_dentes"
-                        android:layout_width="0dp"
-                        android:layout_height="35dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/edit_text_border"
-                        android:focusable="false"
-                        android:gravity="center"
-                        android:inputType="number"
-                        android:text="%"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:orientation="horizontal">
-
-                    <CheckBox
-                        android:id="@+id/check_8_dentes"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/check_mediano"
-                        android:layout_weight="0.9"
-                        android:text="@string/oito"
-                        android:textSize="16sp" />
-
-
-                    <EditText
-                        android:id="@+id/edit_quantidade_8_dentes"
-                        android:layout_width="0dp"
-                        android:layout_height="35dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_weight="0.4"
-                        android:background="@drawable/edit_text_border"
-                        android:enabled="false"
-                        android:gravity="center"
-                        android:inputType="number"
-                        android:text="0" />
-
-                    <EditText
-                        android:id="@+id/edit_percentual_8_dentes"
-                        android:layout_width="0dp"
-                        android:layout_height="35dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/edit_text_border"
-                        android:focusable="false"
-                        android:gravity="center"
-                        android:inputType="number"
-                        android:text="%"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp">
 
                     <Button
-                        android:id="@+id/btn_maturidade"
-                        android:layout_width="165dp"
-                        android:layout_height="35dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginTop="10dp"
-                        android:background="#C09E56"
-                        android:text="Calcular"
-                        android:textColor="#FFFFFF" />
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/spacing_large" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/grey_10" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_bonificacao_titulo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/layout_zero_dentes"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/text_bonificacao_titulo"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/layout_fazenda_qtde"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="5dp"
-                    android:text="Bonificação"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <Button
-                    android:id="@+id/btn_dialog_bonificacao"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/buttonshape"
-                    android:text="+"
-                    android:textColor="#FFFFFF"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_bonificacao"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/layout_bonificacao_titulo"
-                android:orientation="vertical">
-
-                <ListView
-                    android:id="@+id/listViewBonificacao"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:scrollbars="vertical"
-                    android:scrollingCache="true" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/spacing_large" />
+                        android:id="@+id/btn_dialog_bonificacao"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/buttonshape"
+                        android:text="+"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp" />
+                </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/layout_bonificacao"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/layout_bonificacao_titulo"
+                    android:orientation="vertical">
+
+                    <ListView
+                        android:id="@+id/listViewBonificacao"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:scrollbars="vertical"
+                        android:scrollingCache="true" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/spacing_large" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/text_bonificacao_total"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/layout_fazenda_qtde"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_weight="1"
+                            android:text="Bonificação total: R$ "
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/bonificacao_total"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/layout_fazenda_qtde"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_weight="1.1"
+                            android:text="-"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/spacing_large" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/grey_10" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_penalizacao_titulo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/layout_bonificacao"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/text_bonificacao_total"
-                        android:layout_width="0dp"
+                        android:id="@+id/text_penalizacao_titulo"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/layout_fazenda_qtde"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="5dp"
-                        android:layout_weight="1"
-                        android:text="Bonificação total: R$ "
+                        android:text="Penalização"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/bonificacao_total"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/layout_fazenda_qtde"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_weight="1.1"
-                        android:text="-"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                    <Button
+                        android:id="@+id/btn_dialog_penalizacao"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/buttonshape"
+                        android:text="+"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_penalizacao"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/layout_penalizacao_titulo"
+                    android:orientation="vertical">
+
+                    <ListView
+                        android:id="@+id/listViewPenalizacao"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:scrollbars="vertical"
+                        android:scrollingCache="true" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/spacing_large" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/text_penalizacao_total"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_weight="1"
+                            android:text="Penalização total: R$ "
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/penalizacao_total"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_weight="1"
+                            android:text="-"
+                            android:textColor="@color/colorTextAbsent"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/spacing_large" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/grey_10" />
 
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/spacing_large" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/grey_10" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_penalizacao_titulo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/layout_bonificacao"
-                android:orientation="horizontal">
-
                 <TextView
-                    android:id="@+id/text_penalizacao_titulo"
-                    android:layout_width="100dp"
+                    android:id="@+id/text_acerto"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/layout_fazenda_qtde"
+                    android:layout_below="@+id/layout_penalizacao"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="5dp"
-                    android:text="Penalização"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/acerto"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <Button
-                    android:id="@+id/btn_dialog_penalizacao"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/buttonshape"
-                    android:text="+"
-                    android:textColor="#FFFFFF"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_penalizacao"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/layout_penalizacao_titulo"
-                android:orientation="vertical">
-
-                <ListView
-                    android:id="@+id/listViewPenalizacao"
+                <TextView
+                    android:id="@+id/text_acerto_total_bruto"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:scrollbars="vertical"
-                    android:scrollingCache="true" />
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_acerto"
+                    android:layout_marginBottom="3dp"
+                    android:text="Total bruto" />
 
-                <View
+                <EditText
+                    android:id="@+id/edit_acerto_total_bruto"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/spacing_large" />
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/text_acerto_total_bruto"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/edit_text_border"
+                    android:inputType="numberDecimal"
+                    android:paddingStart="10dp"
+                    android:paddingLeft="10dp"
+                    android:textSize="18sp" />
 
                 <LinearLayout
+                    android:id="@+id/layout_funrural"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/edit_acerto_total_bruto"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/text_penalizacao_total"
+                        android:id="@+id/text_acerto_desconto_funrural"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_weight="1"
-                        android:text="Penalização total: R$ "
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:layout_weight="0.9"
+                        android:text="Desconto FUNRURAL" />
 
-                    <TextView
-                        android:id="@+id/penalizacao_total"
+                    <CheckBox
+                        android:id="@+id/check_funrural"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_weight="1"
-                        android:text="-"
-                        android:textColor="@color/colorTextAbsent"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:layout_weight="0.9"
+                        android:gravity="center"
+                        android:scaleX="0.80"
+                        android:scaleY="0.80"
+                        android:text="S/ denconto FUNRURAL"
+                        android:textSize="12sp"
+                        android:textStyle="italic" />
 
                 </LinearLayout>
 
-                <View
+                <TextView
+                    android:id="@+id/text_observacao_desconto_funrural"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/spacing_large" />
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/layout_funrural"
+                    android:layout_marginBottom="3dp"
+                    android:text="Caso não seja informado o valor, será descontado 1,5%"
+                    android:textSize="11sp"
+                    android:textStyle="bold|italic" />
 
-                <View
+                <EditText
+                    android:id="@+id/edit_acerto_desconto_funrural"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/grey_10" />
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/text_observacao_desconto_funrural"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/edit_text_border"
+                    android:inputType="numberDecimal"
+                    android:paddingStart="10dp"
+                    android:paddingLeft="10dp"
+                    android:textSize="18sp" />
 
-            </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/layout_antecipacao"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/edit_acerto_desconto_funrural"
+                    android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/text_acerto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/layout_penalizacao"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:text="@string/acerto"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/text_acerto_percentual_antecipacao"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_weight="1"
+                        android:text="% antecipação" />
 
-            <TextView
-                android:id="@+id/text_acerto_total_bruto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/text_acerto"
-                android:layout_marginBottom="3dp"
-                android:text="Total bruto" />
+                    <TextView
+                        android:id="@+id/text_acerto_desconto_antecipacao"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="3dp"
+                        android:layout_weight="2"
+                        android:text="Total antecipação" />
 
-            <EditText
-                android:id="@+id/edit_acerto_total_bruto"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_below="@+id/text_acerto_total_bruto"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/edit_text_border"
-                android:inputType="numberDecimal"
-                android:paddingStart="10dp"
-                android:paddingLeft="10dp"
-                android:textSize="18sp" />
+                </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/layout_funrural"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/edit_acerto_total_bruto"
-                android:orientation="horizontal">
+                <LinearLayout
+                    android:id="@+id/layout_antecipacao_valores"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/layout_antecipacao"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/edit_acerto_percentual_antecipacao"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/edit_text_border"
+                        android:inputType="numberDecimal"
+                        android:paddingStart="10dp"
+                        android:paddingLeft="10dp"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/edit_acerto_valor_antecipacao"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight="2"
+                        android:background="@drawable/edit_text_border"
+                        android:inputType="numberDecimal"
+                        android:paddingStart="10dp"
+                        android:paddingLeft="10dp"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/text_acerto_desconto_funrural"
-                    android:layout_width="0dp"
+                    android:id="@+id/text_acerto_total_liquido"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.9"
-                    android:text="Desconto FUNRURAL" />
+                    android:layout_below="@+id/layout_antecipacao_valores"
+                    android:layout_marginBottom="3dp"
+                    android:text="Total líquido" />
+
+                <EditText
+                    android:id="@+id/edit_acerto_total_liquido"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/text_acerto_total_liquido"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/edit_text_border"
+                    android:enabled="false"
+                    android:inputType="numberDecimal"
+                    android:paddingStart="10dp"
+                    android:paddingLeft="10dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:id="@+id/espaco_acerto_desconto"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_large"
+                    android:layout_below="@+id/edit_acerto_total_liquido" />
+
+                <TextView
+                    android:id="@+id/text_arroba_negociada"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/espaco_acerto_desconto"
+                    android:text="@string/arroba_negociada" />
+
+                <EditText
+                    android:id="@+id/edit_arroba_negociada"
+                    android:layout_width="100dp"
+                    android:layout_height="35dp"
+                    android:layout_below="@+id/text_arroba_negociada"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/edit_text_border"
+                    android:inputType="numberDecimal"
+                    android:paddingStart="10dp"
+                    android:paddingLeft="10dp"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/text_barra_arroba_negociada"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_arroba_negociada"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toEndOf="@+id/edit_arroba_negociada"
+                    android:paddingTop="6dp"
+                    android:text="@string/barra_arroba"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/text_arroba_recebida"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/edit_arroba_negociada"
+                    android:text="@string/arroba_recebida" />
+
+                <EditText
+                    android:id="@+id/edit_arroba_recebida"
+                    android:layout_width="100dp"
+                    android:layout_height="35dp"
+                    android:layout_below="@+id/text_arroba_recebida"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/edit_text_border"
+                    android:inputType="numberDecimal"
+                    android:paddingStart="10dp"
+                    android:paddingLeft="10dp"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/text_barra_arroba_recebida"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_arroba_recebida"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toEndOf="@+id/edit_arroba_recebida"
+                    android:paddingTop="6dp"
+                    android:text="@string/barra_arroba"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/text_forma_pagamento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/text_arroba_negociada"
+                    android:layout_marginLeft="25dp"
+                    android:layout_toEndOf="@+id/text_barra_arroba_negociada"
+                    android:text="Forma de pagamento" />
 
                 <CheckBox
-                    android:id="@+id/check_funrural"
-                    android:layout_width="0dp"
+                    android:id="@+id/check_a_vista"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.9"
-                    android:gravity="center"
-                    android:scaleX="0.80"
-                    android:scaleY="0.80"
-                    android:text="S/ denconto FUNRURAL"
-                    android:textSize="12sp"
-                    android:textStyle="italic" />
+                    android:layout_alignTop="@+id/edit_arroba_negociada"
+                    android:layout_marginLeft="25dp"
+                    android:layout_toEndOf="@+id/text_barra_arroba_negociada"
+                    android:text="@string/a_vista"
+                    android:textSize="16sp" />
 
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/text_observacao_desconto_funrural"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/layout_funrural"
-                android:layout_marginBottom="3dp"
-                android:text="Caso não seja informado o valor, será descontado 1,5%"
-                android:textSize="11sp"
-                android:textStyle="bold|italic" />
-
-            <EditText
-                android:id="@+id/edit_acerto_desconto_funrural"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_below="@+id/text_observacao_desconto_funrural"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/edit_text_border"
-                android:inputType="numberDecimal"
-                android:paddingStart="10dp"
-                android:paddingLeft="10dp"
-                android:textSize="18sp" />
-
-            <LinearLayout
-                android:id="@+id/layout_antecipacao"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/edit_acerto_desconto_funrural"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/text_acerto_percentual_antecipacao"
-                    android:layout_width="0dp"
+                <CheckBox
+                    android:id="@+id/check_a_prazo"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="3dp"
-                    android:layout_weight="1"
-                    android:text="% antecipação" />
-
-                <TextView
-                    android:id="@+id/text_acerto_desconto_antecipacao"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:layout_weight="2"
-                    android:text="Total antecipação" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_antecipacao_valores"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/layout_antecipacao"
-                android:orientation="horizontal">
+                    android:layout_below="@+id/check_a_vista"
+                    android:layout_alignLeft="@+id/check_a_vista"
+                    android:text="@string/a_prazo"
+                    android:textSize="16sp" />
 
                 <EditText
-                    android:id="@+id/edit_acerto_percentual_antecipacao"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_marginRight="10dp"
+                    android:id="@+id/edit_arroba_negociada_a_prazo"
+                    android:layout_width="50dp"
+                    android:layout_height="35dp"
+                    android:layout_below="@+id/check_a_prazo"
+                    android:layout_alignLeft="@+id/check_a_vista"
+                    android:layout_marginLeft="30dp"
                     android:layout_marginBottom="5dp"
-                    android:layout_weight="1"
                     android:background="@drawable/edit_text_border"
-                    android:inputType="numberDecimal"
+                    android:inputType="number"
                     android:paddingStart="10dp"
                     android:paddingLeft="10dp"
                     android:textSize="18sp" />
 
-                <EditText
-                    android:id="@+id/edit_acerto_valor_antecipacao"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_weight="2"
-                    android:background="@drawable/edit_text_border"
-                    android:inputType="numberDecimal"
-                    android:paddingStart="10dp"
-                    android:paddingLeft="10dp"
-                    android:textSize="18sp" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/text_acerto_total_liquido"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/layout_antecipacao_valores"
-                android:layout_marginBottom="3dp"
-                android:text="Total líquido" />
-
-            <EditText
-                android:id="@+id/edit_acerto_total_liquido"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_below="@+id/text_acerto_total_liquido"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/edit_text_border"
-                android:enabled="false"
-                android:inputType="numberDecimal"
-                android:paddingStart="10dp"
-                android:paddingLeft="10dp"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <View
-                android:id="@+id/espaco_acerto_desconto"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/spacing_large"
-                android:layout_below="@+id/edit_acerto_total_liquido" />
-
-            <TextView
-                android:id="@+id/text_arroba_negociada"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/espaco_acerto_desconto"
-                android:text="@string/arroba_negociada" />
-
-            <EditText
-                android:id="@+id/edit_arroba_negociada"
-                android:layout_width="100dp"
-                android:layout_height="35dp"
-                android:layout_below="@+id/text_arroba_negociada"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/edit_text_border"
-                android:inputType="numberDecimal"
-                android:paddingStart="10dp"
-                android:paddingLeft="10dp"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/text_barra_arroba_negociada"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/text_arroba_negociada"
-                android:layout_marginLeft="5dp"
-                android:layout_toEndOf="@+id/edit_arroba_negociada"
-                android:paddingTop="6dp"
-                android:text="@string/barra_arroba"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/text_arroba_recebida"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/edit_arroba_negociada"
-                android:text="@string/arroba_recebida" />
-
-            <EditText
-                android:id="@+id/edit_arroba_recebida"
-                android:layout_width="100dp"
-                android:layout_height="35dp"
-                android:layout_below="@+id/text_arroba_recebida"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/edit_text_border"
-                android:inputType="numberDecimal"
-                android:paddingStart="10dp"
-                android:paddingLeft="10dp"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/text_barra_arroba_recebida"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/text_arroba_recebida"
-                android:layout_marginLeft="5dp"
-                android:layout_toEndOf="@+id/edit_arroba_recebida"
-                android:paddingTop="6dp"
-                android:text="@string/barra_arroba"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/text_forma_pagamento"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/text_arroba_negociada"
-                android:layout_marginLeft="25dp"
-                android:layout_toEndOf="@+id/text_barra_arroba_negociada"
-                android:text="Forma de pagamento" />
-
-            <CheckBox
-                android:id="@+id/check_a_vista"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/edit_arroba_negociada"
-                android:layout_marginLeft="25dp"
-                android:layout_toEndOf="@+id/text_barra_arroba_negociada"
-                android:text="@string/a_vista"
-                android:textSize="16sp" />
-
-            <CheckBox
-                android:id="@+id/check_a_prazo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/check_a_vista"
-                android:layout_alignLeft="@+id/check_a_vista"
-                android:text="@string/a_prazo"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/edit_arroba_negociada_a_prazo"
-                android:layout_width="50dp"
-                android:layout_height="35dp"
-                android:layout_below="@+id/check_a_prazo"
-                android:layout_alignLeft="@+id/check_a_vista"
-                android:layout_marginLeft="30dp"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/edit_text_border"
-                android:inputType="number"
-                android:paddingStart="10dp"
-                android:paddingLeft="10dp"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/text_dias_a_prazo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/edit_arroba_negociada_a_prazo"
-                android:layout_marginLeft="5dp"
-                android:layout_toEndOf="@+id/edit_arroba_negociada_a_prazo"
-                android:paddingTop="6dp"
-                android:text="@string/dias_a_prazo"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <View
-                android:id="@+id/espaco_final"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/spacing_large"
-                android:layout_below="@+id/edit_arroba_recebida" />
-
-            <Button
-                android:id="@+id/btn_calcular_acerto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/espaco_final"
-                android:background="#C09E56"
-                android:text="Calcular"
-                android:textColor="#FFFFFF" />
-
-            <View
-                android:id="@+id/espaco_acerto_calcular"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/spacing_large"
-                android:layout_below="@+id/btn_calcular_acerto" />
-
-            <View
-                android:id="@+id/barra_acerto"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/espaco_acerto_calcular"
-                android:background="@color/grey_10" />
-
-            <LinearLayout
-                android:id="@+id/layout_acerto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/barra_acerto"
-                android:orientation="vertical">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/spacing_large" />
-
                 <TextView
-                    android:id="@+id/text_penalizacao_descricao"
-                    android:layout_width="match_parent"
+                    android:id="@+id/text_dias_a_prazo"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:text="Observações"
+                    android:layout_alignTop="@+id/edit_arroba_negociada_a_prazo"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toEndOf="@+id/edit_arroba_negociada_a_prazo"
+                    android:paddingTop="6dp"
+                    android:text="@string/dias_a_prazo"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/edit_observacoes"
+                <View
+                    android:id="@+id/espaco_final"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_large"
+                    android:layout_below="@+id/edit_arroba_recebida" />
+
+                <Button
+                    android:id="@+id/btn_calcular_acerto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/edit_text_border"
-                    android:gravity="top|left"
-                    android:inputType="textMultiLine"
-                    android:isScrollContainer="true"
-                    android:lines="5"
-                    android:paddingStart="5dp"
-                    android:paddingLeft="5dp"
-                    android:scrollbars="vertical"
-                    android:overScrollMode="always"
-                    android:scrollbarStyle="insideInset"
-                    android:textSize="18sp" />
+                    android:layout_below="@+id/espaco_final"
+                    android:background="#C09E56"
+                    android:text="Calcular"
+                    android:textColor="#FFFFFF" />
 
                 <View
+                    android:id="@+id/espaco_acerto_calcular"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/spacing_large" />
+                    android:layout_height="@dimen/spacing_large"
+                    android:layout_below="@+id/btn_calcular_acerto" />
 
-                <ImageView
-                    android:id="@+id/image_lote"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/padrao_boi"/>
+                <View
+                    android:id="@+id/barra_acerto"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/espaco_acerto_calcular"
+                    android:background="@color/grey_10" />
 
-                <!--<ImageButton-->
+                <LinearLayout
+                    android:id="@+id/layout_acerto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/barra_acerto"
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/spacing_large" />
+
+                    <TextView
+                        android:id="@+id/text_penalizacao_descricao"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="3dp"
+                        android:text="Observações"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/edit_observacoes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/edit_text_border"
+                        android:gravity="top|left"
+                        android:inputType="textMultiLine"
+                        android:isScrollContainer="true"
+                        android:lines="5"
+                        android:overScrollMode="always"
+                        android:paddingStart="5dp"
+                        android:paddingLeft="5dp"
+                        android:scrollbarStyle="insideInset"
+                        android:scrollbars="vertical"
+                        android:textSize="18sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/spacing_large" />
+
+                    <ImageView
+                        android:id="@+id/image_lote"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/padrao_boi" />
+
+                    <!--<ImageButton-->
                     <!--android:id="@+id/imageButtonGaleria"-->
                     <!--android:layout_width="wrap_content"-->
                     <!--android:layout_height="wrap_content"-->
                     <!--android:layout_gravity="center"-->
                     <!--android:src="@drawable/ic_photo_cinza_24dp"/>-->
 
-            </LinearLayout>
+                </LinearLayout>
 
-            <View
-                android:id="@+id/espaco_acerto"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/spacing_large"
-                android:layout_below="@+id/layout_acerto" />
+                <View
+                    android:id="@+id/espaco_acerto"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_large"
+                    android:layout_below="@+id/layout_acerto" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/espaco_acerto"
-                android:background="@color/grey_10" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/espaco_acerto"
+                    android:background="@color/grey_10" />
 
-        </RelativeLayout>
+            </RelativeLayout>
+
+        </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
 

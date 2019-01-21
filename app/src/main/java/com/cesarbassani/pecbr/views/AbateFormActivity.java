@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -75,6 +76,7 @@ import com.cesarbassani.pecbr.model.Penalizacao;
 import com.cesarbassani.pecbr.model.Rendimento;
 import com.cesarbassani.pecbr.model.Usuario;
 import com.cesarbassani.pecbr.repository.TemplatePDF;
+import com.cesarbassani.pecbr.utils.Tools;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -85,11 +87,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.itextpdf.text.DocumentException;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -237,13 +242,16 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
     double totalAnimaisMaturidade = 0.0;
 
+    private TextView txt_data_abate;
+    private ImageButton datePickerAbate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resumo_abate_form);
 
         long data = System.currentTimeMillis();
-        SimpleDateFormat sdf = new SimpleDateFormat("d/M/yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         dateString = sdf.format(data);
 
         initToolBar();
@@ -522,6 +530,8 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
     private void initComponent() {
 
+        txt_data_abate = findViewById(R.id.txt_data_abate);
+
         usuarioRef = ConfiguracaoFirebase.getFirebaseDatabase().child("usuarios");
 
         storageReference = ConfiguracaoFirebase.getFirebaseStorage();
@@ -565,6 +575,50 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
             }
         });
+
+        txt_data_abate.setText(dateString);
+
+        datePickerAbate = findViewById(R.id.datePickerAbate);
+
+        datePickerAbate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogDatePickerLight((ImageButton) view);
+            }
+        });
+    }
+
+    private void dialogDatePickerLight(final ImageButton bt) {
+        Calendar cur_calender = Calendar.getInstance();
+        final DatePickerDialog datePicker = DatePickerDialog.newInstance(
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.YEAR, year);
+                        calendar.set(Calendar.MONTH, monthOfYear);
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                        long date_ship_millis = calendar.getTimeInMillis();
+
+                        if (bt.getId() == R.id.datePickerAbate) {
+                            txt_data_abate.setText(Tools.getFormattedDateAbate(date_ship_millis));
+                        } else {
+                            txt_data_abate.setText(dateString);
+
+                        }
+                    }
+                },
+                cur_calender.get(Calendar.YEAR),
+                cur_calender.get(Calendar.MONTH),
+                cur_calender.get(Calendar.DAY_OF_MONTH)
+        );
+        //set dark light
+        datePicker.setThemeDark(false);
+        datePicker.setAccentColor(getResources().getColor(R.color.colorPrimary));
+        Calendar calendarMin = new GregorianCalendar(2019, Calendar.JANUARY, 10);
+        datePicker.setMinDate(calendarMin);
+        datePicker.show(this.getFragmentManager(), "Datepickerdialog");
     }
 
     @Override
@@ -711,7 +765,8 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
         templatePDF = new TemplatePDF(getApplicationContext());
         templatePDF.openDocument();
-        templatePDF.addTitles("RESUMO DE ABATE - PECBR", "Data: ", dateString);
+//        templatePDF.addTitles("RESUMO DE ABATE - PECBR", "Data: ", dateString);
+        templatePDF.addTitles("RESUMO DE ABATE - PECBR", "Data: ", txt_data_abate.getText().toString());
 //        templatePDF.onStartPage();
         if (imagemLote == null && fotoDoAbate) {
 //            image_lote.invalidate();
@@ -733,7 +788,8 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
         abate.setTecnico(tecnico);
         abate.setFrigorifico(spinnerFrigorifico.getSelectedItem().toString());
-        abate.setDataAbate(dateString);
+//        abate.setDataAbate(dateString);
+        abate.setDataAbate(txt_data_abate.getText().toString());
 
         Lote lote = new Lote();
         lote.setNomeCliente(this.mViewHolder.mEditNomeCliente.getText().toString());
@@ -825,18 +881,20 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
     public void initToolBar() {
 
         this.mViewHolder.mToolbar = findViewById(R.id.tb_main);
-        this.mViewHolder.mToolbar.setTitle("RESUMO DE ABATE - PECBR");
-        this.mViewHolder.mToolbar.setSubtitle("Data: " + dateString);
+//        this.mViewHolder.mToolbar.setTitle("RESUMO DE ABATE - PECBR");
+//        this.mViewHolder.mToolbar.setSubtitle("Data: " + dateString);
+        this.mViewHolder.mToolbar.setTitleTextColor(Color.WHITE);
+//        this.mViewHolder.mToolbar.setSubtitleTextColor(Color.WHITE);
 //        this.mViewHolder.mToolbar.setLogo(R.mipmap.ic_launcher);
 
         typeFace_date = Typeface.createFromAsset(this.getAssets(), "fonts/brandon_light.otf");
         typeFace_title = Typeface.createFromAsset(this.getAssets(), "fonts/brandon_bold.otf");
 
-        ((TextView) this.mViewHolder.mToolbar.getChildAt(0)).setTypeface(typeFace_title);
-        ((TextView) this.mViewHolder.mToolbar.getChildAt(0)).setTextSize(16);
+//        ((TextView) this.mViewHolder.mToolbar.getChildAt(0)).setTypeface(typeFace_title);
+//        ((TextView) this.mViewHolder.mToolbar.getChildAt(0)).setTextSize(16);
 
-        ((TextView) this.mViewHolder.mToolbar.getChildAt(1)).setTypeface(typeFace_date);
-        ((TextView) this.mViewHolder.mToolbar.getChildAt(1)).setTextSize(14);
+//        ((TextView) this.mViewHolder.mToolbar.getChildAt(1)).setTypeface(typeFace_title);
+//        ((TextView) this.mViewHolder.mToolbar.getChildAt(1)).setTextSize(14);
 
         setSupportActionBar(this.mViewHolder.mToolbar);
 
@@ -853,7 +911,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
         this.abate.setId(abate.getId());
 
-        dateString = abate.getDataAbate();
+        txt_data_abate.setText(abate.getDataAbate());
 
         this.mViewHolder.mEditNomeCliente.setText(abate.getLote().getNomeCliente());
         this.mViewHolder.mEditFazenda.setText(abate.getLote().getPropriedade());

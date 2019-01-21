@@ -132,6 +132,11 @@ public class Tools {
         return newFormat.format(new Date(dateTime));
     }
 
+    public static String getFormattedDateAbate(Long dateTime) {
+        SimpleDateFormat newFormat = new SimpleDateFormat("dd/MM/yyyy");
+        return newFormat.format(new Date(dateTime));
+    }
+
     public static String getFormattedDateEvent(Long dateTime) {
         SimpleDateFormat newFormat = new SimpleDateFormat("EEE, MMM dd yyyy");
         return newFormat.format(new Date(dateTime));
