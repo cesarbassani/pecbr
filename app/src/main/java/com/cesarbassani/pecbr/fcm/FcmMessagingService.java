@@ -12,7 +12,7 @@ import android.text.Html;
 import com.cesarbassani.pecbr.R;
 import com.cesarbassani.pecbr.model.Notification;
 import com.cesarbassani.pecbr.utils.PermissionUtil;
-import com.cesarbassani.pecbr.views.SplashActivity;
+import com.cesarbassani.pecbr.views.MainActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -34,7 +34,7 @@ public class FcmMessagingService extends FirebaseMessagingService {
     }
 
     private void displayNotificationIntent(Notification notification) {
-        Intent intent = new Intent(this, SplashActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("menuFragment", "CotacoesFragment");
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);

@@ -12,8 +12,10 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,19 +36,29 @@ import android.widget.Toast;
 import com.cesarbassani.pecbr.R;
 import com.cesarbassani.pecbr.adapter.ListaAbatesAdapter;
 import com.cesarbassani.pecbr.config.ConfiguracaoFirebase;
+import com.cesarbassani.pecbr.constants.DataBaseConstants;
 import com.cesarbassani.pecbr.constants.GuestConstants;
+import com.cesarbassani.pecbr.helper.PDFHelper;
 import com.cesarbassani.pecbr.listener.OnAbateListenerInteractionListener;
 import com.cesarbassani.pecbr.listener.RecyclerItemClickListener;
 import com.cesarbassani.pecbr.model.Abate;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.itextpdf.text.DocumentException;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import static android.app.Activity.RESULT_OK;
 
 public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryTextListener {
 
@@ -57,6 +69,7 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
     private DatabaseReference abateRef;
     private ValueEventListener valueEventListenerAbates;
     private Abate abate;
+    private  Abate abateListado;
     private SearchView searchView;
     private ProgressDialog progressDialog;
     private LinearLayout lyt_no_result;

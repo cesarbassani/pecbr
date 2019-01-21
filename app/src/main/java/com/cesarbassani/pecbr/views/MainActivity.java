@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -104,6 +105,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         String menuFragment = getIntent().getStringExtra("menuFragment");
         abrirFragmentNotification(menuFragment);
+
+        if (getIntent().getExtras() != null) {
+            for (String key : getIntent().getExtras().keySet()) {
+                String value = getIntent().getExtras().getString(key);
+                Log.d("FIREBASE", "Key: " + key + " Value: " + value);
+            }
+        }
     }
 
     private void setListeners() {

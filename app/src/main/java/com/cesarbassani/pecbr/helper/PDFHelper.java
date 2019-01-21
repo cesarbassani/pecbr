@@ -16,12 +16,13 @@ public class PDFHelper {
 
     private static TemplatePDF templatePDF;
 
-    public static void pdfView(Abate abate, Context context) throws IOException, DocumentException {
+    public static void pdfView(Abate abate, Context context, Bitmap imagem) throws IOException, DocumentException {
 
         templatePDF = new TemplatePDF(context);
         templatePDF.openDocument();
         templatePDF.addTitles("RESUMO DE ABATE - PECBR", "Data: ", abate.getDataAbate());
 //        templatePDF.onStartPage();
+//        templatePDF.carregaImagemDoLote(imagem);
         templatePDF.addFormulario(abate);
 //        templatePDF.onEndPage();
         templatePDF.closeDocument();
