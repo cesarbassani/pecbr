@@ -149,7 +149,7 @@ public class CotacoesFragment extends Fragment {
         vacaGordaAVista = view.findViewById(R.id.vaca_gorda_a_vista);
         txtDataCotacao = view.findViewById(R.id.dataCotacao);
 
-        txtDataCotacao.setText(Tools.getFormattedDateSimple(new Date().getTime()));
+        recuperarCotacoes();
 
         bt_nova_cotacao = view.findViewById(R.id.bt_nova_cotacao);
         RelativeLayout layout_bt_nova_cotacao = view.findViewById(R.id.layout_bt_nova_cotacao);
@@ -321,6 +321,7 @@ public class CotacoesFragment extends Fragment {
                     txtDataCotacao.setText(cotacao.getDataCotacao());
                 } else {
                     limparCampos();
+                    txtDataCotacao.setText(cotacoes.get(cotacoes.size()-1));
                 }
             }
 
