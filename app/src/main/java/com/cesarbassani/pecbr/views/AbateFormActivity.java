@@ -209,7 +209,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
     private TextView txt_rendimento_estimado;
 
     private boolean desativaFunrural;
-    private String prazoAcerto;
+    private String prazoAcerto = "";
     private String bonificacaoObservacoes;
     private String penalizacaoObservacoes;
     private int diasAcerto = 0;
@@ -479,7 +479,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
                 final StorageReference imagemRef;
                 final String nomeArquivo;
                 if (abate.getId() == null || abate.getFotoLote() == null) {
-                     nomeArquivo = UUID.randomUUID().toString();
+                    nomeArquivo = UUID.randomUUID().toString();
                 } else {
                     nomeArquivo = abate.getFotoLote();
                 }
@@ -726,8 +726,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
                         try {
                             Thread.sleep(10000);
                             Abate abateGerado = inicializaAbate();
-
-                            if (validaQtdeAnimaisDoLote() && validaRendimento() && validaRendimentoCalculado()) {
+                            if (validaQtdeAnimaisDoLote() && validaRendimento() && validaRendimentoCalculado() && validaAcerto(abateGerado)) {
                                 pdfView(abateGerado);
                                 if (abateGerado.getId() == null) {
                                     abateGerado.salvar();
@@ -744,6 +743,19 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public boolean validaAcerto(Abate abate) {
+        if (abate.getAcerto().getPrazo().equals("A prazo")) {
+            if (abate.getAcerto().getDias() != 0 && !edit_arroba_negociada_a_prazo.getText().toString().equals("")) {
+                return true;
+            } else {
+                Snackbar.make(parent_view, R.string.err_msg_forma_de_pagamento_dias_a_prazo, Snackbar.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public boolean onTouch(View view, MotionEvent event) {
@@ -915,7 +927,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         this.mViewHolder.mEditFazenda.setText(abate.getLote().getPropriedade());
         this.mViewHolder.mQtdeAnimais.setText(abate.getLote().getQtdeAnimaisLote());
 
-        for (int i=0; i < spinnerFrigorifico.getCount(); i++) {
+        for (int i = 0; i < spinnerFrigorifico.getCount(); i++) {
             if (spinnerFrigorifico.getItemAtPosition(i).toString().equals(abate.getFrigorifico())) {
                 spinnerFrigorifico.setSelection(i);
             }
@@ -1076,6 +1088,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
             } else {
                 check_a_prazo.setChecked(true);
                 edit_arroba_negociada_a_prazo.setText(String.valueOf(abate.getAcerto().getDias()));
+                diasAcerto = abate.getAcerto().getDias();
             }
         }
 
@@ -1085,23 +1098,23 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         storageReference.child("imagens")
                 .child("lote")
                 .child(abate.getFotoLote() + ".jpeg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        if (uri != null) {
+            @Override
+            public void onSuccess(Uri uri) {
+                if (uri != null) {
 //            Uri url = abate.getFotoLote();
 
 //            if (url != null) {
 
-                            GlideApp.with(AbateFormActivity.this.getApplicationContext())
-                                    .load(uri.toString())
-                                    .into(image_lote);
+                    GlideApp.with(AbateFormActivity.this.getApplicationContext())
+                            .load(uri.toString())
+                            .into(image_lote);
 
-                            fotoDoAbate = true;
-                        } else {
-                            image_lote.setImageResource(R.drawable.padrao_boi);
-                        }
-                    }
-                });
+                    fotoDoAbate = true;
+                } else {
+                    image_lote.setImageResource(R.drawable.padrao_boi);
+                }
+            }
+        });
 
 //        if (downloadUrl != null) {
 ////            Uri url = abate.getFotoLote();
@@ -1310,6 +1323,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
                                 diasAcerto = Integer.parseInt(edit_arroba_negociada_a_prazo.getText().toString());
                             } else {
                                 Snackbar.make(parent_view, R.string.err_msg_forma_de_pagamento_dias_a_prazo, Snackbar.LENGTH_SHORT).show();
+                                diasAcerto = 0;
                             }
                         }
 
@@ -1353,8 +1367,9 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
                 }
 
                 if (check_a_prazo.isChecked()) {
-                    if (diasAcerto == 0)
+                    if (diasAcerto == 0 || edit_arroba_negociada_a_prazo.getText().toString().trim().isEmpty())
                         Snackbar.make(parent_view, R.string.err_msg_forma_de_pagamento_dias_a_prazo, Snackbar.LENGTH_SHORT).show();
+                    edit_arroba_negociada_a_prazo.requestFocus();
                 }
             }
         }
@@ -2454,14 +2469,14 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
             mediaTotalLote = Double.valueOf(String.format(Locale.US, "%.2f", mediaTotalLote));
 //            if (mediaTotalLote.equals(0.0)) {
-                pesoCarcacaKilo = (Double.valueOf(this.mViewHolder.pesoCarcaca.getText().toString()));
-                resultadoPesoCarcacaArroba = pesoCarcacaKilo / CALCULOPESOCARCACA;
-                qtdeAnimais = Integer.parseInt(abate.getLote().getQtdeAnimaisLote());
-                pesoTotalDoLote = resultadoPesoCarcacaArroba * qtdeAnimais;
+            pesoCarcacaKilo = (Double.valueOf(this.mViewHolder.pesoCarcaca.getText().toString()));
+            resultadoPesoCarcacaArroba = pesoCarcacaKilo / CALCULOPESOCARCACA;
+            qtdeAnimais = Integer.parseInt(abate.getLote().getQtdeAnimaisLote());
+            pesoTotalDoLote = resultadoPesoCarcacaArroba * qtdeAnimais;
 
-                mediaTotalLote = totalBonificacao / pesoTotalDoLote;
-                mediaTotalBonificacao = totalBonificacao / pesoTotalDoLote;
-                mediaTotalLote = Double.valueOf(String.format(Locale.US, "%.2f", mediaTotalBonificacao));
+            mediaTotalLote = totalBonificacao / pesoTotalDoLote;
+            mediaTotalBonificacao = totalBonificacao / pesoTotalDoLote;
+            mediaTotalLote = Double.valueOf(String.format(Locale.US, "%.2f", mediaTotalBonificacao));
 //            }
             bonificacaoTotal.setText(totalBonificacao + " (+ R$ " + mediaTotalLote + "/@)");
         } else

@@ -91,7 +91,7 @@
     <string name="err_msg_qtde">Informe a quantidade de animais do lote</string>
     <string name="err_msg_total_bruto">Informe o valor do total bruto!</string>
     <string name="err_msg_forma_de_pagamento">Informe a forma de pagamento!</string>
-    <string name="err_msg_forma_de_pagamento_dias_a_prazo">Informe o número de dias para pagamento a prazo!</string>
+    <string name="err_msg_forma_de_pagamento_dias_a_prazo">Informe o número de dias para pagamento a prazo e clique em CALCULAR novamente!</string>
     <string name="err_msg_rendimento_pesoFazenda">Informe o peso da fazenda</string>
     <string name="err_msg_rendimento_pesoFrigorifico">Informe o peso do frigorífico</string>
     <string name="err_msg_rendimento_carcaca">Calule o Rendimento de Carcaça</string>
