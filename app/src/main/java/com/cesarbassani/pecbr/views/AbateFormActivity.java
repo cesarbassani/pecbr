@@ -1082,7 +1082,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         if (abate.getAcerto().getArrobaRecebida() != null)
             edit_arroba_recebida.setText(abate.getAcerto().getArrobaRecebida());
 
-        if (abate.getAcerto().getPrazo() != null) {
+        if (abate.getAcerto().getPrazo() != null && !abate.getAcerto().getPrazo().equals("")) {
             if (abate.getAcerto().getPrazo().equals("À vista")) {
                 check_a_vista.setChecked(true);
             } else {
@@ -1168,6 +1168,12 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 //            requestFocus(this.mViewHolder.pesoFazenda);
 //            return false;
 //        }
+
+        if (this.mViewHolder.mQtdeAnimais.getText().toString().isEmpty()) {
+            Snackbar.make(parent_view, R.string.err_msg_qtde, Snackbar.LENGTH_SHORT).show();
+            requestFocus(this.mViewHolder.mQtdeAnimais);
+            return false;
+        }
 
         if (this.mViewHolder.pesoCarcaca.getText().toString().trim().isEmpty() || this.mViewHolder.pesoCarcaca.getText().toString().trim().equals("0.0")) {
             Snackbar.make(parent_view, R.string.err_msg_pesoCarcaca, Snackbar.LENGTH_SHORT).show();
@@ -1863,9 +1869,15 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
                     if (!edit_peso_animais_penalizacao.getText().toString().trim().isEmpty()) {
                         Double pesoParcial = Double.parseDouble(edit_peso_animais_penalizacao.getText().toString());
-                        Double valorPenalizacaoParcial = Double.parseDouble(edit_penalizacao_desconto.getText().toString());
-                        Double valorTotalParcialPenalizacao = (pesoParcial / 15) * valorPenalizacaoParcial;
-                        parcialPenalizacao.setValorPenalizacao(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", valorTotalParcialPenalizacao))));
+
+                        if (!edit_penalizacao_desconto.getText().toString().isEmpty()) {
+                            Double valorPenalizacaoParcial = Double.parseDouble(edit_penalizacao_desconto.getText().toString());
+                            Double valorTotalParcialPenalizacao = (pesoParcial / 15) * valorPenalizacaoParcial;
+                            parcialPenalizacao.setValorPenalizacao(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", valorTotalParcialPenalizacao))));
+                        } else {
+                            Snackbar.make(parent_view, R.string.err_msg_valoresParcialPenalizacao, Snackbar.LENGTH_SHORT).show();
+                        }
+
                     } else if (!edit_penalizacao_desconto.getText().toString().trim().isEmpty()) {
                         Double valorPenalizacaoParcial = Double.parseDouble(edit_penalizacao_desconto.getText().toString());
                         Double valorTotalParcialPenalizacao = valorPenalizacaoParcial;
