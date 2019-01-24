@@ -1865,35 +1865,36 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
                 parcialPenalizacao.setPeso(edit_peso_animais_penalizacao.getText().toString());
                 parcialPenalizacao.setDesconto(edit_penalizacao_desconto.getText().toString());
 
-                if (validaParcialPenalizacao(parcialPenalizacao)) {
+                validaParcialPenalizacao(parcialPenalizacao);
 
-                    if (!edit_peso_animais_penalizacao.getText().toString().trim().isEmpty()) {
-                        Double pesoParcial = Double.parseDouble(edit_peso_animais_penalizacao.getText().toString());
-
-                        if (!edit_penalizacao_desconto.getText().toString().isEmpty()) {
-                            Double valorPenalizacaoParcial = Double.parseDouble(edit_penalizacao_desconto.getText().toString());
-                            Double valorTotalParcialPenalizacao = (pesoParcial / 15) * valorPenalizacaoParcial;
-                            parcialPenalizacao.setValorPenalizacao(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", valorTotalParcialPenalizacao))));
-                        } else {
-                            Snackbar.make(parent_view, R.string.err_msg_valoresParcialPenalizacao, Snackbar.LENGTH_SHORT).show();
-                        }
-
-                    } else if (!edit_penalizacao_desconto.getText().toString().trim().isEmpty()) {
-                        Double valorPenalizacaoParcial = Double.parseDouble(edit_penalizacao_desconto.getText().toString());
-                        Double valorTotalParcialPenalizacao = valorPenalizacaoParcial;
-                        parcialPenalizacao.setValorPenalizacao(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", valorTotalParcialPenalizacao))));
-                    }
-
-                    parciaisPenalizacao.add(parcialPenalizacao);
-                    adapterParciaisPenalizacao.notifyDataSetChanged();
-                    setListViewHeightBasedOnChildren(listViewParcialPenalizacao);
-
-                    edit_penalizacao_descricao.setText("");
-                    edit_peso_animais_penalizacao.setText("");
-                    edit_penalizacao_desconto.setText("");
-                    edit_quantidade_animais_penalizacao.setText("");
-                    edit_penalizacao_descricao.requestFocus();
-                }
+//                    if (!edit_peso_animais_penalizacao.getText().toString().trim().isEmpty()) {
+//                        Double pesoParcial = Double.parseDouble(edit_peso_animais_penalizacao.getText().toString());
+//
+//                        if (!edit_penalizacao_desconto.getText().toString().isEmpty()) {
+//                            Double valorPenalizacaoParcial = Double.parseDouble(edit_penalizacao_desconto.getText().toString());
+//                            Double valorTotalParcialPenalizacao = (pesoParcial / 15) * valorPenalizacaoParcial;
+//                            parcialPenalizacao.setValorPenalizacao(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", valorTotalParcialPenalizacao))));
+//                        } else {
+//                            Snackbar.make(parent_view, R.string.err_msg_valoresParcialPenalizacao, Snackbar.LENGTH_SHORT).show();
+//                            edit_penalizacao_desconto.requestFocus();
+//                        }
+//
+//                    } else if (!edit_penalizacao_desconto.getText().toString().trim().isEmpty()) {
+//                        Double valorPenalizacaoParcial = Double.parseDouble(edit_penalizacao_desconto.getText().toString());
+//                        Double valorTotalParcialPenalizacao = valorPenalizacaoParcial;
+//                        parcialPenalizacao.setValorPenalizacao(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", valorTotalParcialPenalizacao))));
+//                    }
+//
+//                    parciaisPenalizacao.add(parcialPenalizacao);
+//                    adapterParciaisPenalizacao.notifyDataSetChanged();
+//                    setListViewHeightBasedOnChildren(listViewParcialPenalizacao);
+//
+//                    edit_penalizacao_descricao.setText("");
+//                    edit_peso_animais_penalizacao.setText("");
+//                    edit_penalizacao_desconto.setText("");
+//                    edit_quantidade_animais_penalizacao.setText("");
+//                    edit_penalizacao_descricao.requestFocus();
+//                }
             }
         });
 
@@ -2082,6 +2083,36 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
             toast.show();
             return false;
         }
+
+        if (!edit_peso_animais_penalizacao.getText().toString().trim().isEmpty()) {
+            Double pesoParcial = Double.parseDouble(edit_peso_animais_penalizacao.getText().toString());
+
+            if (!edit_penalizacao_desconto.getText().toString().isEmpty()) {
+                Double valorPenalizacaoParcial = Double.parseDouble(edit_penalizacao_desconto.getText().toString());
+                Double valorTotalParcialPenalizacao = (pesoParcial / 15) * valorPenalizacaoParcial;
+                parcialPenalizacao.setValorPenalizacao(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", valorTotalParcialPenalizacao))));
+            } else {
+                Toast.makeText(this, R.string.err_msg_valoresParcialPenalizacao, Toast.LENGTH_SHORT).show();
+                edit_penalizacao_desconto.requestFocus();
+
+                return false;
+            }
+
+        } else if (!edit_penalizacao_desconto.getText().toString().trim().isEmpty()) {
+            Double valorPenalizacaoParcial = Double.parseDouble(edit_penalizacao_desconto.getText().toString());
+            Double valorTotalParcialPenalizacao = valorPenalizacaoParcial;
+            parcialPenalizacao.setValorPenalizacao(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", valorTotalParcialPenalizacao))));
+        }
+
+        parciaisPenalizacao.add(parcialPenalizacao);
+        adapterParciaisPenalizacao.notifyDataSetChanged();
+        setListViewHeightBasedOnChildren(listViewParcialPenalizacao);
+
+        edit_penalizacao_descricao.setText("");
+        edit_peso_animais_penalizacao.setText("");
+        edit_penalizacao_desconto.setText("");
+        edit_quantidade_animais_penalizacao.setText("");
+        edit_penalizacao_descricao.requestFocus();
 
         return true;
     }
