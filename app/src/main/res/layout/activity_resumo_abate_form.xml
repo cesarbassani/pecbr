@@ -92,44 +92,44 @@
                                 <TextView
                                     android:id="@+id/txt_data_abate"
                                     android:layout_width="0dp"
-                                    android:layout_weight="1.1"
                                     android:layout_height="wrap_content"
-                                    android:text="Data: 21/01/2019"
                                     android:layout_gravity="center"
+                                    android:layout_weight="1.1"
+                                    android:text="Data: 21/01/2019"
                                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                                     android:textColor="@android:color/white" />
 
                                 <ImageButton
                                     android:id="@+id/datePickerAbate"
                                     android:layout_width="0dp"
-                                    android:layout_weight="0.1"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
+                                    android:layout_weight="0.1"
                                     android:background="@color/transparent"
-                                    android:src="@drawable/ic_data_abate"/>
+                                    android:src="@drawable/ic_data_abate" />
 
                             </LinearLayout>
 
                         </LinearLayout>
 
                         <!--<RelativeLayout-->
-                            <!--android:id="@+id/layout_bt_nova_cotacao"-->
-                            <!--android:layout_width="@dimen/spacing_xmlarge"-->
-                            <!--android:layout_height="@dimen/spacing_xmlarge">-->
+                        <!--android:id="@+id/layout_bt_nova_cotacao"-->
+                        <!--android:layout_width="@dimen/spacing_xmlarge"-->
+                        <!--android:layout_height="@dimen/spacing_xmlarge">-->
 
-                            <!--<ImageView-->
-                                <!--android:layout_width="match_parent"-->
-                                <!--android:layout_height="match_parent"-->
-                                <!--android:src="@drawable/shape_circle"-->
-                                <!--android:tint="@android:color/white" />-->
+                        <!--<ImageView-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:src="@drawable/shape_circle"-->
+                        <!--android:tint="@android:color/white" />-->
 
-                            <!--<ImageButton-->
-                                <!--android:id="@+id/bt_gerar_pdf"-->
-                                <!--android:layout_width="match_parent"-->
-                                <!--android:layout_height="match_parent"-->
-                                <!--android:background="@android:color/transparent"-->
-                                <!--android:tint="@color/colorPrimary"-->
-                                <!--app:srcCompat="@drawable/ic_description" />-->
+                        <!--<ImageButton-->
+                        <!--android:id="@+id/bt_gerar_pdf"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:background="@android:color/transparent"-->
+                        <!--android:tint="@color/colorPrimary"-->
+                        <!--app:srcCompat="@drawable/ic_description" />-->
 
                         <!--</RelativeLayout>-->
 
