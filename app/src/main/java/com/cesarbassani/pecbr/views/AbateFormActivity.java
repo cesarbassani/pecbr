@@ -25,6 +25,7 @@ import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -64,7 +65,9 @@ import com.cesarbassani.pecbr.model.Acabamento;
 import com.cesarbassani.pecbr.model.Acerto;
 import com.cesarbassani.pecbr.model.Bonificacao;
 import com.cesarbassani.pecbr.model.Categoria;
+import com.cesarbassani.pecbr.model.Cotacao;
 import com.cesarbassani.pecbr.model.Event;
+import com.cesarbassani.pecbr.model.Frigorifico;
 import com.cesarbassani.pecbr.model.GuestEntity;
 import com.cesarbassani.pecbr.model.Lote;
 import com.cesarbassani.pecbr.model.Maturidade;
@@ -75,6 +78,7 @@ import com.cesarbassani.pecbr.model.Rendimento;
 import com.cesarbassani.pecbr.model.Usuario;
 import com.cesarbassani.pecbr.repository.TemplatePDF;
 import com.cesarbassani.pecbr.utils.Tools;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -82,6 +86,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.itextpdf.text.DocumentException;
@@ -92,12 +98,15 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import static android.support.constraint.Constraints.TAG;
 import static android.widget.Toast.LENGTH_SHORT;
+import static com.cesarbassani.pecbr.utils.Tools.formatDecimal;
 
 public class AbateFormActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, TextWatcher, AdapterView.OnItemClickListener {
 
@@ -228,10 +237,13 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
     private ArrayAdapter<String> frigorificoAdapter;
 
     private Abate abate = new Abate();
+    private ArrayList<String> frigorificos = new ArrayList<>();
 
     private ImageView image_lote;
     private StorageReference storageReference;
     private DatabaseReference abateRef;
+    private DatabaseReference frigorificoRef;
+    private ValueEventListener valueEventListenerFrigorificos;
 
     private Bitmap imagemLote;
     private boolean fotoDoAbate = false;
@@ -242,6 +254,9 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
     private TextView txt_data_abate;
     private ImageButton datePickerAbate;
+    private boolean frigorificoEncontrado = false;
+    private ImageView adicionar_frigorifico;
+    private EditText edit_novo_frigorifico;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -528,6 +543,8 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
     private void initComponent() {
 
+        frigorificoRef = ConfiguracaoFirebase.getFirebaseDatabase().child("frigorificos");
+
         txt_data_abate = findViewById(R.id.txt_data_abate);
 
         usuarioRef = ConfiguracaoFirebase.getFirebaseDatabase().child("usuarios");
@@ -544,7 +561,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
         String[] listaFrigorificos = getResources().getStringArray(R.array.frigorifico);
         spinnerFrigorifico = findViewById(R.id.spn_nome_frigorifico);
-        frigorificoAdapter = new ArrayAdapter<>(AbateFormActivity.this, R.layout.simple_spinner_item, listaFrigorificos);
+        frigorificoAdapter = new ArrayAdapter<>(AbateFormActivity.this, R.layout.simple_spinner_item, frigorificos);
         frigorificoAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
 
         spinnerFrigorifico.setAdapter(frigorificoAdapter);
@@ -574,16 +591,79 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
-        txt_data_abate.setText(dateString);
+        adicionar_frigorifico = findViewById(R.id.adicionar_frigorifico);
 
-        datePickerAbate = findViewById(R.id.datePickerAbate);
-
-        datePickerAbate.setOnClickListener(new View.OnClickListener() {
+        adicionar_frigorifico.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialogDatePickerLight((ImageButton) view);
+                showFrigorificoDialog();
+
+                FirebaseInstanceId.getInstance().getInstanceId()
+                        .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                if (!task.isSuccessful()) {
+                                    Log.w(TAG, "getInstanceId failed", task.getException());
+                                    return;
+                                }
+                            }
+                        });
             }
         });
+    }
+
+    private void showFrigorificoDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+        dialog.setContentView(R.layout.dialog_event_frigorifico);
+        dialog.setCancelable(false);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        edit_novo_frigorifico = dialog.findViewById(R.id.edit_novo_frigorifico);
+
+        ((ImageButton) dialog.findViewById(R.id.bt_close)).
+
+                setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+        ((Button) dialog.findViewById(R.id.bt_save)).
+
+                setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        Frigorifico frigorificoGerado = inicializaFrigorifico();
+
+                        if (frigorificoGerado.getId() == null) {
+                            frigorificoGerado.salvar();
+                        } else {
+                            frigorificoGerado.atualizar();
+                        }
+
+                        dialog.dismiss();
+                    }
+                });
+
+        dialog.show();
+        dialog.getWindow().
+
+                setAttributes(lp);
+    }
+
+    private Frigorifico inicializaFrigorifico() {
+
+        Frigorifico frigorificoSalvo = new Frigorifico();
+
+        frigorificoSalvo.setNomeFrigorifico(edit_novo_frigorifico.getText().toString().trim().toUpperCase());
+
+        return frigorificoSalvo;
     }
 
     private void dialogDatePickerLight(final ImageButton bt) {
@@ -628,6 +708,41 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         super.onStart();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         recuperaUsuarios();
+        recuperarFrigorificos();
+    }
+
+    private void recuperarFrigorificos() {
+
+        frigorificoEncontrado = false;
+
+        valueEventListenerFrigorificos = frigorificoRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                frigorificos.clear();
+
+                for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                    Frigorifico frigorificoBuscado = dados.getValue(Frigorifico.class);
+                    frigorificoBuscado.setId(dados.getKey());
+                    frigorificos.add(frigorificoBuscado.getNomeFrigorifico());
+
+//                    if (frigorificoBuscado.getNomeFrigorifico().equals(txtDataCotacao.getText().toString())) {
+//                        cotacao = cotacaoBuscada;
+//                        cotacaoEncontrada = true;
+//                    }
+                }
+
+                if (frigorificoAdapter != null) {
+                    frigorificoAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     private void atualizaSpinnerTecnico(ArrayList<Usuario> usuarios) {
@@ -651,6 +766,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
     public void onStop() {
         super.onStop();
         usuarioRef.removeEventListener(valueEventListenerUsuarios);
+        frigorificoRef.removeEventListener(valueEventListenerFrigorificos);
     }
 
     private void recuperaUsuarios() {

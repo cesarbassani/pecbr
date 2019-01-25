@@ -171,20 +171,39 @@
                     android:layout_alignParentLeft="true"
                     android:text="Frigorífico" />
 
-                <android.support.v7.widget.AppCompatSpinner
-                    android:id="@+id/spn_nome_frigorifico"
+                <LinearLayout
+                    android:id="@+id/lt_frigorifico"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:layout_below="@+id/text_nome_frigorifico"
                     android:layout_marginBottom="10dp"
-                    android:background="@drawable/edit_text_border"
-                    android:spinnerMode="dialog" />
+                    android:orientation="horizontal">
+
+                    <android.support.v7.widget.AppCompatSpinner
+                        android:id="@+id/spn_nome_frigorifico"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="40dp"
+                        android:layout_below="@+id/text_nome_frigorifico"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/edit_text_border"
+                        android:spinnerMode="dialog" />
+
+                    <ImageButton
+                        android:id="@+id/adicionar_frigorifico"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="0.15"
+                        android:src="@drawable/ic_add"
+                        android:background="@drawable/edit_text_border"/>
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/text_cadastro"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/spn_nome_frigorifico"
+                    android:layout_below="@+id/lt_frigorifico"
                     android:layout_marginBottom="5dp"
                     android:text="@string/cliente"
                     android:textSize="16sp"

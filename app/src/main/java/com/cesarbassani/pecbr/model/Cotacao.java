@@ -66,7 +66,6 @@ public class Cotacao implements Serializable, Parcelable {
     }
 
     public void atualizar() {
-//        String identificadorAbate = UsuarioFirebase.getIdentificadorUsuario();
         DatabaseReference database = ConfiguracaoFirebase.getFirebaseDatabase();
 
         DatabaseReference cotacoesRef = database.child("cotacoes")
