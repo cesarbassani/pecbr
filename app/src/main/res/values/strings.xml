@@ -121,6 +121,8 @@
         \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam efficitur ipsum in placerat molestie.  Fusce quis mauris a enim sollicitudin
     </string>
 
+    <string name="short_lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
+
     <string name="invoice_address">
         Terry M Smith\n(904) 246-1297\n207 Cherry St, Neptune Beach, FL, 32266
     </string>

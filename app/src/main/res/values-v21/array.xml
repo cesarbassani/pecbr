@@ -66,11 +66,12 @@
 
     <string-array name="frigorifico">
         <item>BOIBRAS</item>
+        <item>FRIGOSUL</item>
         <item>FRIZELO TERENOS</item>
         <item>FRIZELO JUTI</item>
         <item>JBS ANASTÁCIO</item>
         <item>JBS ANDRADINA</item>
-        <item>JBS CGR 1</item>frigorifico
+        <item>JBS CGR 1</item>
         <item>JBS CGR 2</item>
         <item>JBS LINS</item>
         <item>JBS NAVIRAÍ</item>

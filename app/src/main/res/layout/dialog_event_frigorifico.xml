@@ -79,7 +79,7 @@
                         android:id="@+id/text_data_cotacao"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Cadastrar novo Frigorífico"
+                        android:text="Cadastrar novo Frigorífico."
                         android:textSize="18sp" />
 
                     <View

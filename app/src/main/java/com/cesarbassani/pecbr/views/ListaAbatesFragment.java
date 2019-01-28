@@ -3,6 +3,7 @@ package com.cesarbassani.pecbr.views;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -18,6 +19,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -29,8 +31,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cesarbassani.pecbr.R;
@@ -57,6 +63,8 @@ import com.itextpdf.text.DocumentException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -151,6 +159,8 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
         recyclerViewListaAbates.addOnItemTouchListener(new RecyclerItemClickListener(context, recyclerViewListaAbates, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, final int position) {
+                Abate abateListado = abates.get(position);
+                carregarAbate(abateListado);
             }
 
             @Override
@@ -222,6 +232,38 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
 
             }
         }));
+    }
+
+    private void carregarAbate(Abate abateListado) {
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+        dialog.setContentView(R.layout.dialog_visualizar_abate);
+        dialog.setCancelable(true);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//
+//        ((TextView) dialog.findViewById(R.id.title)).setText(p.name);
+//        ((CircleImageView) dialog.findViewById(R.id.image)).setImageResource(p.image);
+
+        ((ImageButton) dialog.findViewById(R.id.bt_close)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+//        ((AppCompatButton) dialog.findViewById(R.id.bt_follow)).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(context, "Follow Clicked", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
+        dialog.show();
+        dialog.getWindow().setAttributes(lp);
     }
 
     public static void verifyStoragePermissions(Activity activity) {

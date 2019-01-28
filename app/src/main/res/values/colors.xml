@@ -25,6 +25,6 @@
     <color name="cinza_claro">#eeeeee</color>
     <color name="grey_90">#263238</color>
     <color name="grey_40">#999999</color>
-
+    <color name="grey_20">#cccccc</color>
 
 </resources>
