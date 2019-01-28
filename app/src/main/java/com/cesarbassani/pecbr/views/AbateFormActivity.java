@@ -610,6 +610,17 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
                         });
             }
         });
+
+        txt_data_abate.setText(dateString);
+
+        datePickerAbate = findViewById(R.id.datePickerAbate);
+
+        datePickerAbate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogDatePickerLight((ImageButton) view);
+            }
+        });
     }
 
     private void showFrigorificoDialog() {
