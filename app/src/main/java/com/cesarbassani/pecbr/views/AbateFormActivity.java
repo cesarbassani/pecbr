@@ -746,6 +746,12 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
                 if (frigorificoAdapter != null) {
                     frigorificoAdapter.notifyDataSetChanged();
                 }
+
+                for (int i = 0; i < frigorificos.size(); i++) {
+                    if (frigorificos.get(i).equalsIgnoreCase(abate.getFrigorifico())) {
+                        spinnerFrigorifico.setSelection(i);
+                    }
+                }
             }
 
             @Override
@@ -1053,12 +1059,6 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         this.mViewHolder.mEditNomeCliente.setText(abate.getLote().getNomeCliente());
         this.mViewHolder.mEditFazenda.setText(abate.getLote().getPropriedade());
         this.mViewHolder.mQtdeAnimais.setText(abate.getLote().getQtdeAnimaisLote());
-
-        for (int i = 0; i < spinnerFrigorifico.getCount(); i++) {
-            if (spinnerFrigorifico.getItemAtPosition(i).toString().equals(abate.getFrigorifico())) {
-                spinnerFrigorifico.setSelection(i);
-            }
-        }
 
         //Rendimento
         this.mViewHolder.pesoCarcaca.setText(abate.getRendimento().getPesoCarcacaKilo());

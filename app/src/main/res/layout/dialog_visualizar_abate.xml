@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="40dp"
         android:orientation="horizontal">
 
         <View
@@ -19,7 +19,7 @@
         <ImageButton
             android:id="@+id/bt_close"
             android:layout_width="?attr/actionBarSize"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="40dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:tint="@color/grey_20"
             app:srcCompat="@drawable/ic_close" />
@@ -31,7 +31,9 @@
         android:layout_height="wrap_content"
         android:minHeight="120dp"
         android:orientation="vertical"
-        android:padding="@dimen/spacing_large">
+        android:paddingRight="@dimen/spacing_large"
+        android:paddingLeft="@dimen/spacing_large"
+        android:paddingBottom="@dimen/spacing_large">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -85,161 +87,396 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/spacing_large" />
+            android:layout_height="@dimen/spacing_middle" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="1.5dp"
             android:background="@color/grey_10" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/spacing_large" />
+            android:layout_height="@dimen/spacing_middle" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Claudio de Castro Cunha"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/grey_80"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Fazenda Seis Palmas"
-            android:textStyle="italic"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:textColor="@color/grey_60" />
-
-        <View
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/nested_scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/spacing_large" />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Frigorífico: JBS ANDRADINA"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:textColor="@color/grey_60" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Quantidade: 100 animais"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:textColor="@color/grey_60" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Claudio de Castro Cunha"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/grey_80"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Categoria: Vacas e Novilhas"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:textColor="@color/grey_60" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fazenda Seis Palmas"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60"
+                    android:textStyle="italic" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/spacing_large" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_large" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Dados do Rendimento"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/grey_80"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Frigorífico: JBS ANDRADINA"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Peso fazenda: 510,74kg (17,02@)"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:textColor="@color/grey_60" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Quantidade: 100 animais"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Peso carcaça:258,98kg (17,27@)"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:textColor="@color/grey_60" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Categoria: Vacas e Novilhas"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rendimento: 50,71%"
-            android:textStyle="bold"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-            android:textColor="@color/grey_60" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_large" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rendimento Estimado: 50,94%"
-            android:textSize="10sp"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:textColor="@color/grey_60" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dados do Rendimento"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/grey_80"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Peso fazenda: 510,74kg (17,02@)"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Peso carcaça:258,98kg (17,27@)"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rendimento: 50,71%"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/grey_60"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rendimento Estimado: 50,94%"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60"
+                    android:textSize="12sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_large" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Acabamento"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/grey_80"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ausente - 39 animais (17.11%)"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Escasso Menos - 39 animais (17.11%)"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Escasso - 39 animais (17.11%)"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mediano - 39 animais (17.11%)"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Uniforme - 39 animais (17.11%)"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Excessivo - 39 animais (17.11%)"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_large" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Maturidade"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/grey_80"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0 dentes - 39 animais (17.11%)"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2 dentes - 39 animais (17.11%)"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4 dentes - 39 animais (17.11%)"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="6 dentes - 39 animais (17.11%)"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="8 dentes - 39 animais (17.11%)"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_large" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bonificação"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/grey_80"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sinal Verde"
+                    android:textStyle="italic"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                    android:textColor="@color/grey_60" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="163 animais bonificados\nTotal: R$ 6.332,93\nMédia no lote: R$ 1,44/@)"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_medium" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/grey_10" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_medium" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Trace"
+                    android:textStyle="italic"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                    android:textColor="@color/grey_60" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="227 animais bonificados\nTotal: R$ 8.776,53\nMédia no lote: R$ 1,99/@)"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_medium" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/grey_10" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_medium" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:text="Bonificação total: R$ 15.109,46 (+ R$ 3,43/@)"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_middle" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Observações"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/grey_80"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.codesgood.views.JustifiedTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/grey_60"
+                    android:padding="5dp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:text="- Foram diagnosticadas pelo médico veterinário do SIF, uma carcaça com cisticercose calcificada e uma carcaça com linfadenite (não foram penalizadas). Uma carcaça com abscesso foi destinada à conserva."/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_middle" />
+
+                <ImageView
+                    android:id="@+id/image_lote"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/padrao_boi" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_large" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1.5dp"
+                    android:background="@color/grey_10" />
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
 
     </LinearLayout>
 
+
     <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginLeft="@dimen/spacing_large"-->
-        <!--android:layout_marginRight="@dimen/spacing_large"-->
-        <!--android:layout_marginBottom="?attr/actionBarSize"-->
-        <!--android:orientation="horizontal"-->
-        <!--android:paddingBottom="@dimen/spacing_large">-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginLeft="@dimen/spacing_large"-->
+    <!--android:layout_marginRight="@dimen/spacing_large"-->
+    <!--android:layout_marginBottom="?attr/actionBarSize"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:paddingBottom="@dimen/spacing_large">-->
 
-        <!--<LinearLayout-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="1"-->
-            <!--android:gravity="center"-->
-            <!--android:orientation="vertical">-->
+    <!--<LinearLayout-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="1"-->
+    <!--android:gravity="center"-->
+    <!--android:orientation="vertical">-->
 
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="35.7K"-->
-                <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
-                <!--android:textColor="@color/grey_80"-->
-                <!--android:textStyle="bold" />-->
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="35.7K"-->
+    <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
+    <!--android:textColor="@color/grey_80"-->
+    <!--android:textStyle="bold" />-->
 
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="Followers"-->
-                <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"-->
-                <!--android:textColor="@color/grey_60" />-->
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="Followers"-->
+    <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"-->
+    <!--android:textColor="@color/grey_60" />-->
 
-        <!--</LinearLayout>-->
+    <!--</LinearLayout>-->
 
-        <!--<LinearLayout-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="1"-->
-            <!--android:gravity="center"-->
-            <!--android:orientation="vertical">-->
+    <!--<LinearLayout-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="1"-->
+    <!--android:gravity="center"-->
+    <!--android:orientation="vertical">-->
 
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="215"-->
-                <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
-                <!--android:textColor="@color/grey_80"-->
-                <!--android:textStyle="bold" />-->
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="215"-->
+    <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
+    <!--android:textColor="@color/grey_80"-->
+    <!--android:textStyle="bold" />-->
 
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="Following"-->
-                <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"-->
-                <!--android:textColor="@color/grey_60" />-->
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="Following"-->
+    <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"-->
+    <!--android:textColor="@color/grey_60" />-->
 
-        <!--</LinearLayout>-->
+    <!--</LinearLayout>-->
 
     <!--</LinearLayout>-->
 
