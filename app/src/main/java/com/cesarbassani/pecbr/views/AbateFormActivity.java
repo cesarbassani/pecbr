@@ -1219,6 +1219,8 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
             }
         }
 
+        calcularAcerto();
+
         if (!abate.getObservacoes().equals(""))
             edit_observacoes.setText(abate.getObservacoes());
 
@@ -1438,75 +1440,81 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         }
 
         if (id == R.id.btn_calcular_acerto) {
-            Double totalBruto = 0.0;
-            Double taxaAntecipacao = 0.0;
-            Double arrobaRecebida = 0.0;
-            Double descontoFunrural = 0.0;
-            Double totalLiquido = 0.0;
 
-            try {
+            calcularAcerto();
 
-                if (!edit_acerto_total_bruto.getText().toString().trim().isEmpty()) {
-                    totalBruto = Double.valueOf(edit_acerto_total_bruto.getText().toString());
-
-                    if (check_a_prazo.isChecked() || check_a_vista.isChecked()) {
-
-                        if (check_a_prazo.isChecked()) {
-                            if (!edit_arroba_negociada_a_prazo.getText().toString().trim().isEmpty()) {
-                                diasAcerto = Integer.parseInt(edit_arroba_negociada_a_prazo.getText().toString());
-                            } else {
-                                Snackbar.make(parent_view, R.string.err_msg_forma_de_pagamento_dias_a_prazo, Snackbar.LENGTH_SHORT).show();
-                                diasAcerto = 0;
-                            }
-                        }
-
-                        if (!desativaFunrural) {
-                            if (edit_acerto_desconto_funrural.getText().toString().trim().isEmpty()) {
-                                descontoFunrural = totalBruto * FUNRURAL;
-                            } else {
-                                descontoFunrural = Double.valueOf(edit_acerto_desconto_funrural.getText().toString());
-                            }
-
-                            totalLiquido = totalBruto - descontoFunrural;
-                        } else {
-                            totalLiquido = totalBruto;
-                        }
-
-                        if (!edit_acerto_percentual_antecipacao.getText().toString().trim().isEmpty()) {
-                            taxaAntecipacao = (Double.valueOf(edit_acerto_percentual_antecipacao.getText().toString())) / 100;
-                            totalLiquido = totalLiquido - (totalLiquido * taxaAntecipacao);
-                            edit_acerto_valor_antecipacao.setText(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", totalLiquido * taxaAntecipacao))));
-                        }
-
-                        qtdeAnimais = Integer.parseInt(this.mViewHolder.mQtdeAnimais.getText().toString());
-
-                        arrobaRecebida = (totalLiquido / pesoTotalDoLote);
-                        arrobaRecebidaComFunrural = (totalBruto / pesoTotalDoLote);
-
-                        edit_acerto_desconto_funrural.setText(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", descontoFunrural))));
-                        edit_acerto_total_liquido.setText(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", totalLiquido))));
-                        edit_arroba_recebida.setText(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", arrobaRecebida))));
-                    } else {
-                        Snackbar.make(parent_view, R.string.err_msg_forma_de_pagamento, Snackbar.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Snackbar.make(parent_view, R.string.err_msg_total_bruto, Snackbar.LENGTH_SHORT).show();
-                    edit_acerto_total_bruto.requestFocus();
-                }
-
-            } catch (NumberFormatException e) {
-                if (!check_a_vista.isChecked() && !check_a_prazo.isChecked()) {
-                    Snackbar.make(parent_view, R.string.err_msg_forma_de_pagamento, Snackbar.LENGTH_SHORT).show();
-                }
-
-                if (check_a_prazo.isChecked()) {
-                    if (diasAcerto == 0 || edit_arroba_negociada_a_prazo.getText().toString().trim().isEmpty())
-                        Snackbar.make(parent_view, R.string.err_msg_forma_de_pagamento_dias_a_prazo, Snackbar.LENGTH_SHORT).show();
-                    edit_arroba_negociada_a_prazo.requestFocus();
-                }
-            }
         }
 
+    }
+
+    private void calcularAcerto() {
+        Double totalBruto = 0.0;
+        Double taxaAntecipacao = 0.0;
+        Double arrobaRecebida = 0.0;
+        Double descontoFunrural = 0.0;
+        Double totalLiquido = 0.0;
+
+        try {
+
+            if (!edit_acerto_total_bruto.getText().toString().trim().isEmpty()) {
+                totalBruto = Double.valueOf(edit_acerto_total_bruto.getText().toString());
+
+                if (check_a_prazo.isChecked() || check_a_vista.isChecked()) {
+
+                    if (check_a_prazo.isChecked()) {
+                        if (!edit_arroba_negociada_a_prazo.getText().toString().trim().isEmpty()) {
+                            diasAcerto = Integer.parseInt(edit_arroba_negociada_a_prazo.getText().toString());
+                        } else {
+                            Snackbar.make(parent_view, R.string.err_msg_forma_de_pagamento_dias_a_prazo, Snackbar.LENGTH_SHORT).show();
+                            diasAcerto = 0;
+                        }
+                    }
+
+                    if (!desativaFunrural) {
+                        if (edit_acerto_desconto_funrural.getText().toString().trim().isEmpty()) {
+                            descontoFunrural = totalBruto * FUNRURAL;
+                        } else {
+                            descontoFunrural = Double.valueOf(edit_acerto_desconto_funrural.getText().toString());
+                        }
+
+                        totalLiquido = totalBruto - descontoFunrural;
+                    } else {
+                        totalLiquido = totalBruto;
+                    }
+
+                    if (!edit_acerto_percentual_antecipacao.getText().toString().trim().isEmpty()) {
+                        taxaAntecipacao = (Double.valueOf(edit_acerto_percentual_antecipacao.getText().toString())) / 100;
+                        totalLiquido = totalLiquido - (totalLiquido * taxaAntecipacao);
+                        edit_acerto_valor_antecipacao.setText(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", totalLiquido * taxaAntecipacao))));
+                    }
+
+                    qtdeAnimais = Integer.parseInt(this.mViewHolder.mQtdeAnimais.getText().toString());
+
+                    arrobaRecebida = (totalLiquido / pesoTotalDoLote);
+                    arrobaRecebidaComFunrural = (totalBruto / pesoTotalDoLote);
+
+                    edit_acerto_desconto_funrural.setText(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", descontoFunrural))));
+                    edit_acerto_total_liquido.setText(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", totalLiquido))));
+                    edit_arroba_recebida.setText(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", arrobaRecebida))));
+                } else {
+                    Snackbar.make(parent_view, R.string.err_msg_forma_de_pagamento, Snackbar.LENGTH_SHORT).show();
+                }
+            } else {
+                Snackbar.make(parent_view, R.string.err_msg_total_bruto, Snackbar.LENGTH_SHORT).show();
+                edit_acerto_total_bruto.requestFocus();
+            }
+
+        } catch (NumberFormatException e) {
+            if (!check_a_vista.isChecked() && !check_a_prazo.isChecked()) {
+                Snackbar.make(parent_view, R.string.err_msg_forma_de_pagamento, Snackbar.LENGTH_SHORT).show();
+            }
+
+            if (check_a_prazo.isChecked()) {
+                if (diasAcerto == 0 || edit_arroba_negociada_a_prazo.getText().toString().trim().isEmpty())
+                    Snackbar.make(parent_view, R.string.err_msg_forma_de_pagamento_dias_a_prazo, Snackbar.LENGTH_SHORT).show();
+                edit_arroba_negociada_a_prazo.requestFocus();
+            }
+        }
     }
 
     private void calcularMaturidade() {

@@ -262,6 +262,37 @@ public class TemplatePDF extends PdfPageEventHelper {
 
         document.add(p);
 
+        int somaBezerros = (Integer.parseInt(abate.getCategoria().getQtdeBezerrosGrandes()) + Integer.parseInt(abate.getCategoria().getQtdeBezerrosMedios()) + Integer.parseInt(abate.getCategoria().getQtdeBezerrosPequenos()));
+        if (somaBezerros > 0) {
+            Paragraph bezerros = new Paragraph(new Chunk("Bezerros", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            document.add(bezerros);
+
+            if (Integer.parseInt(abate.getCategoria().getQtdeBezerrosPequenos()) > 0) {
+                Paragraph bezerrosPequenos = new Paragraph(new Chunk("Pequeno - " + abate.getCategoria().getQtdeBezerrosPequenos(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                document.add(bezerrosPequenos);
+            }
+
+            if (Integer.parseInt(abate.getCategoria().getQtdeBezerrosMedios()) > 0) {
+                Paragraph bezerrosMedios = new Paragraph(new Chunk("Médio - " + abate.getCategoria().getQtdeBezerrosMedios(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                document.add(bezerrosMedios);
+            }
+
+            if (Integer.parseInt(abate.getCategoria().getQtdeBezerrosGrandes()) > 0) {
+                Paragraph bezerrosGrandes = new Paragraph(new Chunk("Grande - " + abate.getCategoria().getQtdeBezerrosGrandes(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                document.add(bezerrosGrandes);
+            }
+
+            document.add(p);
+
+        } else if (abate.getCategoria().getCategoria().equals("Vacas") || abate.getCategoria().getCategoria().equals("Novilhas") || abate.getCategoria().getCategoria().equals("Vacas e Novilhas")) {
+            Paragraph bezerros = new Paragraph(new Chunk("Bezerros", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            document.add(bezerros);
+            Paragraph semBezerros = new Paragraph(new Chunk("Nenhum bezerro", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            document.add(semBezerros);
+
+            document.add(p);
+        }
+
         int somaAcabamento = (Integer.parseInt(abate.getAcabamento().getQtdeAusente()) + Integer.parseInt(abate.getAcabamento().getQtdeEscasso()) + Integer.parseInt(abate.getAcabamento().getQtdeEscassoMenos()) + Integer.parseInt(abate.getAcabamento().getQtdeMediano()) + Integer.parseInt(abate.getAcabamento().getQtdeUniforme()) + Integer.parseInt(abate.getAcabamento().getQtdeExcessivo()));
         if (somaAcabamento > 0) {
             Paragraph acabamento = new Paragraph(new Chunk("Acabamento", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
@@ -335,37 +366,6 @@ public class TemplatePDF extends PdfPageEventHelper {
         }
 
 //        document.add(Chunk.NEXTPAGE);
-
-        int somaBezerros = (Integer.parseInt(abate.getCategoria().getQtdeBezerrosGrandes()) + Integer.parseInt(abate.getCategoria().getQtdeBezerrosMedios()) + Integer.parseInt(abate.getCategoria().getQtdeBezerrosPequenos()));
-        if (somaBezerros > 0) {
-            Paragraph bezerros = new Paragraph(new Chunk("Bezerros", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-            document.add(bezerros);
-
-            if (Integer.parseInt(abate.getCategoria().getQtdeBezerrosPequenos()) > 0) {
-                Paragraph bezerrosPequenos = new Paragraph(new Chunk("Pequeno - " + abate.getCategoria().getQtdeBezerrosPequenos(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(bezerrosPequenos);
-            }
-
-            if (Integer.parseInt(abate.getCategoria().getQtdeBezerrosMedios()) > 0) {
-                Paragraph bezerrosMedios = new Paragraph(new Chunk("Médio - " + abate.getCategoria().getQtdeBezerrosMedios(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(bezerrosMedios);
-            }
-
-            if (Integer.parseInt(abate.getCategoria().getQtdeBezerrosGrandes()) > 0) {
-                Paragraph bezerrosGrandes = new Paragraph(new Chunk("Grande - " + abate.getCategoria().getQtdeBezerrosGrandes(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(bezerrosGrandes);
-            }
-
-            document.add(p);
-
-        } else if (abate.getCategoria().getCategoria().equals("Vacas") || abate.getCategoria().getCategoria().equals("Novilhas") || abate.getCategoria().getCategoria().equals("Vacas e Novilhas")) {
-            Paragraph bezerros = new Paragraph(new Chunk("Bezerros", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-            document.add(bezerros);
-            Paragraph semBezerros = new Paragraph(new Chunk("Nenhum bezerro", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-            document.add(semBezerros);
-
-            document.add(p);
-        }
 
         if (abate.getBonificacoes().size() > 0) {
 

@@ -48,6 +48,7 @@ import com.cesarbassani.pecbr.helper.PDFHelper;
 import com.cesarbassani.pecbr.listener.OnAbateListenerInteractionListener;
 import com.cesarbassani.pecbr.listener.RecyclerItemClickListener;
 import com.cesarbassani.pecbr.model.Abate;
+import com.cesarbassani.pecbr.utils.Tools;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -67,6 +68,7 @@ import java.util.ArrayList;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
+import static com.cesarbassani.pecbr.utils.Tools.*;
 
 public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryTextListener {
 
@@ -244,9 +246,38 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
         lp.copyFrom(dialog.getWindow().getAttributes());
         lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-//
-//        ((TextView) dialog.findViewById(R.id.title)).setText(p.name);
-//        ((CircleImageView) dialog.findViewById(R.id.image)).setImageResource(p.image);
+
+        ((TextView) dialog.findViewById(R.id.text_tecnico)).setText("Técnico Responsável: " + abateListado.getTecnico().getNome());
+        ((TextView) dialog.findViewById(R.id.text_data)).setText("Data: " + abateListado.getDataAbate());
+        ((TextView) dialog.findViewById(R.id.txt_proprietario)).setText(abateListado.getLote().getNomeCliente());
+        ((TextView) dialog.findViewById(R.id.txt_propriedade)).setText(abateListado.getLote().getPropriedade());
+        ((TextView) dialog.findViewById(R.id.txt_frigorifico)).setText("Frigorífico: " + abateListado.getFrigorifico());
+        ((TextView) dialog.findViewById(R.id.txt_qtd_animais)).setText("Quantidade: " + abateListado.getLote().getQtdeAnimaisLote());
+        ((TextView) dialog.findViewById(R.id.txt_categoria)).setText("Categoria: " + abateListado.getCategoria().getCategoria() + " - " + abateListado.getCategoria().getRacial());
+
+        if (!abateListado.getRendimento().getPesoFazendaKilo().equals("0.0")) {
+            ((TextView) dialog.findViewById(R.id.txt_peso_fazenda)).setText("Peso fazenda: " + (formatDecimal(Double.valueOf(abateListado.getRendimento().getPesoFazendaKilo())) + "kg (" + (formatDecimal(Double.valueOf(abateListado.getRendimento().getPesoFazendaArroba()))) + "@)"));
+        } else {
+            ((TextView) dialog.findViewById(R.id.txt_peso_fazenda)).setVisibility(View.GONE);
+        }
+
+        if (!abateListado.getRendimento().getPesoCarcacaKilo().equals("0.0")) {
+            ((TextView) dialog.findViewById(R.id.txt_peso_carcaca)).setText("Peso fazenda: " + (formatDecimal(Double.valueOf(abateListado.getRendimento().getPesoCarcacaKilo())) + "kg (" + (formatDecimal(Double.valueOf(abateListado.getRendimento().getPesoCarcacaArroba()))) + "@)"));
+        } else {
+            ((TextView) dialog.findViewById(R.id.txt_peso_carcaca)).setVisibility(View.GONE);
+        }
+
+        if (!abateListado.getRendimento().getRendimentoCarcaça().equals("0.0")) {
+            ((TextView) dialog.findViewById(R.id.txt_rendimento)).setText("Rendimento: " + (formatDecimal(Double.valueOf(abateListado.getRendimento().getRendimentoCarcaça()))) + "%");
+        } else {
+            ((TextView) dialog.findViewById(R.id.txt_rendimento)).setVisibility(View.GONE);
+        }
+
+        if (!abateListado.getRendimento().getRendimentoEstimado().equals("-")) {
+            ((TextView) dialog.findViewById(R.id.txt_rend_estimado)).setText("Rendimento: " + (formatDecimal(Double.valueOf(abateListado.getRendimento().getRendimentoEstimado().replace("%", "")))) + "%");
+        } else {
+            ((TextView) dialog.findViewById(R.id.txt_rend_estimado)).setVisibility(View.GONE);
+        }
 
         ((ImageButton) dialog.findViewById(R.id.bt_close)).setOnClickListener(new View.OnClickListener() {
             @Override
