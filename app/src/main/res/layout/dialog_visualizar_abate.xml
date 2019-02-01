@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="40dp"
         android:orientation="horizontal">
 
         <View
@@ -19,7 +19,7 @@
         <ImageButton
             android:id="@+id/bt_close"
             android:layout_width="?attr/actionBarSize"
-            android:layout_height="35dp"
+            android:layout_height="40dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:tint="@color/grey_20"
             app:srcCompat="@drawable/ic_close" />
@@ -129,7 +129,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/spacing_large" />
+                    android:layout_height="@dimen/spacing_middle" />
 
                 <TextView
                     android:id="@+id/txt_frigorifico"
@@ -152,30 +152,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Categoria: Vacas e Novilhas"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                    android:textColor="@color/grey_60" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/spacing_large" />
-
-                <TextView
-                    android:id="@+id/titulo_bezerros"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Bezerros"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/grey_80"
-                    android:textSize="14sp"
-                    android:visibility="visible"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/txt_nenhum_bezerro"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Nenum bezerro"
-                    android:visibility="visible"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                     android:textColor="@color/grey_60" />
 
@@ -314,7 +290,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/spacing_large" />
+                    android:layout_height="@dimen/spacing_middle" />
 
                 <TextView
                     android:id="@+id/titulo_dados_rendimento"
@@ -362,7 +338,58 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/spacing_large" />
+                    android:layout_height="@dimen/spacing_middle" />
+
+                <TextView
+                    android:id="@+id/titulo_bezerros"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bezerros"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/grey_80"
+                    android:textSize="14sp"
+                    android:visibility="visible"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txt_nenhum_bezerro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nenum bezerro"
+                    android:visibility="gone"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60" />
+
+                <TextView
+                    android:id="@+id/txt_bz_pequeno"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pequeno - 2"
+                    android:visibility="visible"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60" />
+
+                <TextView
+                    android:id="@+id/txt_bz_medio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Médio - 3"
+                    android:visibility="visible"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60" />
+
+                <TextView
+                    android:id="@+id/txt_bz_grande"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Grande - 1"
+                    android:visibility="visible"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_60" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_middle" />
 
                 <!--<View-->
                     <!--android:layout_width="match_parent"-->
@@ -797,7 +824,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/spacing_large" />
+                    android:layout_height="@dimen/spacing_middle" />
 
                 <TableLayout
                     android:id="@+id/tab_maturidade"
@@ -1044,7 +1071,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/spacing_large" />
+                    android:layout_height="@dimen/spacing_middle" />
 
                 <!--<TextView-->
                 <!--android:layout_width="wrap_content"-->

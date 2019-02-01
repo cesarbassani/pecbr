@@ -79,7 +79,7 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
     private DatabaseReference abateRef;
     private ValueEventListener valueEventListenerAbates;
     private Abate abate;
-    private  Abate abateListado;
+    private Abate abateListado;
     private SearchView searchView;
     private ProgressDialog progressDialog;
     private LinearLayout lyt_no_result;
@@ -255,6 +255,34 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
         ((TextView) dialog.findViewById(R.id.txt_qtd_animais)).setText("Quantidade: " + abateListado.getLote().getQtdeAnimaisLote());
         ((TextView) dialog.findViewById(R.id.txt_categoria)).setText("Categoria: " + abateListado.getCategoria().getCategoria() + " - " + abateListado.getCategoria().getRacial());
 
+        int somaBezerros = (Integer.parseInt(abateListado.getCategoria().getQtdeBezerrosGrandes()) + Integer.parseInt(abateListado.getCategoria().getQtdeBezerrosMedios()) + Integer.parseInt(abateListado.getCategoria().getQtdeBezerrosPequenos()));
+        if (somaBezerros > 0) {
+            ((TextView) dialog.findViewById(R.id.titulo_bezerros)).setVisibility(View.VISIBLE);
+            if (Integer.parseInt(abateListado.getCategoria().getQtdeBezerrosPequenos()) > 0) {
+                ((TextView) dialog.findViewById(R.id.txt_bz_pequeno)).setVisibility(View.VISIBLE);
+                ((TextView) dialog.findViewById(R.id.txt_bz_pequeno)).setText("Pequeno: " + abateListado.getCategoria().getQtdeBezerrosPequenos());
+            } else {
+                ((TextView) dialog.findViewById(R.id.txt_bz_pequeno)).setVisibility(View.GONE);
+            }
+
+            if (Integer.parseInt(abateListado.getCategoria().getQtdeBezerrosMedios()) > 0) {
+                ((TextView) dialog.findViewById(R.id.txt_bz_medio)).setVisibility(View.VISIBLE);
+                ((TextView) dialog.findViewById(R.id.txt_bz_medio)).setText("Médio: " + abateListado.getCategoria().getQtdeBezerrosMedios());
+            } else {
+                ((TextView) dialog.findViewById(R.id.txt_bz_medio)).setVisibility(View.GONE);
+            }
+
+            if (Integer.parseInt(abateListado.getCategoria().getQtdeBezerrosGrandes()) > 0) {
+                ((TextView) dialog.findViewById(R.id.txt_bz_grande)).setVisibility(View.VISIBLE);
+                ((TextView) dialog.findViewById(R.id.txt_bz_grande)).setText("Grande: " + abateListado.getCategoria().getQtdeBezerrosGrandes());
+            } else {
+                ((TextView) dialog.findViewById(R.id.txt_bz_grande)).setVisibility(View.GONE);
+            }
+        } else if (abate.getCategoria().getCategoria().equals("Vacas") || abate.getCategoria().getCategoria().equals("Novilhas") || abate.getCategoria().getCategoria().equals("Vacas e Novilhas")) {
+            ((TextView) dialog.findViewById(R.id.titulo_bezerros)).setVisibility(View.VISIBLE);
+            ((TextView) dialog.findViewById(R.id.txt_nenhum_bezerro)).setVisibility(View.VISIBLE);
+        }
+
         if (!abateListado.getRendimento().getPesoFazendaKilo().equals("0.0")) {
             ((TextView) dialog.findViewById(R.id.txt_peso_fazenda)).setText("Peso fazenda: " + (formatDecimal(Double.valueOf(abateListado.getRendimento().getPesoFazendaKilo())) + "kg (" + (formatDecimal(Double.valueOf(abateListado.getRendimento().getPesoFazendaArroba()))) + "@)"));
         } else {
@@ -278,6 +306,7 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
         } else {
             ((TextView) dialog.findViewById(R.id.txt_rend_estimado)).setVisibility(View.GONE);
         }
+
 
         ((ImageButton) dialog.findViewById(R.id.bt_close)).setOnClickListener(new View.OnClickListener() {
             @Override

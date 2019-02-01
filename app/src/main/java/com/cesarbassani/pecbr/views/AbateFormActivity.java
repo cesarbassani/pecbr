@@ -1067,8 +1067,6 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
             this.mViewHolder.pesoFazenda.setText(abate.getRendimento().getPesoFazendaKilo());
         }
 
-        calculaRendimento();
-
         //Categoria
         this.mViewHolder.txtCategoria.setText(abate.getCategoria().getCategoria());
         this.mViewHolder.txtRacial.setText(abate.getCategoria().getRacial());
@@ -1085,6 +1083,8 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         if (Integer.parseInt(abate.getCategoria().getQtdeBezerrosPequenos()) > 0) {
             ((TextView) findViewById(R.id.tv_bezerros_pequeno)).setText(abate.getCategoria().getQtdeBezerrosPequenos());
         }
+
+        calculaRendimento();
 
         //Acabamento
         int qtdAcabamento = 0;
