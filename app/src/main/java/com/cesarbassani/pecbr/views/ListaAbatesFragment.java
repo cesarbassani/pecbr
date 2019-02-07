@@ -36,10 +36,15 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cesarbassani.pecbr.R;
+import com.cesarbassani.pecbr.adapter.AdapterBonificacoesPersonalizado;
+import com.cesarbassani.pecbr.adapter.AdapterPenalizacoesPersonalizado;
 import com.cesarbassani.pecbr.adapter.ListaAbatesAdapter;
 import com.cesarbassani.pecbr.config.ConfiguracaoFirebase;
 import com.cesarbassani.pecbr.constants.DataBaseConstants;
@@ -48,6 +53,8 @@ import com.cesarbassani.pecbr.helper.PDFHelper;
 import com.cesarbassani.pecbr.listener.OnAbateListenerInteractionListener;
 import com.cesarbassani.pecbr.listener.RecyclerItemClickListener;
 import com.cesarbassani.pecbr.model.Abate;
+import com.cesarbassani.pecbr.model.Bonificacao;
+import com.cesarbassani.pecbr.model.Penalizacao;
 import com.cesarbassani.pecbr.utils.Tools;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -64,6 +71,8 @@ import com.itextpdf.text.DocumentException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -83,7 +92,10 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
     private SearchView searchView;
     private ProgressDialog progressDialog;
     private LinearLayout lyt_no_result;
-
+    private ListView listViewBonificacao;
+    private ListView listViewPenalizacao;
+    private AdapterBonificacoesPersonalizado adapterBonificacao;
+    private AdapterPenalizacoesPersonalizado adapterPenalizacao;
     private StorageReference storageReference;
     private StorageReference imagens;
     private StorageReference imageRef;
@@ -234,6 +246,7 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
 
             }
         }));
+
     }
 
     private void carregarAbate(Abate abateListado) {
@@ -246,6 +259,11 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
         lp.copyFrom(dialog.getWindow().getAttributes());
         lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        listViewBonificacao = dialog.findViewById(R.id.list_view_bonificacao);
+        listViewPenalizacao = dialog.findViewById(R.id.list_view_penalizacao);
+        dialog.findViewById(R.id.text_bonificacao_total);
+        dialog.findViewById(R.id.text_penalizacao_total);
 
         ((TextView) dialog.findViewById(R.id.text_tecnico)).setText("Técnico Responsável: " + abateListado.getTecnico().getNome());
         ((TextView) dialog.findViewById(R.id.text_data)).setText("Data: " + abateListado.getDataAbate());
@@ -263,6 +281,7 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
                 ((TextView) dialog.findViewById(R.id.txt_bz_pequeno)).setText("Pequeno: " + abateListado.getCategoria().getQtdeBezerrosPequenos());
             } else {
                 ((TextView) dialog.findViewById(R.id.txt_bz_pequeno)).setVisibility(View.GONE);
+                ((View) dialog.findViewById(R.id.espaco_bezerros)).setVisibility(View.GONE);
             }
 
             if (Integer.parseInt(abateListado.getCategoria().getQtdeBezerrosMedios()) > 0) {
@@ -278,9 +297,16 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
             } else {
                 ((TextView) dialog.findViewById(R.id.txt_bz_grande)).setVisibility(View.GONE);
             }
-        } else if (abate.getCategoria().getCategoria().equals("Vacas") || abate.getCategoria().getCategoria().equals("Novilhas") || abate.getCategoria().getCategoria().equals("Vacas e Novilhas")) {
+        } else if (abateListado.getCategoria().getCategoria().equals("Vacas") || abateListado.getCategoria().getCategoria().equals("Novilhas") || abateListado.getCategoria().getCategoria().equals("Vacas e Novilhas")) {
             ((TextView) dialog.findViewById(R.id.titulo_bezerros)).setVisibility(View.VISIBLE);
             ((TextView) dialog.findViewById(R.id.txt_nenhum_bezerro)).setVisibility(View.VISIBLE);
+        } else {
+            ((TextView) dialog.findViewById(R.id.titulo_bezerros)).setVisibility(View.GONE);
+            ((TextView) dialog.findViewById(R.id.txt_bz_pequeno)).setVisibility(View.GONE);
+            ((TextView) dialog.findViewById(R.id.txt_bz_medio)).setVisibility(View.GONE);
+            ((TextView) dialog.findViewById(R.id.txt_bz_grande)).setVisibility(View.GONE);
+            ((TextView) dialog.findViewById(R.id.titulo_bezerros)).setVisibility(View.GONE);
+            ((TextView) dialog.findViewById(R.id.txt_nenhum_bezerro)).setVisibility(View.GONE);
         }
 
         if (!abateListado.getRendimento().getPesoFazendaKilo().equals("0.0")) {
@@ -307,6 +333,216 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
             ((TextView) dialog.findViewById(R.id.txt_rend_estimado)).setVisibility(View.GONE);
         }
 
+        int somaAcabamento = (Integer.parseInt(abateListado.getAcabamento().getQtdeAusente()) + Integer.parseInt(abateListado.getAcabamento().getQtdeEscasso()) + Integer.parseInt(abateListado.getAcabamento().getQtdeEscassoMenos()) + Integer.parseInt(abateListado.getAcabamento().getQtdeMediano()) + Integer.parseInt(abateListado.getAcabamento().getQtdeUniforme()) + Integer.parseInt(abateListado.getAcabamento().getQtdeExcessivo()));
+        if (somaAcabamento > 0) {
+            ((TableLayout) dialog.findViewById(R.id.tab_acabamento)).setVisibility(View.VISIBLE);
+
+            if (Integer.parseInt(abateListado.getAcabamento().getQtdeAusente()) > 0) {
+                ((TableRow) dialog.findViewById(R.id.linha_ausente)).setVisibility(View.VISIBLE);
+                ((TextView) dialog.findViewById(R.id.qtd_ausente)).setText(abateListado.getAcabamento().getQtdeAusente());
+                ((TextView) dialog.findViewById(R.id.perc_ausente)).setText(abateListado.getAcabamento().getPercentualAusente());
+            } else {
+                ((TableRow) dialog.findViewById(R.id.linha_ausente)).setVisibility(View.GONE);
+            }
+
+            if (Integer.parseInt(abateListado.getAcabamento().getQtdeEscassoMenos()) > 0) {
+                ((TableRow) dialog.findViewById(R.id.linha_escasso_menos)).setVisibility(View.VISIBLE);
+                ((TextView) dialog.findViewById(R.id.qtd_escasso_menos)).setText(abateListado.getAcabamento().getQtdeEscassoMenos());
+                ((TextView) dialog.findViewById(R.id.perc_escasso_menos)).setText(abateListado.getAcabamento().getPercentualEscassoMenos());
+            } else {
+                ((TableRow) dialog.findViewById(R.id.linha_escasso_menos)).setVisibility(View.GONE);
+            }
+
+            if (Integer.parseInt(abateListado.getAcabamento().getQtdeEscasso()) > 0) {
+                ((TableRow) dialog.findViewById(R.id.linha_escasso)).setVisibility(View.VISIBLE);
+                ((TextView) dialog.findViewById(R.id.qtd_escasso)).setText(abateListado.getAcabamento().getQtdeEscasso());
+                ((TextView) dialog.findViewById(R.id.perc_escasso)).setText(abateListado.getAcabamento().getPercentualEscasso());
+            } else {
+                ((TableRow) dialog.findViewById(R.id.linha_escasso)).setVisibility(View.GONE);
+            }
+
+            if (Integer.parseInt(abateListado.getAcabamento().getQtdeMediano()) > 0) {
+                ((TableRow) dialog.findViewById(R.id.linha_mediano)).setVisibility(View.VISIBLE);
+                ((TextView) dialog.findViewById(R.id.qtd_mediano)).setText(abateListado.getAcabamento().getQtdeMediano());
+                ((TextView) dialog.findViewById(R.id.perc_mediano)).setText(abateListado.getAcabamento().getPercentualMediano());
+            } else {
+                ((TableRow) dialog.findViewById(R.id.linha_mediano)).setVisibility(View.GONE);
+            }
+
+            if (Integer.parseInt(abateListado.getAcabamento().getQtdeUniforme()) > 0) {
+                ((TableRow) dialog.findViewById(R.id.linha_Uniforme)).setVisibility(View.VISIBLE);
+                ((TextView) dialog.findViewById(R.id.qtd_uniforme)).setText(abateListado.getAcabamento().getQtdeUniforme());
+                ((TextView) dialog.findViewById(R.id.perc_uniforme)).setText(abateListado.getAcabamento().getPercentualUniforme());
+            } else {
+                ((TableRow) dialog.findViewById(R.id.linha_Uniforme)).setVisibility(View.GONE);
+            }
+
+            if (Integer.parseInt(abateListado.getAcabamento().getQtdeExcessivo()) > 0) {
+                ((TableRow) dialog.findViewById(R.id.linha_excessivo)).setVisibility(View.VISIBLE);
+                ((TextView) dialog.findViewById(R.id.qtd_excessivo)).setText(abateListado.getAcabamento().getQtdeExcessivo());
+                ((TextView) dialog.findViewById(R.id.perc_excessivo)).setText(abateListado.getAcabamento().getQtdeExcessivo());
+            } else {
+                ((TableRow) dialog.findViewById(R.id.linha_excessivo)).setVisibility(View.GONE);
+            }
+
+        } else {
+            ((TableLayout) dialog.findViewById(R.id.tab_acabamento)).setVisibility(View.GONE);
+            ((View) dialog.findViewById(R.id.espaco_acabamento)).setVisibility(View.GONE);
+        }
+
+        int somaMaturidade = (Integer.parseInt(abateListado.getMaturidade().getQtdeZeroDentes()) + Integer.parseInt(abateListado.getMaturidade().getQtdeDoisDentes()) + Integer.parseInt(abateListado.getMaturidade().getQtdeQuatroDentes()) + Integer.parseInt(abateListado.getMaturidade().getQtdeSeisDentes()) + Integer.parseInt(abateListado.getMaturidade().getQtdeOitoDentes()));
+        if (somaMaturidade > 0) {
+            ((TableLayout) dialog.findViewById(R.id.tab_maturidade)).setVisibility(View.VISIBLE);
+
+            if (Integer.parseInt(abateListado.getMaturidade().getQtdeZeroDentes()) > 0) {
+                ((TableRow) dialog.findViewById(R.id.linha_0_dentes)).setVisibility(View.VISIBLE);
+                ((TextView) dialog.findViewById(R.id.qtd_0_dentes)).setText(abateListado.getMaturidade().getQtdeZeroDentes());
+                ((TextView) dialog.findViewById(R.id.perc_0_dentes)).setText(abateListado.getMaturidade().getPercentualZeroDentes());
+            } else {
+                ((TableRow) dialog.findViewById(R.id.linha_0_dentes)).setVisibility(View.GONE);
+            }
+
+            if (Integer.parseInt(abateListado.getMaturidade().getQtdeDoisDentes()) > 0) {
+                ((TableRow) dialog.findViewById(R.id.linha_2_dentes)).setVisibility(View.VISIBLE);
+                ((TextView) dialog.findViewById(R.id.qtd_2_dentes)).setText(abateListado.getMaturidade().getQtdeDoisDentes());
+                ((TextView) dialog.findViewById(R.id.perc_2_dentes)).setText(abateListado.getMaturidade().getPercentualDoisDentes());
+            } else {
+                ((TableRow) dialog.findViewById(R.id.linha_2_dentes)).setVisibility(View.GONE);
+            }
+
+            if (Integer.parseInt(abateListado.getMaturidade().getQtdeQuatroDentes()) > 0) {
+                ((TableRow) dialog.findViewById(R.id.linha_4_dentes)).setVisibility(View.VISIBLE);
+                ((TextView) dialog.findViewById(R.id.qtd_4_dentes)).setText(abateListado.getMaturidade().getQtdeQuatroDentes());
+                ((TextView) dialog.findViewById(R.id.perc_4_dentes)).setText(abateListado.getMaturidade().getPercentualQuatroDentes());
+            } else {
+                ((TableRow) dialog.findViewById(R.id.linha_4_dentes)).setVisibility(View.GONE);
+            }
+
+            if (Integer.parseInt(abateListado.getMaturidade().getQtdeSeisDentes()) > 0) {
+                ((TableRow) dialog.findViewById(R.id.linha_6_dentes)).setVisibility(View.VISIBLE);
+                ((TextView) dialog.findViewById(R.id.qtd_6_dentes)).setText(abateListado.getMaturidade().getQtdeSeisDentes());
+                ((TextView) dialog.findViewById(R.id.perc_6_dentes)).setText(abateListado.getMaturidade().getPercentualSeisDentes());
+            } else {
+                ((TableRow) dialog.findViewById(R.id.linha_6_dentes)).setVisibility(View.GONE);
+            }
+
+            if (Integer.parseInt(abateListado.getMaturidade().getQtdeOitoDentes()) > 0) {
+                ((TableRow) dialog.findViewById(R.id.linha_8_dentes)).setVisibility(View.VISIBLE);
+                ((TextView) dialog.findViewById(R.id.qtd_8_dentes)).setText(abateListado.getMaturidade().getQtdeOitoDentes());
+                ((TextView) dialog.findViewById(R.id.perc_8_dentes)).setText(abateListado.getMaturidade().getPercentualOitoDentes());
+            } else {
+                ((TableRow) dialog.findViewById(R.id.linha_8_dentes)).setVisibility(View.GONE);
+            }
+
+        } else {
+            ((TableLayout) dialog.findViewById(R.id.tab_maturidade)).setVisibility(View.GONE);
+            ((View) dialog.findViewById(R.id.espaco_maturidade)).setVisibility(View.GONE);
+        }
+
+        if (!abateListado.getAcerto().getTotalLiquido().equals("")) {
+            ((TextView) dialog.findViewById(R.id.titulo_acerto)).setVisibility(View.VISIBLE);
+            ((View) dialog.findViewById(R.id.espaco_acerto)).setVisibility(View.VISIBLE);
+            if (!abateListado.getAcerto().getArrobaNegociada().equals("")) {
+                ((TextView) dialog.findViewById(R.id.txt_arroba_negociada)).setVisibility(View.VISIBLE);
+                ((TextView) dialog.findViewById(R.id.txt_arroba_negociada)).setText("@ Negociada: R$ " + formatDecimal(Double.valueOf(abateListado.getAcerto().getArrobaNegociada())));
+            }
+
+            if (!abateListado.getAcerto().getTotalBruto().equals("")) {
+                ((TextView) dialog.findViewById(R.id.txt_total_bruto)).setVisibility(View.VISIBLE);
+                ((TextView) dialog.findViewById(R.id.txt_total_bruto)).setText("Total Bruto: R$ " + formatDecimal(Double.valueOf(abateListado.getAcerto().getTotalBruto())));
+            }
+
+            if (!abateListado.getAcerto().getTotalLiquido().equals("")) {
+                ((TextView) dialog.findViewById(R.id.txt_total_liquido)).setVisibility(View.VISIBLE);
+                ((TextView) dialog.findViewById(R.id.txt_total_liquido)).setText("Total Líquido: R$ " + formatDecimal(Double.valueOf(abateListado.getAcerto().getTotalLiquido())));
+            }
+
+            if (!abateListado.getAcerto().getArrobaRecebidaComFunrural().equals("0.0")) {
+                ((TextView) dialog.findViewById(R.id.txt_arroba_com_funrural)).setVisibility(View.VISIBLE);
+                ((TextView) dialog.findViewById(R.id.txt_arroba_com_funrural)).setText("Valor da @ com Funrural: R$ " + formatDecimal(Double.valueOf(abateListado.getAcerto().getArrobaRecebidaComFunrural())));
+            }
+
+            if (!abateListado.getAcerto().getArrobaRecebida().equals("")) {
+                ((TextView) dialog.findViewById(R.id.txt_arroba_recebida)).setVisibility(View.VISIBLE);
+                ((TextView) dialog.findViewById(R.id.txt_arroba_recebida)).setText("@ Recebida: R$ " + formatDecimal(Double.valueOf(abateListado.getAcerto().getArrobaRecebida())));
+            }
+
+            ((TextView) dialog.findViewById(R.id.txt_forma_pagamento)).setVisibility(View.VISIBLE);
+
+            if (!(abateListado.getAcerto().getPrazo() == null) && abateListado.getAcerto().getPrazo().equals("A prazo")) {
+                ((TextView) dialog.findViewById(R.id.txt_forma_pagamento)).setText("Forma de pagamento: " + abateListado.getAcerto().getPrazo() + " (" + abateListado.getAcerto().getDias() + " dias)");
+            } else if (!(abateListado.getAcerto().getPrazo() == null) && abateListado.getAcerto().getPrazo().equals("À vista")) {
+                ((TextView) dialog.findViewById(R.id.txt_forma_pagamento)).setText("Forma de pagamento: " + abateListado.getAcerto().getPrazo());
+            }
+
+        } else {
+                ((TextView) dialog.findViewById(R.id.titulo_acerto)).setVisibility(View.GONE);
+                ((TextView) dialog.findViewById(R.id.txt_arroba_negociada)).setVisibility(View.GONE);
+                ((TextView) dialog.findViewById(R.id.txt_total_bruto)).setVisibility(View.GONE);
+                ((TextView) dialog.findViewById(R.id.txt_total_liquido)).setVisibility(View.GONE);
+                ((TextView) dialog.findViewById(R.id.txt_arroba_com_funrural)).setVisibility(View.GONE);
+                ((TextView) dialog.findViewById(R.id.txt_arroba_recebida)).setVisibility(View.GONE);
+                ((TextView) dialog.findViewById(R.id.txt_forma_pagamento)).setVisibility(View.GONE);
+                ((View) dialog.findViewById(R.id.espaco_acerto)).setVisibility(View.GONE);
+        }
+
+        if (!abateListado.getObservacoes().equals("")) {
+            ((TextView) dialog.findViewById(R.id.titulo_observacoes)).setVisibility(View.VISIBLE);
+            ((TextView) dialog.findViewById(R.id.txt_observacoes)).setVisibility(View.VISIBLE);
+            ((TextView) dialog.findViewById(R.id.txt_observacoes)).setText(abateListado.getObservacoes());
+            ((View) dialog.findViewById(R.id.espaco_observacoes)).setVisibility(View.VISIBLE);
+        } else {
+            ((TextView) dialog.findViewById(R.id.titulo_observacoes)).setVisibility(View.GONE);
+            ((TextView) dialog.findViewById(R.id.txt_observacoes)).setVisibility(View.GONE);
+            ((View) dialog.findViewById(R.id.espaco_observacoes)).setVisibility(View.GONE);
+        }
+
+        if (abateListado.getBonificacoes().size() > 0) {
+            ((TextView) dialog.findViewById(R.id.titulo_bonificacao)).setVisibility(View.VISIBLE);
+            ((TextView) dialog.findViewById(R.id.text_bonificacao_total)).setVisibility(View.VISIBLE);
+
+            String bonificacaoTotal = atualizaTotalBonificacao(abateListado);
+
+            if (!bonificacaoTotal.equals(" - ")) {
+                ((TextView) dialog.findViewById(R.id.text_bonificacao_total)).setText(bonificacaoTotal);
+            } else {
+                ((TextView) dialog.findViewById(R.id.text_bonificacao_total)).setVisibility(View.GONE);
+            }
+            ((ListView) dialog.findViewById(R.id.list_view_bonificacao)).setVisibility(View.VISIBLE);
+        } else {
+            ((TextView) dialog.findViewById(R.id.titulo_bonificacao)).setVisibility(View.GONE);
+            ((TextView) dialog.findViewById(R.id.text_bonificacao_total)).setVisibility(View.GONE);
+            ((ListView) dialog.findViewById(R.id.list_view_bonificacao)).setVisibility(View.GONE);
+            ((View) dialog.findViewById(R.id.espaco_bonificacao)).setVisibility(View.GONE);
+            ((View) dialog.findViewById(R.id.espaco_bonificacao_total)).setVisibility(View.GONE);
+        }
+
+        adapterBonificacao = new AdapterBonificacoesPersonalizado(abateListado.getBonificacoes(), getActivity());
+        listViewBonificacao.setAdapter(adapterBonificacao);
+//        setListViewHeightBasedOnChildren(listViewBonificacao);
+
+        if (abateListado.getPenalizacoes().size() > 0) {
+            ((TextView) dialog.findViewById(R.id.titulo_penalizacao)).setVisibility(View.VISIBLE);
+
+            String penalizacaoTotal = atualizaTotalPenalizacao(abateListado);
+
+            if (!penalizacaoTotal.equals(" - ")) {
+                ((TextView) dialog.findViewById(R.id.text_penalizacao_total)).setText(penalizacaoTotal);
+            } else {
+                ((TextView) dialog.findViewById(R.id.text_penalizacao_total)).setVisibility(View.GONE);
+            }
+            ((ListView) dialog.findViewById(R.id.list_view_penalizacao)).setVisibility(View.VISIBLE);
+        } else {
+            ((TextView) dialog.findViewById(R.id.titulo_penalizacao)).setVisibility(View.GONE);
+            ((TextView) dialog.findViewById(R.id.text_penalizacao_total)).setVisibility(View.GONE);
+            ((ListView) dialog.findViewById(R.id.list_view_penalizacao)).setVisibility(View.GONE);
+            ((View) dialog.findViewById(R.id.espaco_penalizacao)).setVisibility(View.GONE);
+            ((View) dialog.findViewById(R.id.espaco_penalizacao_total)).setVisibility(View.GONE);
+        }
+
+        adapterPenalizacao = new AdapterPenalizacoesPersonalizado(abateListado.getPenalizacoes(), getActivity());
+        listViewPenalizacao.setAdapter(adapterPenalizacao);
+//        setListViewHeightBasedOnChildren(listViewPenalizacao);
 
         ((ImageButton) dialog.findViewById(R.id.bt_close)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -324,6 +560,50 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
 
         dialog.show();
         dialog.getWindow().setAttributes(lp);
+    }
+
+    private String atualizaTotalPenalizacao(Abate abate) {
+        Double totalPenalizacao = 0.0;
+        Double mediaTotalLote = 0.0;
+        Double pesoTotalDoLote = 0.0;
+
+        for (Penalizacao penalizacaoRetornada : abate.getPenalizacoes()) {
+            if (penalizacaoRetornada.getTotal() != null)
+                totalPenalizacao += Double.valueOf(penalizacaoRetornada.getTotal());
+        }
+
+        if (!totalPenalizacao.equals(0.0)) {
+            totalPenalizacao = Double.valueOf(String.format(Locale.US, "%.2f", totalPenalizacao));
+            pesoTotalDoLote = Double.parseDouble(abate.getRendimento().getPesoCarcacaArroba()) * Integer.parseInt(abate.getLote().getQtdeAnimaisLote());
+
+            mediaTotalLote = totalPenalizacao / pesoTotalDoLote;
+            mediaTotalLote = Double.valueOf(String.format(Locale.US, "%.2f", mediaTotalLote));
+
+            return ("Penalização total: R$" + formatDecimal(totalPenalizacao) + " (+ R$ " + mediaTotalLote + "/@)");
+        } else
+            return " - ";
+    }
+
+    private String atualizaTotalBonificacao(Abate abate) {
+        Double totalBonificacao = 0.0;
+        Double mediaTotalLote = 0.0;
+        Double pesoTotalDoLote = 0.0;
+
+        for (Bonificacao bonificacaoRetornada : abate.getBonificacoes()) {
+            if (bonificacaoRetornada.getTotal() != null)
+                totalBonificacao += Double.valueOf(bonificacaoRetornada.getTotal());
+        }
+
+        if (!totalBonificacao.equals(0.0)) {
+            totalBonificacao = Double.valueOf(String.format(Locale.US, "%.2f", totalBonificacao));
+            pesoTotalDoLote = Double.parseDouble(abate.getRendimento().getPesoCarcacaArroba()) * Integer.parseInt(abate.getLote().getQtdeAnimaisLote());
+
+            mediaTotalLote = totalBonificacao / pesoTotalDoLote;
+            mediaTotalLote = Double.valueOf(String.format(Locale.US, "%.2f", mediaTotalLote));
+
+            return ("Bonificação total: R$" + formatDecimal(totalBonificacao) + " (+ R$ " + mediaTotalLote + "/@)");
+        } else
+            return " - ";
     }
 
     public static void verifyStoragePermissions(Activity activity) {

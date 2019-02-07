@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cesarbassani.pecbr.R;
@@ -59,17 +60,36 @@ public class AdapterPenalizacoesPersonalizado extends BaseAdapter {
                 qtde.setText(String.valueOf(penalizacao.getQuantidade()));
                 total.setText(String.valueOf(penalizacao.getTotal()));
                 mediaLote.setText(String.valueOf(penalizacao.getMedia()) + "/@");
-                observacoes.setText(penalizacao.getObservacoes());
+                if (!penalizacao.getObservacoes().equals("")) {
+                    observacoes.setText(penalizacao.getObservacoes());
+                } else {
+                    observacoes.setVisibility(View.GONE);
+                }
             } else {
-                convertView = activity.getLayoutInflater().inflate(R.layout.lista_penalizacao_personalizada_simplificada, parent, false);
+                convertView = activity.getLayoutInflater().inflate(R.layout.lista_penalizacao_personalizada, parent, false);
 
                 TextView descricao = convertView.findViewById(R.id.lista_penalizacao_descricao);
                 TextView qtde = convertView.findViewById(R.id.lista_penalizacao_quantidade);
                 TextView observacoes = convertView.findViewById(R.id.lista_penalizacao_observacao);
+                TextView total = convertView.findViewById(R.id.lista_penalizacao_Total);
+                TextView mediaLote = convertView.findViewById(R.id.lista_penalizacao_media);
+
+                LinearLayout layout_penalizacao_total_linha = convertView.findViewById(R.id.layout_penalizacao_total_linha);
+                LinearLayout layout_penalizacao_media_linha = convertView.findViewById(R.id.layout_penalizacao_media_linha);
+
+                total.setVisibility(View.GONE);
+                mediaLote.setVisibility(View.GONE);
+
+                layout_penalizacao_total_linha.setVisibility(View.GONE);
+                layout_penalizacao_media_linha.setVisibility(View.GONE);
 
                 descricao.setText(penalizacao.getDescricao());
                 qtde.setText(String.valueOf(penalizacao.getQuantidade()));
-                observacoes.setText(penalizacao.getObservacoes());
+                if (!penalizacao.getObservacoes().equals("")) {
+                    observacoes.setText(penalizacao.getObservacoes());
+                } else {
+                    observacoes.setVisibility(View.GONE);
+                }
             }
         }
 

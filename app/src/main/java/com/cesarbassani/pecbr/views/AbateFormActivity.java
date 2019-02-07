@@ -1219,7 +1219,8 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
             }
         }
 
-        calcularAcerto();
+        if (abate.getAcerto().getTotalBruto() != null && !abate.getAcerto().getTotalBruto().equals(""))
+            calcularAcerto();
 
         if (!abate.getObservacoes().equals(""))
             edit_observacoes.setText(abate.getObservacoes());

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.cesarbassani.pecbr.R;
 
@@ -59,18 +60,36 @@ public class AdapterBonificacoesPersonalizado extends BaseAdapter {
                 qtde.setText(String.valueOf(bonificacao.getQtde()));
                 total.setText(String.valueOf(bonificacao.getTotal()));
                 media.setText(String.valueOf(bonificacao.getMediaLote()) + "/@");
-                observacoes.setText(bonificacao.getObservacoes());
+                if (!bonificacao.getObservacoes().equals("")) {
+                    observacoes.setText(bonificacao.getObservacoes());
+                } else {
+                    observacoes.setVisibility(View.GONE);
+                }
 
             } else {
-                convertView = activity.getLayoutInflater().inflate(R.layout.lista_bonificacao_personalizada_simplificada, parent, false);
+                convertView = activity.getLayoutInflater().inflate(R.layout.lista_bonificacao_personalizada, parent, false);
 
                 TextView tipo = convertView.findViewById(R.id.lista_bonificacao_tipo);
                 TextView qtde = convertView.findViewById(R.id.lista_bonificacao_qtde);
                 TextView observacoes = convertView.findViewById(R.id.lista_bonificacao_observacao);
+                TextView total = convertView.findViewById(R.id.lista_bonificacao_total);
+                TextView media = convertView.findViewById(R.id.lista_bonificacao_media);
 
+                LinearLayout layout_bonificacao_total_linha = convertView.findViewById(R.id.layout_bonificacao_total_linha);
+                LinearLayout layout_bonificacao_media_linha = convertView.findViewById(R.id.layout_bonificacao_media_linha);
+
+                total.setVisibility(View.GONE);
+                media.setVisibility(View.GONE);
+
+                layout_bonificacao_total_linha.setVisibility(View.GONE);
+                layout_bonificacao_media_linha.setVisibility(View.GONE);
 
                 qtde.setText(String.valueOf(bonificacao.getQtde()));
-                observacoes.setText(bonificacao.getObservacoes());
+                if (!bonificacao.getObservacoes().equals("")) {
+                    observacoes.setText(bonificacao.getObservacoes());
+                } else {
+                    observacoes.setVisibility(View.GONE);
+                }
                 tipo.setText(bonificacao.getTipo());
             }
         }
