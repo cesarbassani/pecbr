@@ -98,7 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/spacing_middle" />
 
-        <android.support.v4.widget.NestedScrollView
+        <ScrollView
             android:id="@+id/nested_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -1145,16 +1145,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/spacing_medium" />
 
-                <ListView
+                <android.support.v7.widget.RecyclerView
                     android:id="@+id/list_view_bonificacao"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_medium" />
 
                 <View
                     android:id="@+id/espaco_bonificacao"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/grey_10" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_medium" />
 
                 <!--<View-->
                     <!--android:id="@+id/espaco_bonificacao_total"-->
@@ -1189,16 +1198,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/spacing_medium" />
 
-                <ListView
+                <android.support.v7.widget.RecyclerView
                     android:id="@+id/list_view_penalizacao"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_medium" />
 
                 <View
                     android:id="@+id/espaco_penalizacao"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/grey_10" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_medium" />
 
                 <!--<View-->
                     <!--android:layout_width="match_parent"-->
@@ -1330,7 +1348,7 @@
 
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
+        </ScrollView>
 
     </LinearLayout>
 

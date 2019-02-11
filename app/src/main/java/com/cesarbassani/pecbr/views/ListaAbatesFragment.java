@@ -13,13 +13,10 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -45,38 +42,27 @@ import android.widget.Toast;
 import com.cesarbassani.pecbr.R;
 import com.cesarbassani.pecbr.adapter.AdapterBonificacoesPersonalizado;
 import com.cesarbassani.pecbr.adapter.AdapterPenalizacoesPersonalizado;
+import com.cesarbassani.pecbr.adapter.BonificacaoAdapter;
 import com.cesarbassani.pecbr.adapter.ListaAbatesAdapter;
+import com.cesarbassani.pecbr.adapter.PenalizacaoAdapter;
 import com.cesarbassani.pecbr.config.ConfiguracaoFirebase;
-import com.cesarbassani.pecbr.constants.DataBaseConstants;
 import com.cesarbassani.pecbr.constants.GuestConstants;
-import com.cesarbassani.pecbr.helper.PDFHelper;
 import com.cesarbassani.pecbr.listener.OnAbateListenerInteractionListener;
 import com.cesarbassani.pecbr.listener.RecyclerItemClickListener;
 import com.cesarbassani.pecbr.model.Abate;
 import com.cesarbassani.pecbr.model.Bonificacao;
 import com.cesarbassani.pecbr.model.Penalizacao;
-import com.cesarbassani.pecbr.utils.Tools;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.itextpdf.text.DocumentException;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
-import static android.app.Activity.RESULT_OK;
 import static com.cesarbassani.pecbr.utils.Tools.*;
 
 public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryTextListener {
@@ -92,14 +78,16 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
     private SearchView searchView;
     private ProgressDialog progressDialog;
     private LinearLayout lyt_no_result;
-    private ListView listViewBonificacao;
-    private ListView listViewPenalizacao;
+    private RecyclerView recyclerViewBonificacao;
+    private RecyclerView recyclerViewPenalizacao;
     private AdapterBonificacoesPersonalizado adapterBonificacao;
-    private AdapterPenalizacoesPersonalizado adapterPenalizacao;
+    private BonificacaoAdapter bonificacaoAdapter;
+    private PenalizacaoAdapter penalizacaoAdapter;
     private StorageReference storageReference;
     private StorageReference imagens;
     private StorageReference imageRef;
     private ContentResolver contentResolver;
+    private LinearLayoutManager linearLayoutManager;
 
     private Bitmap imagemLote;
     private Uri path;
@@ -123,6 +111,8 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
         context = view.getContext();
 
         initComponent(view);
+
+        linearLayoutManager = new LinearLayoutManager(getActivity());
 
         swipe();
 
@@ -260,8 +250,20 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
         lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
-        listViewBonificacao = dialog.findViewById(R.id.list_view_bonificacao);
-        listViewPenalizacao = dialog.findViewById(R.id.list_view_penalizacao);
+//        recyclerViewBonificacao = new RecyclerView(getContext());
+        recyclerViewBonificacao = dialog.findViewById(R.id.list_view_bonificacao);
+
+//        recyclerViewPenalizacao = new RecyclerView(getContext());
+        recyclerViewPenalizacao = dialog.findViewById(R.id.list_view_penalizacao);
+
+//        LinearLayoutManager layout_manager = new LinearLayoutManager(context);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerViewBonificacao.setLayoutManager(newLLM());
+        recyclerViewPenalizacao.setLayoutManager(newLLM());
+
+        recyclerViewBonificacao.setHasFixedSize(true);
+        recyclerViewPenalizacao.setHasFixedSize(true);
+
         dialog.findViewById(R.id.text_bonificacao_total);
         dialog.findViewById(R.id.text_penalizacao_total);
 
@@ -508,18 +510,20 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
             } else {
                 ((TextView) dialog.findViewById(R.id.text_bonificacao_total)).setVisibility(View.GONE);
             }
-            ((ListView) dialog.findViewById(R.id.list_view_bonificacao)).setVisibility(View.VISIBLE);
+            ((RecyclerView) dialog.findViewById(R.id.list_view_bonificacao)).setVisibility(View.VISIBLE);
         } else {
             ((TextView) dialog.findViewById(R.id.titulo_bonificacao)).setVisibility(View.GONE);
             ((TextView) dialog.findViewById(R.id.text_bonificacao_total)).setVisibility(View.GONE);
-            ((ListView) dialog.findViewById(R.id.list_view_bonificacao)).setVisibility(View.GONE);
+            ((RecyclerView) dialog.findViewById(R.id.list_view_bonificacao)).setVisibility(View.GONE);
             ((View) dialog.findViewById(R.id.espaco_bonificacao)).setVisibility(View.GONE);
             ((View) dialog.findViewById(R.id.espaco_bonificacao_total)).setVisibility(View.GONE);
         }
 
-        adapterBonificacao = new AdapterBonificacoesPersonalizado(abateListado.getBonificacoes(), getActivity());
-        listViewBonificacao.setAdapter(adapterBonificacao);
-//        setListViewHeightBasedOnChildren(listViewBonificacao);
+//        adapterBonificacao = new AdapterBonificacoesPersonalizado(abateListado.getBonificacoes(), getActivity());
+
+        bonificacaoAdapter = new BonificacaoAdapter(abateListado.getBonificacoes());
+        recyclerViewBonificacao.setAdapter(bonificacaoAdapter);
+//        setListViewHeightBasedOnChildren(recyclerViewBonificacao);
 
         if (abateListado.getPenalizacoes().size() > 0) {
             ((TextView) dialog.findViewById(R.id.titulo_penalizacao)).setVisibility(View.VISIBLE);
@@ -531,18 +535,19 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
             } else {
                 ((TextView) dialog.findViewById(R.id.text_penalizacao_total)).setVisibility(View.GONE);
             }
-            ((ListView) dialog.findViewById(R.id.list_view_penalizacao)).setVisibility(View.VISIBLE);
+            ((RecyclerView) dialog.findViewById(R.id.list_view_penalizacao)).setVisibility(View.VISIBLE);
         } else {
             ((TextView) dialog.findViewById(R.id.titulo_penalizacao)).setVisibility(View.GONE);
             ((TextView) dialog.findViewById(R.id.text_penalizacao_total)).setVisibility(View.GONE);
-            ((ListView) dialog.findViewById(R.id.list_view_penalizacao)).setVisibility(View.GONE);
+            ((RecyclerView) dialog.findViewById(R.id.list_view_penalizacao)).setVisibility(View.GONE);
             ((View) dialog.findViewById(R.id.espaco_penalizacao)).setVisibility(View.GONE);
             ((View) dialog.findViewById(R.id.espaco_penalizacao_total)).setVisibility(View.GONE);
         }
 
-        adapterPenalizacao = new AdapterPenalizacoesPersonalizado(abateListado.getPenalizacoes(), getActivity());
-        listViewPenalizacao.setAdapter(adapterPenalizacao);
-//        setListViewHeightBasedOnChildren(listViewPenalizacao);
+//        adapterPenalizacao = new AdapterPenalizacoesPersonalizado(abateListado.getPenalizacoes(), getActivity());
+        penalizacaoAdapter = new PenalizacaoAdapter(abateListado.getPenalizacoes());
+        recyclerViewPenalizacao.setAdapter(penalizacaoAdapter);
+//        setListViewHeightBasedOnChildren(recyclerViewPenalizacao);
 
         ((ImageButton) dialog.findViewById(R.id.bt_close)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -560,6 +565,12 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
 
         dialog.show();
         dialog.getWindow().setAttributes(lp);
+    }
+
+    private LinearLayoutManager newLLM() {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        return linearLayoutManager;
     }
 
     private String atualizaTotalPenalizacao(Abate abate) {

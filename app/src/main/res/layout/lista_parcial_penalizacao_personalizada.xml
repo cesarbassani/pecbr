@@ -7,7 +7,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="10dp"
         android:orientation="vertical">
 
         <TextView
@@ -86,9 +85,6 @@
 
         </LinearLayout>
 
-        <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="@dimen/spacing_large" />-->
 
     </LinearLayout>
 
