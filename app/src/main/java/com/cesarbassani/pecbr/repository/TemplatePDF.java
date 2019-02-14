@@ -451,34 +451,68 @@ public class TemplatePDF extends PdfPageEventHelper {
             document.add(p);
         }
 
-        if (!abate.getAcerto().getTotalLiquido().equals("")) {
-            Paragraph acerto = new Paragraph(new Chunk("Acerto", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-            document.add(acerto);
-
-            if (!abate.getAcerto().getArrobaNegociada().equals("")) {
-                Paragraph acertoArrobaNogociada = new Paragraph(new Chunk("@ Negociada: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getArrobaNegociada())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(acertoArrobaNogociada);
-            }
-
-            if (!abate.getAcerto().getTotalBruto().equals("")) {
-                Paragraph acertoTotalBruto = new Paragraph(new Chunk("Total Bruto: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getTotalBruto())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(acertoTotalBruto);
-            }
+        if (!abate.getAcerto().getTotalLiquido().equals("") || !abate.getAcerto().getArrobaNegociada().equals("")) {
 
             if (!abate.getAcerto().getTotalLiquido().equals("")) {
-                Paragraph acertoTotalLiquido = new Paragraph(new Chunk("Total Líquido: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getTotalLiquido())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(acertoTotalLiquido);
-            }
 
-            if (!abate.getAcerto().getArrobaRecebidaComFunrural().equals("0.0")) {
-                Paragraph acertoArrobaRecebidaComFunrural = new Paragraph(new Chunk("Valor da @ com Funrural: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getArrobaRecebidaComFunrural())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(acertoArrobaRecebidaComFunrural);
-            }
+                Paragraph acerto = new Paragraph(new Chunk("Acerto", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                document.add(acerto);
 
-            if (!abate.getAcerto().getArrobaRecebida().equals("")) {
-                Paragraph acertoArrobaRecebida = new Paragraph(new Chunk("@ Recebida: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getArrobaRecebida())) + " (Livre de Funrural)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(acertoArrobaRecebida);
+                if (!abate.getAcerto().getArrobaNegociada().equals("")) {
+                    Paragraph acertoArrobaNogociada = new Paragraph(new Chunk("@ Negociada: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getArrobaNegociada())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                    document.add(acertoArrobaNogociada);
+                }
+
+                if (!abate.getAcerto().getTotalBruto().equals("")) {
+                    Paragraph acertoTotalBruto = new Paragraph(new Chunk("Total Bruto: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getTotalBruto())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                    document.add(acertoTotalBruto);
+                }
+
+                if (!abate.getAcerto().getTotalLiquido().equals("")) {
+                    Paragraph acertoTotalLiquido = new Paragraph(new Chunk("Total Líquido: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getTotalLiquido())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                    document.add(acertoTotalLiquido);
+                }
+
+                if (!abate.getAcerto().getArrobaRecebidaComFunrural().equals("0.0")) {
+                    Paragraph acertoArrobaRecebidaComFunrural = new Paragraph(new Chunk("Valor da @ com Funrural: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getArrobaRecebidaComFunrural())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                    document.add(acertoArrobaRecebidaComFunrural);
+                }
+
+                if (!abate.getAcerto().getArrobaRecebida().equals("")) {
+                    Paragraph acertoArrobaRecebida = new Paragraph(new Chunk("@ Recebida: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getArrobaRecebida())) + " (Livre de Funrural)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                    document.add(acertoArrobaRecebida);
+                }
+
+                if (!(abate.getAcerto().getPrazo() == null) && abate.getAcerto().getPrazo().equals("A prazo")) {
+                    Paragraph formaDePagamento = new Paragraph(new Chunk("Forma de pagamento: " + abate.getAcerto().getPrazo() + " (" + abate.getAcerto().getDias() + " dias)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                    document.add(formaDePagamento);
+                } else if (!(abate.getAcerto().getPrazo() == null) && abate.getAcerto().getPrazo().equals("À vista")) {
+                    Paragraph formaDePagamento = new Paragraph(new Chunk("Forma de pagamento: " + abate.getAcerto().getPrazo(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                    document.add(formaDePagamento);
+                }
+
+                document.add(p);
+
+            } else if (!abate.getAcerto().getArrobaNegociada().equals("")) {
+                Paragraph acerto = new Paragraph(new Chunk("Acerto", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                document.add(acerto);
+
+                Paragraph acertoArrobaNogociada = new Paragraph(new Chunk("@ Negociada: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getArrobaNegociada())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                document.add(acertoArrobaNogociada);
+
+                if (!(abate.getAcerto().getPrazo() == null) && abate.getAcerto().getPrazo().equals("A prazo")) {
+                    Paragraph formaDePagamento = new Paragraph(new Chunk("Forma de pagamento: " + abate.getAcerto().getPrazo() + " (" + abate.getAcerto().getDias() + " dias)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                    document.add(formaDePagamento);
+                } else if (!(abate.getAcerto().getPrazo() == null) && abate.getAcerto().getPrazo().equals("À vista")) {
+                    Paragraph formaDePagamento = new Paragraph(new Chunk("Forma de pagamento: " + abate.getAcerto().getPrazo(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                    document.add(formaDePagamento);
+                }
+
+                document.add(p);
             }
+        } else if (!(abate.getAcerto().getPrazo() == null) && !(abate.getAcerto().getPrazo().equals(""))) {
+            Paragraph acerto = new Paragraph(new Chunk("Acerto", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            document.add(acerto);
 
             if (!(abate.getAcerto().getPrazo() == null) && abate.getAcerto().getPrazo().equals("A prazo")) {
                 Paragraph formaDePagamento = new Paragraph(new Chunk("Forma de pagamento: " + abate.getAcerto().getPrazo() + " (" + abate.getAcerto().getDias() + " dias)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));

@@ -52,6 +52,7 @@ import com.cesarbassani.pecbr.listener.RecyclerItemClickListener;
 import com.cesarbassani.pecbr.model.Abate;
 import com.cesarbassani.pecbr.model.Bonificacao;
 import com.cesarbassani.pecbr.model.Penalizacao;
+import com.cesarbassani.pecbr.model.Usuario;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -94,6 +95,10 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
 
     private OnAbateListenerInteractionListener mOnAbateListenerInteractionListener;
 
+    private DatabaseReference usuarioRef;
+    private ValueEventListener valueEventListenerUsuarios;
+    private ArrayList<Usuario> usuarios = new ArrayList<>();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,12 +128,36 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
     public void onStart() {
         super.onStart();
         recuperarAbates();
+        recuperaUsuarios();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         abateRef.removeEventListener(valueEventListenerAbates);
+        usuarioRef.removeEventListener(valueEventListenerUsuarios);
+    }
+
+    private void recuperaUsuarios() {
+        valueEventListenerUsuarios = usuarioRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                usuarios.clear();
+
+                for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                    Usuario usuario = dados.getValue(Usuario.class);
+                    usuarios.add(usuario);
+                }
+
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void initComponent(View view) {
@@ -147,6 +176,8 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
 
         abateRef = ConfiguracaoFirebase.getFirebaseDatabase().child("abates");
 
+        usuarioRef = ConfiguracaoFirebase.getFirebaseDatabase().child("usuarios");
+
         lyt_no_result = view.findViewById(R.id.lyt_no_result);
 
         recyclerViewListaAbates = view.findViewById(R.id.recycler_lista_abates);
@@ -156,7 +187,7 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
         recyclerViewListaAbates.setLayoutManager(layout_manager);
         recyclerViewListaAbates.setHasFixedSize(true);
 
-        adapter = new ListaAbatesAdapter(abates, context);
+        adapter = new ListaAbatesAdapter(abates, context, usuarios);
         recyclerViewListaAbates.setAdapter(adapter);
 
         //Evento de click
@@ -441,51 +472,102 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
             ((View) dialog.findViewById(R.id.espaco_maturidade)).setVisibility(View.GONE);
         }
 
-        if (!abateListado.getAcerto().getTotalLiquido().equals("")) {
+        if (!abateListado.getAcerto().getTotalLiquido().equals("") || !abateListado.getAcerto().getArrobaNegociada().equals("")) {
             ((TextView) dialog.findViewById(R.id.titulo_acerto)).setVisibility(View.VISIBLE);
             ((View) dialog.findViewById(R.id.espaco_acerto)).setVisibility(View.VISIBLE);
-            if (!abateListado.getAcerto().getArrobaNegociada().equals("")) {
-                ((TextView) dialog.findViewById(R.id.txt_arroba_negociada)).setVisibility(View.VISIBLE);
-                ((TextView) dialog.findViewById(R.id.txt_arroba_negociada)).setText("@ Negociada: R$ " + formatDecimal(Double.valueOf(abateListado.getAcerto().getArrobaNegociada())));
-            }
-
-            if (!abateListado.getAcerto().getTotalBruto().equals("")) {
-                ((TextView) dialog.findViewById(R.id.txt_total_bruto)).setVisibility(View.VISIBLE);
-                ((TextView) dialog.findViewById(R.id.txt_total_bruto)).setText("Total Bruto: R$ " + formatDecimal(Double.valueOf(abateListado.getAcerto().getTotalBruto())));
-            }
 
             if (!abateListado.getAcerto().getTotalLiquido().equals("")) {
-                ((TextView) dialog.findViewById(R.id.txt_total_liquido)).setVisibility(View.VISIBLE);
-                ((TextView) dialog.findViewById(R.id.txt_total_liquido)).setText("Total Líquido: R$ " + formatDecimal(Double.valueOf(abateListado.getAcerto().getTotalLiquido())));
-            }
+                if (!abateListado.getAcerto().getArrobaNegociada().equals("")) {
+                    ((TextView) dialog.findViewById(R.id.txt_arroba_negociada)).setVisibility(View.VISIBLE);
+                    ((TextView) dialog.findViewById(R.id.txt_arroba_negociada)).setText("@ Negociada: R$ " + formatDecimal(Double.valueOf(abateListado.getAcerto().getArrobaNegociada())));
+                }
 
-            if (!abateListado.getAcerto().getArrobaRecebidaComFunrural().equals("0.0")) {
-                ((TextView) dialog.findViewById(R.id.txt_arroba_com_funrural)).setVisibility(View.VISIBLE);
-                ((TextView) dialog.findViewById(R.id.txt_arroba_com_funrural)).setText("Valor da @ com Funrural: R$ " + formatDecimal(Double.valueOf(abateListado.getAcerto().getArrobaRecebidaComFunrural())));
-            }
+                if (!abateListado.getAcerto().getTotalBruto().equals("")) {
+                    ((TextView) dialog.findViewById(R.id.txt_total_bruto)).setVisibility(View.VISIBLE);
+                    ((TextView) dialog.findViewById(R.id.txt_total_bruto)).setText("Total Bruto: R$ " + formatDecimal(Double.valueOf(abateListado.getAcerto().getTotalBruto())));
+                }
 
-            if (!abateListado.getAcerto().getArrobaRecebida().equals("")) {
-                ((TextView) dialog.findViewById(R.id.txt_arroba_recebida)).setVisibility(View.VISIBLE);
-                ((TextView) dialog.findViewById(R.id.txt_arroba_recebida)).setText("@ Recebida: R$ " + formatDecimal(Double.valueOf(abateListado.getAcerto().getArrobaRecebida())));
-            }
+                if (!abateListado.getAcerto().getTotalLiquido().equals("")) {
+                    ((TextView) dialog.findViewById(R.id.txt_total_liquido)).setVisibility(View.VISIBLE);
+                    ((TextView) dialog.findViewById(R.id.txt_total_liquido)).setText("Total Líquido: R$ " + formatDecimal(Double.valueOf(abateListado.getAcerto().getTotalLiquido())));
+                }
 
-            ((TextView) dialog.findViewById(R.id.txt_forma_pagamento)).setVisibility(View.VISIBLE);
+                if (!abateListado.getAcerto().getArrobaRecebidaComFunrural().equals("0.0")) {
+                    ((TextView) dialog.findViewById(R.id.txt_arroba_com_funrural)).setVisibility(View.VISIBLE);
+                    ((TextView) dialog.findViewById(R.id.txt_arroba_com_funrural)).setText("Valor da @ com Funrural: R$ " + formatDecimal(Double.valueOf(abateListado.getAcerto().getArrobaRecebidaComFunrural())));
+                }
+
+                if (!abateListado.getAcerto().getArrobaRecebida().equals("")) {
+                    ((TextView) dialog.findViewById(R.id.txt_arroba_recebida)).setVisibility(View.VISIBLE);
+                    ((TextView) dialog.findViewById(R.id.txt_arroba_recebida)).setText("@ Recebida: R$ " + formatDecimal(Double.valueOf(abateListado.getAcerto().getArrobaRecebida())));
+                }
+
+                ((TextView) dialog.findViewById(R.id.txt_forma_pagamento)).setVisibility(View.VISIBLE);
+
+                if (!(abateListado.getAcerto().getPrazo() == null) && abateListado.getAcerto().getPrazo().equals("A prazo")) {
+                    ((TextView) dialog.findViewById(R.id.txt_forma_pagamento)).setText("Forma de pagamento: " + abateListado.getAcerto().getPrazo() + " (" + abateListado.getAcerto().getDias() + " dias)");
+                } else if (!(abateListado.getAcerto().getPrazo() == null) && abateListado.getAcerto().getPrazo().equals("À vista")) {
+                    ((TextView) dialog.findViewById(R.id.txt_forma_pagamento)).setText("Forma de pagamento: " + abateListado.getAcerto().getPrazo());
+                }
+
+            } else {
+                if (!abateListado.getAcerto().getArrobaNegociada().equals("")) {
+                    ((TextView) dialog.findViewById(R.id.txt_arroba_negociada)).setVisibility(View.VISIBLE);
+                    ((TextView) dialog.findViewById(R.id.txt_arroba_negociada)).setText("@ Negociada: R$ " + formatDecimal(Double.valueOf(abateListado.getAcerto().getArrobaNegociada())));
+
+                    if (!(abateListado.getAcerto().getPrazo() == null) && abateListado.getAcerto().getPrazo().equals("A prazo")) {
+                        ((TextView) dialog.findViewById(R.id.txt_forma_pagamento)).setVisibility(View.VISIBLE);
+                        ((TextView) dialog.findViewById(R.id.txt_forma_pagamento)).setText("Forma de pagamento: " + abateListado.getAcerto().getPrazo() + " (" + abateListado.getAcerto().getDias() + " dias)");
+
+                        ((TextView) dialog.findViewById(R.id.txt_total_bruto)).setVisibility(View.GONE);
+                        ((TextView) dialog.findViewById(R.id.txt_total_liquido)).setVisibility(View.GONE);
+                        ((TextView) dialog.findViewById(R.id.txt_arroba_com_funrural)).setVisibility(View.GONE);
+                        ((TextView) dialog.findViewById(R.id.txt_arroba_recebida)).setVisibility(View.GONE);
+
+                    } else if (!(abateListado.getAcerto().getPrazo() == null) && abateListado.getAcerto().getPrazo().equals("À vista")) {
+                        ((TextView) dialog.findViewById(R.id.txt_forma_pagamento)).setVisibility(View.VISIBLE);
+                        ((TextView) dialog.findViewById(R.id.txt_forma_pagamento)).setText("Forma de pagamento: " + abateListado.getAcerto().getPrazo());
+
+                        ((TextView) dialog.findViewById(R.id.txt_total_bruto)).setVisibility(View.GONE);
+                        ((TextView) dialog.findViewById(R.id.txt_total_liquido)).setVisibility(View.GONE);
+                        ((TextView) dialog.findViewById(R.id.txt_arroba_com_funrural)).setVisibility(View.GONE);
+                        ((TextView) dialog.findViewById(R.id.txt_arroba_recebida)).setVisibility(View.GONE);
+                    }
+                }
+            }
+        } else if (!(abateListado.getAcerto().getPrazo() == null) && !(abateListado.getAcerto().getPrazo().equals(""))) {
+            ((TextView) dialog.findViewById(R.id.titulo_acerto)).setVisibility(View.VISIBLE);
+            ((View) dialog.findViewById(R.id.espaco_acerto)).setVisibility(View.VISIBLE);
 
             if (!(abateListado.getAcerto().getPrazo() == null) && abateListado.getAcerto().getPrazo().equals("A prazo")) {
+                ((TextView) dialog.findViewById(R.id.txt_forma_pagamento)).setVisibility(View.VISIBLE);
                 ((TextView) dialog.findViewById(R.id.txt_forma_pagamento)).setText("Forma de pagamento: " + abateListado.getAcerto().getPrazo() + " (" + abateListado.getAcerto().getDias() + " dias)");
-            } else if (!(abateListado.getAcerto().getPrazo() == null) && abateListado.getAcerto().getPrazo().equals("À vista")) {
-                ((TextView) dialog.findViewById(R.id.txt_forma_pagamento)).setText("Forma de pagamento: " + abateListado.getAcerto().getPrazo());
-            }
 
-        } else {
-                ((TextView) dialog.findViewById(R.id.titulo_acerto)).setVisibility(View.GONE);
-                ((TextView) dialog.findViewById(R.id.txt_arroba_negociada)).setVisibility(View.GONE);
                 ((TextView) dialog.findViewById(R.id.txt_total_bruto)).setVisibility(View.GONE);
                 ((TextView) dialog.findViewById(R.id.txt_total_liquido)).setVisibility(View.GONE);
                 ((TextView) dialog.findViewById(R.id.txt_arroba_com_funrural)).setVisibility(View.GONE);
                 ((TextView) dialog.findViewById(R.id.txt_arroba_recebida)).setVisibility(View.GONE);
-                ((TextView) dialog.findViewById(R.id.txt_forma_pagamento)).setVisibility(View.GONE);
-                ((View) dialog.findViewById(R.id.espaco_acerto)).setVisibility(View.GONE);
+                ((TextView) dialog.findViewById(R.id.txt_arroba_negociada)).setVisibility(View.GONE);
+
+            } else if (!(abateListado.getAcerto().getPrazo() == null) && abateListado.getAcerto().getPrazo().equals("À vista")) {
+                ((TextView) dialog.findViewById(R.id.txt_forma_pagamento)).setVisibility(View.VISIBLE);
+                ((TextView) dialog.findViewById(R.id.txt_forma_pagamento)).setText("Forma de pagamento: " + abateListado.getAcerto().getPrazo());
+
+                ((TextView) dialog.findViewById(R.id.txt_total_bruto)).setVisibility(View.GONE);
+                ((TextView) dialog.findViewById(R.id.txt_total_liquido)).setVisibility(View.GONE);
+                ((TextView) dialog.findViewById(R.id.txt_arroba_com_funrural)).setVisibility(View.GONE);
+                ((TextView) dialog.findViewById(R.id.txt_arroba_recebida)).setVisibility(View.GONE);
+                ((TextView) dialog.findViewById(R.id.txt_arroba_negociada)).setVisibility(View.GONE);
+            }
+        } else {
+            ((TextView) dialog.findViewById(R.id.titulo_acerto)).setVisibility(View.GONE);
+            ((TextView) dialog.findViewById(R.id.txt_arroba_negociada)).setVisibility(View.GONE);
+            ((TextView) dialog.findViewById(R.id.txt_total_bruto)).setVisibility(View.GONE);
+            ((TextView) dialog.findViewById(R.id.txt_total_liquido)).setVisibility(View.GONE);
+            ((TextView) dialog.findViewById(R.id.txt_arroba_com_funrural)).setVisibility(View.GONE);
+            ((TextView) dialog.findViewById(R.id.txt_arroba_recebida)).setVisibility(View.GONE);
+            ((TextView) dialog.findViewById(R.id.txt_forma_pagamento)).setVisibility(View.GONE);
+            ((View) dialog.findViewById(R.id.espaco_acerto)).setVisibility(View.GONE);
         }
 
         if (!abateListado.getObservacoes().equals("")) {
@@ -516,6 +598,8 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
             ((TextView) dialog.findViewById(R.id.text_bonificacao_total)).setVisibility(View.GONE);
             ((RecyclerView) dialog.findViewById(R.id.list_view_bonificacao)).setVisibility(View.GONE);
             ((View) dialog.findViewById(R.id.espaco_bonificacao)).setVisibility(View.GONE);
+            ((View) dialog.findViewById(R.id.espaco_bonificacao1)).setVisibility(View.GONE);
+            ((View) dialog.findViewById(R.id.espaco_bonificacao2)).setVisibility(View.GONE);
             ((View) dialog.findViewById(R.id.espaco_bonificacao_total)).setVisibility(View.GONE);
         }
 
@@ -541,6 +625,8 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
             ((TextView) dialog.findViewById(R.id.text_penalizacao_total)).setVisibility(View.GONE);
             ((RecyclerView) dialog.findViewById(R.id.list_view_penalizacao)).setVisibility(View.GONE);
             ((View) dialog.findViewById(R.id.espaco_penalizacao)).setVisibility(View.GONE);
+            ((View) dialog.findViewById(R.id.espaco_penalizacao2)).setVisibility(View.GONE);
+            ((View) dialog.findViewById(R.id.espaco_penalizacao1)).setVisibility(View.GONE);
             ((View) dialog.findViewById(R.id.espaco_penalizacao_total)).setVisibility(View.GONE);
         }
 

@@ -874,7 +874,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         for (int i = 0; i < listAdapter.getCount(); i++) {
             View listItem = listAdapter.getView(i, null, listView);
 
-            if(listItem != null){
+            if (listItem != null) {
                 listItem.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
                 totalHeight += listItem.getMeasuredHeight();
@@ -1505,11 +1505,61 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         Double arrobaRecebida = 0.0;
         Double descontoFunrural = 0.0;
         Double totalLiquido = 0.0;
+        String arrobaNegociada;
 
         try {
 
-            if (!edit_acerto_total_bruto.getText().toString().trim().isEmpty()) {
-                totalBruto = Double.valueOf(edit_acerto_total_bruto.getText().toString());
+            if (!edit_acerto_total_bruto.getText().toString().trim().isEmpty() || !edit_arroba_negociada.getText().toString().trim().isEmpty()) {
+
+                if (!edit_acerto_total_bruto.getText().toString().trim().isEmpty()) {
+                    totalBruto = Double.valueOf(edit_acerto_total_bruto.getText().toString());
+
+                    if (check_a_prazo.isChecked() || check_a_vista.isChecked()) {
+
+                        if (check_a_prazo.isChecked()) {
+                            if (!edit_arroba_negociada_a_prazo.getText().toString().trim().isEmpty()) {
+                                diasAcerto = Integer.parseInt(edit_arroba_negociada_a_prazo.getText().toString());
+                            } else {
+                                Snackbar.make(parent_view, R.string.err_msg_forma_de_pagamento_dias_a_prazo, Snackbar.LENGTH_SHORT).show();
+                                diasAcerto = 0;
+                            }
+                        }
+
+                        if (!desativaFunrural) {
+                            if (edit_acerto_desconto_funrural.getText().toString().trim().isEmpty()) {
+                                descontoFunrural = totalBruto * FUNRURAL;
+                            } else {
+                                descontoFunrural = Double.valueOf(edit_acerto_desconto_funrural.getText().toString());
+                            }
+
+                            totalLiquido = totalBruto - descontoFunrural;
+                        } else {
+                            totalLiquido = totalBruto;
+                        }
+
+                        if (!edit_acerto_percentual_antecipacao.getText().toString().trim().isEmpty()) {
+                            taxaAntecipacao = (Double.valueOf(edit_acerto_percentual_antecipacao.getText().toString())) / 100;
+                            totalLiquido = totalLiquido - (totalLiquido * taxaAntecipacao);
+                            edit_acerto_valor_antecipacao.setText(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", totalLiquido * taxaAntecipacao))));
+                        }
+
+                        qtdeAnimais = Integer.parseInt(this.mViewHolder.mQtdeAnimais.getText().toString());
+
+                        arrobaRecebida = (totalLiquido / pesoTotalDoLote);
+                        arrobaRecebidaComFunrural = (totalBruto / pesoTotalDoLote);
+
+                        edit_acerto_desconto_funrural.setText(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", descontoFunrural))));
+                        edit_acerto_total_liquido.setText(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", totalLiquido))));
+                        edit_arroba_recebida.setText(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", arrobaRecebida))));
+                    } else {
+                        Snackbar.make(parent_view, R.string.err_msg_forma_de_pagamento, Snackbar.LENGTH_SHORT).show();
+                    }
+                }
+
+                if (!edit_arroba_negociada.getText().toString().trim().isEmpty())
+                    arrobaNegociada = edit_acerto_total_bruto.getText().toString();
+
+            } else if (check_a_prazo.isChecked() || check_a_vista.isChecked()) {
 
                 if (check_a_prazo.isChecked() || check_a_vista.isChecked()) {
 
@@ -1521,39 +1571,27 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
                             diasAcerto = 0;
                         }
                     }
-
-                    if (!desativaFunrural) {
-                        if (edit_acerto_desconto_funrural.getText().toString().trim().isEmpty()) {
-                            descontoFunrural = totalBruto * FUNRURAL;
-                        } else {
-                            descontoFunrural = Double.valueOf(edit_acerto_desconto_funrural.getText().toString());
-                        }
-
-                        totalLiquido = totalBruto - descontoFunrural;
-                    } else {
-                        totalLiquido = totalBruto;
-                    }
-
-                    if (!edit_acerto_percentual_antecipacao.getText().toString().trim().isEmpty()) {
-                        taxaAntecipacao = (Double.valueOf(edit_acerto_percentual_antecipacao.getText().toString())) / 100;
-                        totalLiquido = totalLiquido - (totalLiquido * taxaAntecipacao);
-                        edit_acerto_valor_antecipacao.setText(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", totalLiquido * taxaAntecipacao))));
-                    }
-
-                    qtdeAnimais = Integer.parseInt(this.mViewHolder.mQtdeAnimais.getText().toString());
-
-                    arrobaRecebida = (totalLiquido / pesoTotalDoLote);
-                    arrobaRecebidaComFunrural = (totalBruto / pesoTotalDoLote);
-
-                    edit_acerto_desconto_funrural.setText(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", descontoFunrural))));
-                    edit_acerto_total_liquido.setText(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", totalLiquido))));
-                    edit_arroba_recebida.setText(String.valueOf(Double.valueOf(String.format(Locale.US, "%.2f", arrobaRecebida))));
                 } else {
                     Snackbar.make(parent_view, R.string.err_msg_forma_de_pagamento, Snackbar.LENGTH_SHORT).show();
                 }
+
             } else {
                 Snackbar.make(parent_view, R.string.err_msg_total_bruto, Snackbar.LENGTH_SHORT).show();
                 edit_acerto_total_bruto.requestFocus();
+            }
+
+            if (check_a_prazo.isChecked() || check_a_vista.isChecked()) {
+
+                if (check_a_prazo.isChecked()) {
+                    if (!edit_arroba_negociada_a_prazo.getText().toString().trim().isEmpty()) {
+                        diasAcerto = Integer.parseInt(edit_arroba_negociada_a_prazo.getText().toString());
+                    } else {
+                        Snackbar.make(parent_view, R.string.err_msg_forma_de_pagamento_dias_a_prazo, Snackbar.LENGTH_SHORT).show();
+                        diasAcerto = 0;
+                    }
+                }
+            } else {
+                Snackbar.make(parent_view, R.string.err_msg_forma_de_pagamento, Snackbar.LENGTH_SHORT).show();
             }
 
         } catch (NumberFormatException e) {

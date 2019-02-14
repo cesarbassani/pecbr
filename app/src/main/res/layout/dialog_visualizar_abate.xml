@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="320dp"
+    android:layout_width="330dp"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
     android:orientation="vertical">
@@ -1079,7 +1079,7 @@
                 </TableLayout>
 
                 <View
-                    android:id="@+id/espaco_maturidade"
+                        android:id="@+id/espaco_maturidade"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/spacing_middle" />
 
@@ -1152,6 +1152,7 @@
                     android:scrollbars="none"/>
 
                 <View
+                    android:id="@+id/espaco_bonificacao1"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/spacing_medium" />
 
@@ -1162,6 +1163,7 @@
                     android:background="@color/grey_10" />
 
                 <View
+                    android:id="@+id/espaco_bonificacao2"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/spacing_medium" />
 
@@ -1205,6 +1207,7 @@
                     android:scrollbars="none"/>
 
                 <View
+                    android:id="@+id/espaco_penalizacao1"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/spacing_medium" />
 
@@ -1215,6 +1218,7 @@
                     android:background="@color/grey_10" />
 
                 <View
+                    android:id="@+id/espaco_penalizacao2"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/spacing_medium" />
 

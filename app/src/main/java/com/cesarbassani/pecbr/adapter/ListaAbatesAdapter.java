@@ -9,16 +9,20 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cesarbassani.pecbr.R;
+import com.cesarbassani.pecbr.config.ConfiguracaoFirebase;
 import com.cesarbassani.pecbr.config.GlideApp;
 import com.cesarbassani.pecbr.helper.UsuarioFirebase;
 import com.cesarbassani.pecbr.helper.ValidacaoHelper;
 import com.cesarbassani.pecbr.model.Abate;
 import com.cesarbassani.pecbr.listener.OnAbateListenerInteractionListener;
+import com.cesarbassani.pecbr.model.Usuario;
 import com.cesarbassani.pecbr.viewholder.AbateViewHolder;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -26,12 +30,15 @@ import java.util.List;
 public class ListaAbatesAdapter extends RecyclerView.Adapter<AbateViewHolder> {
 
     private List<Abate> abates;
+    private List<Usuario> usuarios;
     private Context context;
+    private Uri uri;
 
-    public ListaAbatesAdapter(List<Abate> abates, Context context) {
+    public ListaAbatesAdapter(List<Abate> abates, Context context, ArrayList<Usuario> usuarios) {
 
         this.abates = abates;
         this.context = context;
+        this.usuarios = usuarios;
     }
 
     @Override
@@ -70,8 +77,14 @@ public class ListaAbatesAdapter extends RecyclerView.Adapter<AbateViewHolder> {
 
         holder.dataAbate.setText(formatDia.format(c.getTime()) + " de " + formatMes.format(c.getTime()).toUpperCase());
 
+        FirebaseUser user = ConfiguracaoFirebase.getFirebaseAutenticacao().getCurrentUser();
         if (abate.getTecnico() != null) {
-            Uri uri = Uri.parse(abate.getTecnico().getFoto());
+//            Uri uri = Uri.parse(abate.getTecnico().getFoto());
+            for (Usuario usuario : usuarios) {
+                if (usuario.getEmail().equals(abate.getTecnico().getEmail())) {
+                    uri = Uri.parse(usuario.getFoto());
+                }
+            }
             GlideApp.with(context)
                     .load(uri)
                     .into(holder.foto);
