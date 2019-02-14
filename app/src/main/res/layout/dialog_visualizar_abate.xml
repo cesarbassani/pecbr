@@ -1335,11 +1335,11 @@
                     android:layout_height="@dimen/spacing_middle" />
 
                 <ImageView
-                    android:id="@+id/imagem_lote"
+                    android:id="@+id/imagem_lote_visualizacao"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/foto_abate" />
+                    android:src="@drawable/padrao_boi" />
 
                 <View
                     android:layout_width="match_parent"

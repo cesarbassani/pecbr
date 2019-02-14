@@ -32,6 +32,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TableLayout;
@@ -46,6 +47,7 @@ import com.cesarbassani.pecbr.adapter.BonificacaoAdapter;
 import com.cesarbassani.pecbr.adapter.ListaAbatesAdapter;
 import com.cesarbassani.pecbr.adapter.PenalizacaoAdapter;
 import com.cesarbassani.pecbr.config.ConfiguracaoFirebase;
+import com.cesarbassani.pecbr.config.GlideApp;
 import com.cesarbassani.pecbr.constants.GuestConstants;
 import com.cesarbassani.pecbr.listener.OnAbateListenerInteractionListener;
 import com.cesarbassani.pecbr.listener.RecyclerItemClickListener;
@@ -60,7 +62,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
+import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.Image;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -98,6 +104,7 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
     private DatabaseReference usuarioRef;
     private ValueEventListener valueEventListenerUsuarios;
     private ArrayList<Usuario> usuarios = new ArrayList<>();
+    private ImageView image_lote;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -286,6 +293,8 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
 
 //        recyclerViewPenalizacao = new RecyclerView(getContext());
         recyclerViewPenalizacao = dialog.findViewById(R.id.list_view_penalizacao);
+
+        image_lote = dialog.findViewById(R.id.imagem_lote_visualizacao);
 
 //        LinearLayoutManager layout_manager = new LinearLayoutManager(context);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -630,6 +639,24 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
             ((View) dialog.findViewById(R.id.espaco_penalizacao_total)).setVisibility(View.GONE);
         }
 
+        imagens.child(abateListado.getFotoLote() + ".jpeg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                if (uri != null) {
+//            Uri url = abate.getFotoLote();
+
+//            if (url != null) {
+
+                    GlideApp.with(getActivity().getApplicationContext())
+                            .load(uri.toString())
+                            .into(image_lote);
+                } else {
+                    image_lote.setImageResource(R.drawable.padrao_boi);
+                    image_lote.setVisibility(View.GONE);
+                }
+            }
+        });
+
 //        adapterPenalizacao = new AdapterPenalizacoesPersonalizado(abateListado.getPenalizacoes(), getActivity());
         penalizacaoAdapter = new PenalizacaoAdapter(abateListado.getPenalizacoes());
         recyclerViewPenalizacao.setAdapter(penalizacaoAdapter);
@@ -652,6 +679,22 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
         dialog.show();
         dialog.getWindow().setAttributes(lp);
     }
+
+//        public void carregaImagemDoLote(Bitmap imagemLote) {
+//
+//            try {
+//                if (imagemLote != null) {
+//                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                    imagemLote.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                    imageLote = Image.getInstance(stream.toByteArray());
+//                    imageLote.scaleToFit(525, 525);
+//                }
+//            } catch (BadElementException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
 
     private LinearLayoutManager newLLM() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
