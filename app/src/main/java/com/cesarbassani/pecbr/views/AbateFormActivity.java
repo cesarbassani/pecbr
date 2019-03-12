@@ -258,6 +258,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
     private boolean frigorificoEncontrado = false;
     private ImageView adicionar_frigorifico;
     private EditText edit_novo_frigorifico;
+    private Float pageSizeAbatePDF;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -958,7 +959,11 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
     public void pdfView(Abate abate) throws IOException, DocumentException {
 
         templatePDF = new TemplatePDF(getApplicationContext());
-        templatePDF.openDocument();
+
+        if (abate.getFotoLote() != null)
+            pageSizeAbatePDF += 800f;
+
+        templatePDF.openDocument(pageSizeAbatePDF);
 //        templatePDF.addTitles("RESUMO DE ABATE - PECBR", "Data: ", dateString);
         templatePDF.addTitles("RESUMO DE ABATE - PECBR", "Data: ", txt_data_abate.getText().toString());
 //        templatePDF.onStartPage();
@@ -1054,6 +1059,45 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         abate.setPenalizacoes(penalizacoes);
         abate.setAcerto(acerto);
         abate.setObservacoes(edit_observacoes.getText().toString());
+
+        if (!abate.getCategoria().getCategoria().equals("")) {
+            pageSizeAbatePDF = 250f;
+        }
+
+        int somaBezerros = (Integer.parseInt(abate.getCategoria().getQtdeBezerrosGrandes()) + Integer.parseInt(abate.getCategoria().getQtdeBezerrosMedios()) + Integer.parseInt(abate.getCategoria().getQtdeBezerrosPequenos()));
+        if (somaBezerros > 0) {
+            pageSizeAbatePDF += 250f;
+        }
+
+        int somaAcabamento = (Integer.parseInt(abate.getAcabamento().getQtdeAusente()) + Integer.parseInt(abate.getAcabamento().getQtdeEscasso()) + Integer.parseInt(abate.getAcabamento().getQtdeEscassoMenos()) + Integer.parseInt(abate.getAcabamento().getQtdeMediano()) + Integer.parseInt(abate.getAcabamento().getQtdeUniforme()) + Integer.parseInt(abate.getAcabamento().getQtdeExcessivo()));
+        if (somaAcabamento > 0) {
+            pageSizeAbatePDF += 250f;
+        }
+
+        int somaMaturidade = (Integer.parseInt(abate.getMaturidade().getQtdeZeroDentes()) + Integer.parseInt(abate.getMaturidade().getQtdeDoisDentes()) + Integer.parseInt(abate.getMaturidade().getQtdeQuatroDentes()) + Integer.parseInt(abate.getMaturidade().getQtdeSeisDentes()) + Integer.parseInt(abate.getMaturidade().getQtdeOitoDentes()));
+        if (somaMaturidade > 0) {
+            pageSizeAbatePDF += 250f;
+        }
+
+        if (abate.getBonificacoes().size() > 0) {
+            pageSizeAbatePDF += 500f;
+        }
+
+        if (abate.getPenalizacoes().size() > 0) {
+            pageSizeAbatePDF += 500f;
+        }
+
+        if (!abate.getAcerto().getTotalLiquido().equals("") || !abate.getAcerto().getArrobaNegociada().equals("")) {
+            pageSizeAbatePDF += 250f;
+        }
+
+        if (!abate.getObservacoes().equals("")) {
+            pageSizeAbatePDF += 250f;
+        }
+
+        if (abate.getFotoLote() != null) {
+            pageSizeAbatePDF += 500;
+        }
 
         return abate;
     }

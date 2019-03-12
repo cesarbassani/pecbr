@@ -19,7 +19,7 @@ public class PDFHelper {
     public static void pdfView(Abate abate, Context context, Bitmap imagem) throws IOException, DocumentException {
 
         templatePDF = new TemplatePDF(context);
-        templatePDF.openDocument();
+        templatePDF.openDocument(0f);
         templatePDF.addTitles("RESUMO DE ABATE - PECBR", "Data: ", abate.getDataAbate());
 //        templatePDF.onStartPage();
 //        templatePDF.carregaImagemDoLote(imagem);

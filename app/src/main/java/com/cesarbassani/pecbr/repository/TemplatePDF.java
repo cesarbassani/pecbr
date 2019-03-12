@@ -24,6 +24,7 @@ import com.cesarbassani.pecbr.constants.GuestConstants;
 import com.cesarbassani.pecbr.model.Abate;
 import com.cesarbassani.pecbr.model.Bonificacao;
 import com.cesarbassani.pecbr.model.Penalizacao;
+import com.cesarbassani.pecbr.utils.Tools;
 import com.cesarbassani.pecbr.views.ViewPDFActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -47,6 +48,7 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfName;
 import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPCellEvent;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -87,6 +89,7 @@ public class TemplatePDF extends PdfPageEventHelper {
     private Double totalPenalizacao = 0.0;
     private Double mediaTotalPenalizacao = 0.0;
     private String tecnicoResponsavel;
+    private Float tamanhoTela;
 
     private StorageReference storageReference;
 
@@ -112,10 +115,13 @@ public class TemplatePDF extends PdfPageEventHelper {
         this.context = context;
     }
 
-    public void openDocument() {
+    public void openDocument(Float pageSize) {
+//        pageSize += 800f;
+        tamanhoTela = pageSize;
         createFile();
         try {
-            document = new Document(PageSize.A4, 36, 36, 125, 55);
+            Rectangle pageSizeDocument = new Rectangle(600f, pageSize);
+            document = new Document(pageSizeDocument, 36, 36, 130, 15);
             pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(pdfFile));
 
             pdfWriter.setPageEvent(this);
@@ -179,6 +185,9 @@ public class TemplatePDF extends PdfPageEventHelper {
         Paragraph p = new Paragraph();
         p.setSpacingAfter(10);
 
+        Paragraph pTable = new Paragraph();
+        p.setSpacingAfter(20);
+
         LineSeparator lineSeparator = new LineSeparator();
         lineSeparator.setLineColor(new BaseColor(0, 0, 0, 68));
         lineSeparator.setPercentage(60);
@@ -194,6 +203,12 @@ public class TemplatePDF extends PdfPageEventHelper {
 //        document.add(mOrderDetailsTitleParagraph);
 //
 //        document.add(p);
+
+        try {
+            addHeader(pdfWriter);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
 
         Font mOrderIdValueFont = new Font(urSubtitulo, 24.0f, Font.NORMAL, BaseColor.BLACK);
         Chunk mOrderIdValueChunk = new Chunk(abate.getLote().getNomeCliente(), mOrderIdValueFont);
@@ -295,71 +310,209 @@ public class TemplatePDF extends PdfPageEventHelper {
 
         int somaAcabamento = (Integer.parseInt(abate.getAcabamento().getQtdeAusente()) + Integer.parseInt(abate.getAcabamento().getQtdeEscasso()) + Integer.parseInt(abate.getAcabamento().getQtdeEscassoMenos()) + Integer.parseInt(abate.getAcabamento().getQtdeMediano()) + Integer.parseInt(abate.getAcabamento().getQtdeUniforme()) + Integer.parseInt(abate.getAcabamento().getQtdeExcessivo()));
         if (somaAcabamento > 0) {
-            Paragraph acabamento = new Paragraph(new Chunk("Acabamento", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-            document.add(acabamento);
+
+            document.add(pTable);
+//            Paragraph acabamento = new Paragraph(new Chunk("Acabamento", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//            document.add(acabamento);
+
+            PdfPTable acabamentoTable = new PdfPTable(3);
+            acabamentoTable.setHorizontalAlignment(Element.ALIGN_LEFT);
+            acabamentoTable.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+//            acabamentoTable.setTotalWidth((PageSize.A4.getWidth() - document.leftMargin()
+//                    - document.rightMargin()) * acabamentoTable.getWidthPercentage() / 100);
+            acabamentoTable.setWidthPercentage(100);
+            acabamentoTable.setKeepTogether(true);
+
+            PdfPCell tituloAcabamento = new PdfPCell(new Paragraph("Acabamento", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            tituloAcabamento.setBorder(PdfPCell.NO_BORDER);
+            tituloAcabamento.setBorderWidthBottom(1.5f);
+            tituloAcabamento.setBorderColorBottom(BaseColor.GRAY);
+            tituloAcabamento.setUseBorderPadding(true);
+            tituloAcabamento.setPaddingBottom(5f);
+//                tituloMaturidade.addElement(new Phrase("Maturidade", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            acabamentoTable.addCell(tituloAcabamento);
+
+            PdfPCell tituloAcabamentoQtd = new PdfPCell(new Paragraph("Quantidade", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            tituloAcabamentoQtd.setBorder(PdfPCell.NO_BORDER);
+            tituloAcabamentoQtd.setBorderWidthBottom(1.5f);
+            tituloAcabamentoQtd.setBorderColorBottom(BaseColor.GRAY);
+            tituloAcabamentoQtd.setHorizontalAlignment(Element.ALIGN_CENTER);
+            tituloAcabamentoQtd.setUseBorderPadding(true);
+            tituloAcabamentoQtd.setPaddingBottom(5f);
+//                tituloMaturidadeQtd.addElement(new Phrase("Quantidade", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            acabamentoTable.addCell(tituloAcabamentoQtd);
+
+            PdfPCell tituloAcabamentoPercentual = new PdfPCell(new Paragraph("%", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            tituloAcabamentoPercentual.setBorder(PdfPCell.NO_BORDER);
+            tituloAcabamentoPercentual.setBorderWidthBottom(1.5f);
+            tituloAcabamentoPercentual.setBorderColorBottom(BaseColor.GRAY);
+            tituloAcabamentoPercentual.setHorizontalAlignment(Element.ALIGN_CENTER);
+            tituloAcabamentoPercentual.setUseBorderPadding(true);
+            tituloAcabamentoPercentual.setPaddingBottom(5f);
+//                tituloMaturidadePercentual.addElement(new Phrase("%", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            acabamentoTable.addCell(tituloAcabamentoPercentual);
 
             if (Integer.parseInt(abate.getAcabamento().getQtdeAusente()) > 0) {
-                Paragraph acabamentoAusente = new Paragraph(new Chunk("Ausente - " + abate.getAcabamento().getQtdeAusente() + " " + validaQuantidade(Integer.parseInt(abate.getAcabamento().getQtdeAusente())) + " (" + abate.getAcabamento().getPercentualAusente() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(acabamentoAusente);
+
+                tabelaAcabamento(acabamentoTable, abate.getAcabamento().getQtdeAusente(), "Ausente", abate.getAcabamento().getPercentualAusente());
+
+//                Paragraph acabamentoAusente = new Paragraph(new Chunk("Ausente - " + abate.getAcabamento().getQtdeAusente() + " " + validaQuantidade(Integer.parseInt(abate.getAcabamento().getQtdeAusente())) + " (" + abate.getAcabamento().getPercentualAusente() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                document.add(acabamentoAusente);
             }
 
             if (Integer.parseInt(abate.getAcabamento().getQtdeEscassoMenos()) > 0) {
-                Paragraph acabamentoEscassoMenos = new Paragraph(new Chunk("Escasso Menos - " + abate.getAcabamento().getQtdeEscassoMenos() + " " + validaQuantidade(Integer.parseInt(abate.getAcabamento().getQtdeEscassoMenos())) + " (" + abate.getAcabamento().getPercentualEscassoMenos() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(acabamentoEscassoMenos);
+                tabelaAcabamento(acabamentoTable, abate.getAcabamento().getQtdeEscassoMenos(), "Escasso Menos", abate.getAcabamento().getPercentualEscassoMenos());
+
+//                Paragraph acabamentoEscassoMenos = new Paragraph(new Chunk("Escasso Menos - " + abate.getAcabamento().getQtdeEscassoMenos() + " " + validaQuantidade(Integer.parseInt(abate.getAcabamento().getQtdeEscassoMenos())) + " (" + abate.getAcabamento().getPercentualEscassoMenos() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                document.add(acabamentoEscassoMenos);
             }
 
             if (Integer.parseInt(abate.getAcabamento().getQtdeEscasso()) > 0) {
-                Paragraph acabamentoEscasso = new Paragraph(new Chunk("Escasso - " + abate.getAcabamento().getQtdeEscasso() + " " + validaQuantidade(Integer.parseInt(abate.getAcabamento().getQtdeEscasso())) + " (" + abate.getAcabamento().getPercentualEscasso() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(acabamentoEscasso);
+                tabelaAcabamento(acabamentoTable, abate.getAcabamento().getQtdeEscasso(), "Escasso", abate.getAcabamento().getPercentualEscasso());
+
+//                Paragraph acabamentoEscasso = new Paragraph(new Chunk("Escasso - " + abate.getAcabamento().getQtdeEscasso() + " " + validaQuantidade(Integer.parseInt(abate.getAcabamento().getQtdeEscasso())) + " (" + abate.getAcabamento().getPercentualEscasso() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                document.add(acabamentoEscasso);
             }
 
             if (Integer.parseInt(abate.getAcabamento().getQtdeMediano()) > 0) {
-                Paragraph acabamentoMediano = new Paragraph(new Chunk("Mediano - " + abate.getAcabamento().getQtdeMediano() + " " + validaQuantidade(Integer.parseInt(abate.getAcabamento().getQtdeMediano())) + " (" + abate.getAcabamento().getPercentualMediano() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(acabamentoMediano);
+                tabelaAcabamento(acabamentoTable, abate.getAcabamento().getQtdeMediano(), "Mediano", abate.getAcabamento().getPercentualMediano());
+
+//                Paragraph acabamentoMediano = new Paragraph(new Chunk("Mediano - " + abate.getAcabamento().getQtdeMediano() + " " + validaQuantidade(Integer.parseInt(abate.getAcabamento().getQtdeMediano())) + " (" + abate.getAcabamento().getPercentualMediano() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                document.add(acabamentoMediano);
             }
 
             if (Integer.parseInt(abate.getAcabamento().getQtdeUniforme()) > 0) {
-                Paragraph acabamentoUniforme = new Paragraph(new Chunk("Uniforme - " + abate.getAcabamento().getQtdeUniforme() + " " + validaQuantidade(Integer.parseInt(abate.getAcabamento().getQtdeUniforme())) + " (" + abate.getAcabamento().getPercentualUniforme() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(acabamentoUniforme);
+                tabelaAcabamento(acabamentoTable, abate.getAcabamento().getQtdeUniforme(), "Uniforme", abate.getAcabamento().getPercentualUniforme());
+
+//                Paragraph acabamentoUniforme = new Paragraph(new Chunk("Uniforme - " + abate.getAcabamento().getQtdeUniforme() + " " + validaQuantidade(Integer.parseInt(abate.getAcabamento().getQtdeUniforme())) + " (" + abate.getAcabamento().getPercentualUniforme() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                document.add(acabamentoUniforme);
             }
 
             if (Integer.parseInt(abate.getAcabamento().getQtdeExcessivo()) > 0) {
-                Paragraph acabamentoExcessivo = new Paragraph(new Chunk("Excessivo - " + abate.getAcabamento().getQtdeExcessivo() + " " + validaQuantidade(Integer.parseInt(abate.getAcabamento().getQtdeExcessivo())) + " (" + abate.getAcabamento().getPercentualExcessivo() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(acabamentoExcessivo);
+                tabelaAcabamento(acabamentoTable, abate.getAcabamento().getQtdeExcessivo(), "Excessivo", abate.getAcabamento().getPercentualExcessivo());
+
+//                Paragraph acabamentoExcessivo = new Paragraph(new Chunk("Excessivo - " + abate.getAcabamento().getQtdeExcessivo() + " " + validaQuantidade(Integer.parseInt(abate.getAcabamento().getQtdeExcessivo())) + " (" + abate.getAcabamento().getPercentualExcessivo() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                document.add(acabamentoExcessivo);
             }
+
+            PdfPCell finalTabelaAcabamento = new PdfPCell();
+            finalTabelaAcabamento.setBorder(PdfPCell.NO_BORDER);
+            finalTabelaAcabamento.setColspan(3);
+            finalTabelaAcabamento.setBorderWidthBottom(1.5f);
+            finalTabelaAcabamento.setBorderColorBottom(BaseColor.GRAY);
+            finalTabelaAcabamento.setUseBorderPadding(true);
+            finalTabelaAcabamento.setPaddingBottom(5f);
+            acabamentoTable.addCell(finalTabelaAcabamento);
+
+            PdfPCell espacoFinalTabelaAcabamento = new PdfPCell(new Paragraph(" ", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            espacoFinalTabelaAcabamento.setBorder(PdfPCell.NO_BORDER);
+            espacoFinalTabelaAcabamento.setColspan(3);
+            espacoFinalTabelaAcabamento.setUseBorderPadding(true);
+            espacoFinalTabelaAcabamento.setPaddingBottom(5f);
+            acabamentoTable.addCell(espacoFinalTabelaAcabamento);
+
+            acabamentoTable.getTotalHeight();
+
+            document.add(acabamentoTable);
 
             document.add(p);
         }
 
         int somaMaturidade = (Integer.parseInt(abate.getMaturidade().getQtdeZeroDentes()) + Integer.parseInt(abate.getMaturidade().getQtdeDoisDentes()) + Integer.parseInt(abate.getMaturidade().getQtdeQuatroDentes()) + Integer.parseInt(abate.getMaturidade().getQtdeSeisDentes()) + Integer.parseInt(abate.getMaturidade().getQtdeOitoDentes()));
         if (somaMaturidade > 0) {
-            Paragraph maturidade = new Paragraph(new Chunk("Maturidade", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-            document.add(maturidade);
+//            Paragraph maturidade = new Paragraph(new Chunk("Maturidade", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//            document.add(maturidade);
+
+            document.add(pTable);
+
+            PdfPTable maturidadeTable = new PdfPTable(3);
+            maturidadeTable.setHorizontalAlignment(Element.ALIGN_LEFT);
+            maturidadeTable.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+            maturidadeTable.setWidthPercentage(100);
+            maturidadeTable.setKeepTogether(true);
+
+            PdfPCell tituloMaturidade = new PdfPCell(new Paragraph("Maturidade", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            tituloMaturidade.setBorder(PdfPCell.NO_BORDER);
+            tituloMaturidade.setBorderWidthBottom(1.5f);
+            tituloMaturidade.setBorderColorBottom(BaseColor.GRAY);
+            tituloMaturidade.setUseBorderPadding(true);
+            tituloMaturidade.setPaddingBottom(5f);
+//                tituloMaturidade.addElement(new Phrase("Maturidade", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            maturidadeTable.addCell(tituloMaturidade);
+
+            PdfPCell tituloMaturidadeQtd = new PdfPCell(new Paragraph("Quantidade", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            tituloMaturidadeQtd.setBorder(PdfPCell.NO_BORDER);
+            tituloMaturidadeQtd.setBorderWidthBottom(1.5f);
+            tituloMaturidadeQtd.setBorderColorBottom(BaseColor.GRAY);
+            tituloMaturidadeQtd.setHorizontalAlignment(Element.ALIGN_CENTER);
+            tituloMaturidadeQtd.setUseBorderPadding(true);
+            tituloMaturidadeQtd.setPaddingBottom(5f);
+//                tituloMaturidadeQtd.addElement(new Phrase("Quantidade", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            maturidadeTable.addCell(tituloMaturidadeQtd);
+
+            PdfPCell tituloMaturidadePercentual = new PdfPCell(new Paragraph("%", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            tituloMaturidadePercentual.setBorder(PdfPCell.NO_BORDER);
+            tituloMaturidadePercentual.setBorderWidthBottom(1.5f);
+            tituloMaturidadePercentual.setBorderColorBottom(BaseColor.GRAY);
+            tituloMaturidadePercentual.setHorizontalAlignment(Element.ALIGN_CENTER);
+            tituloMaturidadePercentual.setUseBorderPadding(true);
+            tituloMaturidadePercentual.setPaddingBottom(5f);
+//                tituloMaturidadePercentual.addElement(new Phrase("%", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            maturidadeTable.addCell(tituloMaturidadePercentual);
 
             if (Integer.parseInt(abate.getMaturidade().getQtdeZeroDentes()) > 0) {
-                Paragraph maturidadeZeroDentes = new Paragraph(new Chunk("0 dentes - " + abate.getMaturidade().getQtdeZeroDentes() + " " + validaQuantidade(Integer.parseInt(abate.getMaturidade().getQtdeZeroDentes())) + " (" + abate.getMaturidade().getPercentualZeroDentes() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(maturidadeZeroDentes);
+
+                tabelaMaturidade(maturidadeTable, abate.getMaturidade().getQtdeZeroDentes(), "0", abate.getMaturidade().getPercentualZeroDentes());
+
+//                Paragraph maturidadeZeroDentes = new Paragraph(new Chunk("0 dentes - " + abate.getMaturidade().getQtdeZeroDentes() + " " + validaQuantidade(Integer.parseInt(abate.getMaturidade().getQtdeZeroDentes())) + " (" + abate.getMaturidade().getPercentualZeroDentes() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                document.add(maturidadeZeroDentes);
             }
 
             if (Integer.parseInt(abate.getMaturidade().getQtdeDoisDentes()) > 0) {
-                Paragraph maturidadeDoisDentes = new Paragraph(new Chunk("2 dentes - " + abate.getMaturidade().getQtdeDoisDentes() + " " + validaQuantidade(Integer.parseInt(abate.getMaturidade().getQtdeDoisDentes())) + " (" + abate.getMaturidade().getPercentualDoisDentes() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(maturidadeDoisDentes);
+                tabelaMaturidade(maturidadeTable, abate.getMaturidade().getQtdeDoisDentes(), "2", abate.getMaturidade().getPercentualDoisDentes());
+
+//                Paragraph maturidadeDoisDentes = new Paragraph(new Chunk("2 dentes - " + abate.getMaturidade().getQtdeDoisDentes() + " " + validaQuantidade(Integer.parseInt(abate.getMaturidade().getQtdeDoisDentes())) + " (" + abate.getMaturidade().getPercentualDoisDentes() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                document.add(maturidadeDoisDentes);
             }
 
             if (Integer.parseInt(abate.getMaturidade().getQtdeQuatroDentes()) > 0) {
-                Paragraph maturidadeQuatroDentes = new Paragraph(new Chunk("4 dentes - " + abate.getMaturidade().getQtdeQuatroDentes() + " " + validaQuantidade(Integer.parseInt(abate.getMaturidade().getQtdeQuatroDentes())) + " (" + abate.getMaturidade().getPercentualQuatroDentes() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(maturidadeQuatroDentes);
+                tabelaMaturidade(maturidadeTable, abate.getMaturidade().getQtdeQuatroDentes(), "4", abate.getMaturidade().getPercentualQuatroDentes());
+
+//                Paragraph maturidadeQuatroDentes = new Paragraph(new Chunk("4 dentes - " + abate.getMaturidade().getQtdeQuatroDentes() + " " + validaQuantidade(Integer.parseInt(abate.getMaturidade().getQtdeQuatroDentes())) + " (" + abate.getMaturidade().getPercentualQuatroDentes() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                document.add(maturidadeQuatroDentes);
             }
 
             if (Integer.parseInt(abate.getMaturidade().getQtdeSeisDentes()) > 0) {
-                Paragraph maturidadeSeisDentes = new Paragraph(new Chunk("6 dentes - " + abate.getMaturidade().getQtdeSeisDentes() + " " + validaQuantidade(Integer.parseInt(abate.getMaturidade().getQtdeSeisDentes())) + " (" + abate.getMaturidade().getPercentualSeisDentes() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(maturidadeSeisDentes);
+                tabelaMaturidade(maturidadeTable, abate.getMaturidade().getQtdeSeisDentes(), "6", abate.getMaturidade().getPercentualSeisDentes());
+
+//                Paragraph maturidadeSeisDentes = new Paragraph(new Chunk("6 dentes - " + abate.getMaturidade().getQtdeSeisDentes() + " " + validaQuantidade(Integer.parseInt(abate.getMaturidade().getQtdeSeisDentes())) + " (" + abate.getMaturidade().getPercentualSeisDentes() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                document.add(maturidadeSeisDentes);
             }
 
             if (Integer.parseInt(abate.getMaturidade().getQtdeOitoDentes()) > 0) {
-                Paragraph maturidadeOitoDentes = new Paragraph(new Chunk("8 dentes - " + abate.getMaturidade().getQtdeOitoDentes() + " " + validaQuantidade(Integer.parseInt(abate.getMaturidade().getQtdeOitoDentes())) + " (" + abate.getMaturidade().getPercentualOitoDentes() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(maturidadeOitoDentes);
+                tabelaMaturidade(maturidadeTable, abate.getMaturidade().getQtdeOitoDentes(), "8", abate.getMaturidade().getPercentualOitoDentes());
+
+//                Paragraph maturidadeOitoDentes = new Paragraph(new Chunk("8 dentes - " + abate.getMaturidade().getQtdeOitoDentes() + " " + validaQuantidade(Integer.parseInt(abate.getMaturidade().getQtdeOitoDentes())) + " (" + abate.getMaturidade().getPercentualOitoDentes() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                document.add(maturidadeOitoDentes);
             }
+
+            PdfPCell finalTabelaMaturidade = new PdfPCell();
+            finalTabelaMaturidade.setBorder(PdfPCell.NO_BORDER);
+            finalTabelaMaturidade.setColspan(3);
+            finalTabelaMaturidade.setBorderWidthBottom(1.5f);
+            finalTabelaMaturidade.setBorderColorBottom(BaseColor.GRAY);
+            finalTabelaMaturidade.setUseBorderPadding(true);
+            finalTabelaMaturidade.setPaddingBottom(5f);
+            maturidadeTable.addCell(finalTabelaMaturidade);
+
+            PdfPCell espacoFinalTabelaMaturidade = new PdfPCell(new Paragraph(" ", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            espacoFinalTabelaMaturidade.setBorder(PdfPCell.NO_BORDER);
+            espacoFinalTabelaMaturidade.setColspan(3);
+            espacoFinalTabelaMaturidade.setUseBorderPadding(true);
+            espacoFinalTabelaMaturidade.setPaddingBottom(5f);
+            maturidadeTable.addCell(espacoFinalTabelaMaturidade);
+
+            document.add(maturidadeTable);
 
             document.add(p);
 
@@ -531,17 +684,153 @@ public class TemplatePDF extends PdfPageEventHelper {
 
             Paragraph observacoesAbate = new Paragraph(new Chunk(abate.getObservacoes(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
             document.add(observacoesAbate);
+
+            document.add(p);
         }
 
         if (imageLote != null) {
-            document.add(Chunk.NEXTPAGE);
+//            document.add(Chunk.NEXTPAGE);
             document.add(new Paragraph(""));
             document.add(new Paragraph(""));
-            Paragraph fotosLote = new Paragraph(new Chunk("FOTOS DO ABATE", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            Paragraph fotosLote = new Paragraph(new Chunk("Fotos do Abate", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
             document.add(fotosLote);
 
             document.add(imageLote);
+
+//            addFooter(pdfWriter);
+
+//            pdfWriter.getPageSize();
+//            pdfWriter.setPageSize(new Rectangle(600, 5000));
+//
+//            document.setPageSize(new Rectangle(600, 5000));
+//            document.getPageSize();
+
+//            PdfPTable footer = new PdfPTable(1);
+//            footer.setWidthPercentage(80);
+//            footer.setTotalWidth(527);
+//            footer.setWidths(new int[]{1});
+//            footer.getDefaultCell().setBorder(Rectangle.TOP);
+//            footer.getDefaultCell().setBorderColor(BaseColor.LIGHT_GRAY);
+//
+//            PdfPCell cell = new PdfPCell();
+//            Paragraph titulo = new Paragraph("PECBR Soluções e Consultoria em Agronegócios – contato@pecbr.com Tel: 067-30458338\n" +
+//                    "Campo Grande-MS. Rua 13 de Junho, 1811. CENTRO", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, new BaseColor(110, 92, 82)));
+//            titulo.setAlignment(Element.ALIGN_CENTER);
+//            cell.addElement(titulo);
+//            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+//            cell.setVerticalAlignment(Element.ALIGN_BOTTOM);
+//            cell.setBorder(Rectangle.TOP);
+//            cell.setBorderColor(BaseColor.LIGHT_GRAY);
+//
+//            footer.addCell(cell);
+
+//        document.add(table);
+
+//        footer.writeSelectedRows(0, -1, 36, 64, writer.getDirectContent());
+
+            // write page
+//            PdfContentByte canvas = pdfWriter.getDirectContent();
+//            canvas.beginMarkedContentSequence(PdfName.ARTIFACT);
+//            footer.writeSelectedRows(0, -1, 34, 60, canvas);
+//            canvas.endMarkedContentSequence();
+
         }
+
+        addFooter(pdfWriter);
+    }
+
+    public void tabelaMaturidade(PdfPTable maturidadeTable, String qtdAnimais, String qtdDentes, String percentual) {
+        PdfPCell textMaturidade = new PdfPCell(new Paragraph(qtdDentes + " dentes", new Font(urTexto, mHeadingFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                textMaturidade.setVerticalAlignment(Element.ALIGN_LEFT);
+        textMaturidade.setBorder(PdfPCell.NO_BORDER);
+        textMaturidade.setBorderWidthBottom(0.5f);
+        textMaturidade.setBorderColorBottom(BaseColor.GRAY);
+        textMaturidade.setMinimumHeight(30f);
+        textMaturidade.setUseBorderPadding(true);
+        textMaturidade.setPaddingBottom(5f);
+//                textMaturidade.setCellEvent(new SolidBorder(PdfPCell.TOP));
+//                textMaturidade.addElement(new Phrase("0 dentes - ", new Font(urTexto, mHeadingFontSize, Font.NORMAL, BaseColor.BLACK)));
+        maturidadeTable.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
+        maturidadeTable.addCell(textMaturidade);
+
+        PdfPCell textMaturidadeQtd = new PdfPCell(new Paragraph(qtdDentes, new Font(urTexto, mHeadingFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                textMaturidade.setVerticalAlignment(Element.ALIGN_LEFT);
+        textMaturidadeQtd.setBorder(PdfPCell.NO_BORDER);
+        textMaturidadeQtd.setBorderWidthBottom(0.5f);
+        textMaturidadeQtd.setBorderColorBottom(BaseColor.GRAY);
+        textMaturidadeQtd.setUseBorderPadding(true);
+        textMaturidadeQtd.setPaddingBottom(5f);
+        textMaturidadeQtd.setMinimumHeight(30f);
+        textMaturidadeQtd.setHorizontalAlignment(Element.ALIGN_CENTER);
+//                textMaturidade.setCellEvent(new SolidBorder(PdfPCell.TOP));
+//                textMaturidadeQtd.addElement(new Phrase(abate.getMaturidade().getQtdeZeroDentes(), new Font(urTexto, mHeadingFontSize, Font.NORMAL, BaseColor.BLACK)));
+        maturidadeTable.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
+        maturidadeTable.addCell(textMaturidadeQtd);
+
+        PdfPCell textMaturidadePercentual = new PdfPCell(new Paragraph(percentual, new Font(urTexto, mHeadingFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                textMaturidade.setVerticalAlignment(Element.ALIGN_LEFT);
+        textMaturidadePercentual.setBorder(PdfPCell.NO_BORDER);
+        textMaturidadePercentual.setBorderWidthBottom(0.5f);
+        textMaturidadePercentual.setBorderColorBottom(BaseColor.GRAY);
+        textMaturidadePercentual.setUseBorderPadding(true);
+        textMaturidadePercentual.setMinimumHeight(30f);
+        textMaturidadePercentual.setPaddingBottom(5f);
+        textMaturidadePercentual.setHorizontalAlignment(Element.ALIGN_CENTER);
+//                textMaturidade.setCellEvent(new SolidBorder(PdfPCell.TOP));
+//                textMaturidadePercentual.addElement(new Phrase(abate.getMaturidade().getPercentualZeroDentes(), new Font(urTexto, mHeadingFontSize, Font.NORMAL, BaseColor.BLACK)));
+        maturidadeTable.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
+        maturidadeTable.addCell(textMaturidadePercentual);
+    }
+
+    public void tabelaAcabamento(PdfPTable acabamentoTable, String qtdAnimais, String tipoAcabamento, String percentual) {
+
+        BaseColor corFonteAcabamento;
+
+        if (tipoAcabamento.equals("Ausente") || tipoAcabamento.equals("Escasso Menos")) {
+            corFonteAcabamento = BaseColor.RED;
+        }else {
+            corFonteAcabamento = BaseColor.BLACK;
+        }
+
+        PdfPCell textAcabamento = new PdfPCell(new Paragraph(tipoAcabamento, new Font(urTexto, mHeadingFontSize, Font.NORMAL, corFonteAcabamento)));
+        textAcabamento.setBorder(PdfPCell.NO_BORDER);
+        textAcabamento.setBorderWidthBottom(0.5f);
+        textAcabamento.setBorderColorBottom(BaseColor.GRAY);
+        textAcabamento.setMinimumHeight(30f);
+        textAcabamento.setUseBorderPadding(true);
+        textAcabamento.setPaddingBottom(5f);
+//                textMaturidade.setCellEvent(new SolidBorder(PdfPCell.TOP));
+//                textMaturidade.addElement(new Phrase("0 dentes - ", new Font(urTexto, mHeadingFontSize, Font.NORMAL, BaseColor.BLACK)));
+        acabamentoTable.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
+        acabamentoTable.addCell(textAcabamento);
+
+        PdfPCell textAcabamentoQtd = new PdfPCell(new Paragraph(qtdAnimais, new Font(urTexto, mHeadingFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                textMaturidade.setVerticalAlignment(Element.ALIGN_LEFT);
+        textAcabamentoQtd.setBorder(PdfPCell.NO_BORDER);
+        textAcabamentoQtd.setBorderWidthBottom(0.5f);
+        textAcabamentoQtd.setBorderColorBottom(BaseColor.GRAY);
+        textAcabamentoQtd.setUseBorderPadding(true);
+        textAcabamentoQtd.setPaddingBottom(5f);
+        textAcabamentoQtd.setMinimumHeight(30f);
+        textAcabamentoQtd.setHorizontalAlignment(Element.ALIGN_CENTER);
+//                textMaturidade.setCellEvent(new SolidBorder(PdfPCell.TOP));
+//                textMaturidadeQtd.addElement(new Phrase(abate.getMaturidade().getQtdeZeroDentes(), new Font(urTexto, mHeadingFontSize, Font.NORMAL, BaseColor.BLACK)));
+        acabamentoTable.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
+        acabamentoTable.addCell(textAcabamentoQtd);
+
+        PdfPCell textAcabamentoPercentual = new PdfPCell(new Paragraph(percentual, new Font(urTexto, mHeadingFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                textMaturidade.setVerticalAlignment(Element.ALIGN_LEFT);
+        textAcabamentoPercentual.setBorder(PdfPCell.NO_BORDER);
+        textAcabamentoPercentual.setBorderWidthBottom(0.5f);
+        textAcabamentoPercentual.setBorderColorBottom(BaseColor.GRAY);
+        textAcabamentoPercentual.setUseBorderPadding(true);
+        textAcabamentoPercentual.setMinimumHeight(30f);
+        textAcabamentoPercentual.setPaddingBottom(5f);
+        textAcabamentoPercentual.setHorizontalAlignment(Element.ALIGN_CENTER);
+//                textMaturidade.setCellEvent(new SolidBorder(PdfPCell.TOP));
+//                textMaturidadePercentual.addElement(new Phrase(abate.getMaturidade().getPercentualZeroDentes(), new Font(urTexto, mHeadingFontSize, Font.NORMAL, BaseColor.BLACK)));
+        acabamentoTable.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
+        acabamentoTable.addCell(textAcabamentoPercentual);
     }
 
 //        document.add(new Paragraph(""));
@@ -638,17 +927,19 @@ public class TemplatePDF extends PdfPageEventHelper {
 //    }
 
     public void onEndPage(PdfWriter pdfWriter, Document document) {
-        try {
-            addHeader(pdfWriter);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            addHeader(pdfWriter);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
-        try {
-            addFooter(pdfWriter);
-        } catch (DocumentException e) {
-            e.printStackTrace();
-        }
+        this.pdfWriter = pdfWriter;
+
+//        try {
+//            addFooter(pdfWriter);
+//        } catch (DocumentException e) {
+//            e.printStackTrace();
+//        }
     }
 
 //    public void onEndPage() throws DocumentException, IOException {
@@ -839,7 +1130,7 @@ public class TemplatePDF extends PdfPageEventHelper {
             // write page
             PdfContentByte canvas = writer.getDirectContent();
             canvas.beginMarkedContentSequence(PdfName.ARTIFACT);
-            header.writeSelectedRows(0, -1, 34, 830, canvas);
+            header.writeSelectedRows(0, -1, 34, (tamanhoTela - 20f), canvas);
             canvas.endMarkedContentSequence();
         } catch (DocumentException de) {
             throw new ExceptionConverter(de);
@@ -892,4 +1183,46 @@ public class TemplatePDF extends PdfPageEventHelper {
     }
 
 
+    private  class SolidBorder extends CustomBorder {
+
+        public SolidBorder(int border) {
+            super(border);
+        }
+        public void setLineDash(PdfContentByte canvas) {
+            canvas.setLineDash(1, 1);
+        }
+    }
+
+    abstract class CustomBorder implements PdfPCellEvent {
+        private int border = 0;
+        public CustomBorder(int border) {
+            this.border = border;
+        }
+        public void cellLayout(PdfPCell cell, Rectangle position,
+                               PdfContentByte[] canvases) {
+            PdfContentByte canvas = canvases[PdfPTable.LINECANVAS];
+            canvas.saveState();
+            setLineDash(canvas);
+            if ((border & PdfPCell.TOP) == PdfPCell.TOP) {
+                canvas.moveTo(position.getRight(), position.getTop());
+                canvas.lineTo(position.getLeft(), position.getTop());
+            }
+            if ((border & PdfPCell.BOTTOM) == PdfPCell.BOTTOM) {
+                canvas.moveTo(position.getRight(), position.getBottom());
+                canvas.lineTo(position.getLeft(), position.getBottom());
+            }
+            if ((border & PdfPCell.RIGHT) == PdfPCell.RIGHT) {
+                canvas.moveTo(position.getRight(), position.getTop());
+                canvas.lineTo(position.getRight(), position.getBottom());
+            }
+            if ((border & PdfPCell.LEFT) == PdfPCell.LEFT) {
+                canvas.moveTo(position.getLeft(), position.getTop());
+                canvas.lineTo(position.getLeft(), position.getBottom());
+            }
+            canvas.stroke();
+            canvas.restoreState();
+        }
+
+        public abstract void setLineDash(PdfContentByte canvas);
+    }
 }
