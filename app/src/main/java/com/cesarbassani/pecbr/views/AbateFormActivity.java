@@ -258,7 +258,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
     private boolean frigorificoEncontrado = false;
     private ImageView adicionar_frigorifico;
     private EditText edit_novo_frigorifico;
-    private Float pageSizeAbatePDF;
+    private Float pageSizeAbatePDF = 0f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -960,10 +960,12 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
         templatePDF = new TemplatePDF(getApplicationContext());
 
-        if (abate.getFotoLote() != null)
-            pageSizeAbatePDF += 800f;
+        Float tamanhoPDF = medirPDF(abate);
 
-        templatePDF.openDocument(pageSizeAbatePDF);
+        if (abate.getFotoLote() != null)
+            tamanhoPDF += 1000f;
+
+        templatePDF.openDocument(tamanhoPDF);
 //        templatePDF.addTitles("RESUMO DE ABATE - PECBR", "Data: ", dateString);
         templatePDF.addTitles("RESUMO DE ABATE - PECBR", "Data: ", txt_data_abate.getText().toString());
 //        templatePDF.onStartPage();
@@ -976,6 +978,26 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         templatePDF.addFormulario(abate);
         templatePDF.closeDocument();
         templatePDF.viewPDF();
+    }
+
+    private Float medirPDF(Abate abate) throws DocumentException {
+        pageSizeAbatePDF = 2000f;
+
+        templatePDF.openDocument(pageSizeAbatePDF);
+//        templatePDF.addTitles("RESUMO DE ABATE - PECBR", "Data: ", dateString);
+        templatePDF.addTitles("RESUMO DE ABATE - PECBR", "Data: ", txt_data_abate.getText().toString());
+//        templatePDF.onStartPage();
+        if (imagemLote == null && fotoDoAbate) {
+//            image_lote.invalidate();
+            BitmapDrawable drawable = (BitmapDrawable) image_lote.getDrawable();
+            imagemLote = drawable.getBitmap();
+        }
+        templatePDF.carregaImagemDoLote(imagemLote);
+        templatePDF.addFormulario(abate);
+        Float tamanhoFinalPDF = templatePDF.calcularMedidaPDF();
+        templatePDF.closeDocument();
+
+        return (tamanhoFinalPDF - pageSizeAbatePDF);
     }
 
     private Abate inicializaAbate() {
@@ -1060,44 +1082,52 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         abate.setAcerto(acerto);
         abate.setObservacoes(edit_observacoes.getText().toString());
 
-        if (!abate.getCategoria().getCategoria().equals("")) {
-            pageSizeAbatePDF = 250f;
-        }
-
-        int somaBezerros = (Integer.parseInt(abate.getCategoria().getQtdeBezerrosGrandes()) + Integer.parseInt(abate.getCategoria().getQtdeBezerrosMedios()) + Integer.parseInt(abate.getCategoria().getQtdeBezerrosPequenos()));
-        if (somaBezerros > 0) {
-            pageSizeAbatePDF += 250f;
-        }
-
-        int somaAcabamento = (Integer.parseInt(abate.getAcabamento().getQtdeAusente()) + Integer.parseInt(abate.getAcabamento().getQtdeEscasso()) + Integer.parseInt(abate.getAcabamento().getQtdeEscassoMenos()) + Integer.parseInt(abate.getAcabamento().getQtdeMediano()) + Integer.parseInt(abate.getAcabamento().getQtdeUniforme()) + Integer.parseInt(abate.getAcabamento().getQtdeExcessivo()));
-        if (somaAcabamento > 0) {
-            pageSizeAbatePDF += 250f;
-        }
-
-        int somaMaturidade = (Integer.parseInt(abate.getMaturidade().getQtdeZeroDentes()) + Integer.parseInt(abate.getMaturidade().getQtdeDoisDentes()) + Integer.parseInt(abate.getMaturidade().getQtdeQuatroDentes()) + Integer.parseInt(abate.getMaturidade().getQtdeSeisDentes()) + Integer.parseInt(abate.getMaturidade().getQtdeOitoDentes()));
-        if (somaMaturidade > 0) {
-            pageSizeAbatePDF += 250f;
-        }
-
-        if (abate.getBonificacoes().size() > 0) {
-            pageSizeAbatePDF += 500f;
-        }
-
-        if (abate.getPenalizacoes().size() > 0) {
-            pageSizeAbatePDF += 500f;
-        }
-
-        if (!abate.getAcerto().getTotalLiquido().equals("") || !abate.getAcerto().getArrobaNegociada().equals("")) {
-            pageSizeAbatePDF += 250f;
-        }
-
-        if (!abate.getObservacoes().equals("")) {
-            pageSizeAbatePDF += 250f;
-        }
-
-        if (abate.getFotoLote() != null) {
-            pageSizeAbatePDF += 500;
-        }
+//        if (!abate.getCategoria().getCategoria().equals("")) {
+//            pageSizeAbatePDF = 250f;
+//        }
+//
+//        int somaBezerros = (Integer.parseInt(abate.getCategoria().getQtdeBezerrosGrandes()) + Integer.parseInt(abate.getCategoria().getQtdeBezerrosMedios()) + Integer.parseInt(abate.getCategoria().getQtdeBezerrosPequenos()));
+//        if (somaBezerros > 0) {
+//            pageSizeAbatePDF += 250f;
+//        }
+//
+//        int somaAcabamento = (Integer.parseInt(abate.getAcabamento().getQtdeAusente()) + Integer.parseInt(abate.getAcabamento().getQtdeEscasso()) + Integer.parseInt(abate.getAcabamento().getQtdeEscassoMenos()) + Integer.parseInt(abate.getAcabamento().getQtdeMediano()) + Integer.parseInt(abate.getAcabamento().getQtdeUniforme()) + Integer.parseInt(abate.getAcabamento().getQtdeExcessivo()));
+//        if (somaAcabamento > 0) {
+//            pageSizeAbatePDF += 250f;
+//        } else {
+//            pageSizeAbatePDF -= 250f;
+//        }
+//
+//        int somaMaturidade = (Integer.parseInt(abate.getMaturidade().getQtdeZeroDentes()) + Integer.parseInt(abate.getMaturidade().getQtdeDoisDentes()) + Integer.parseInt(abate.getMaturidade().getQtdeQuatroDentes()) + Integer.parseInt(abate.getMaturidade().getQtdeSeisDentes()) + Integer.parseInt(abate.getMaturidade().getQtdeOitoDentes()));
+//        if (somaMaturidade > 0) {
+//            pageSizeAbatePDF += 250f;
+//        }
+//
+//        if (abate.getBonificacoes().size() > 0) {
+//            pageSizeAbatePDF += 250f;
+//        } else {
+//            pageSizeAbatePDF -= 250f;
+//        }
+//
+//        if (abate.getPenalizacoes().size() > 0) {
+//            pageSizeAbatePDF += 250f;
+//        } else {
+//            pageSizeAbatePDF -= 250f;
+//        }
+//
+//        if (!abate.getAcerto().getTotalLiquido().equals("") || !abate.getAcerto().getArrobaNegociada().equals("")) {
+//            pageSizeAbatePDF += 250f;
+//        }
+//
+//        if (!abate.getObservacoes().equals("")) {
+//            pageSizeAbatePDF += 500f;
+//        } else {
+//            pageSizeAbatePDF -= 250f;
+//        }
+//
+//        if (abate.getFotoLote() != null) {
+//            pageSizeAbatePDF += 700f;
+//        }
 
         return abate;
     }

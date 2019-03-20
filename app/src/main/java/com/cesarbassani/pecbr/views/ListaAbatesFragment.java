@@ -34,7 +34,6 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -42,7 +41,6 @@ import android.widget.Toast;
 
 import com.cesarbassani.pecbr.R;
 import com.cesarbassani.pecbr.adapter.AdapterBonificacoesPersonalizado;
-import com.cesarbassani.pecbr.adapter.AdapterPenalizacoesPersonalizado;
 import com.cesarbassani.pecbr.adapter.BonificacaoAdapter;
 import com.cesarbassani.pecbr.adapter.ListaAbatesAdapter;
 import com.cesarbassani.pecbr.adapter.PenalizacaoAdapter;
@@ -62,11 +60,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
-import com.itextpdf.text.BadElementException;
-import com.itextpdf.text.Image;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -384,7 +378,7 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
             if (Integer.parseInt(abateListado.getAcabamento().getQtdeAusente()) > 0) {
                 ((TableRow) dialog.findViewById(R.id.linha_ausente)).setVisibility(View.VISIBLE);
                 ((TextView) dialog.findViewById(R.id.qtd_ausente)).setText(abateListado.getAcabamento().getQtdeAusente());
-                ((TextView) dialog.findViewById(R.id.perc_ausente)).setText(arredontaValor(abateListado.getAcabamento().getPercentualAusente().replaceAll("%", "")) + "%");
+                ((TextView) dialog.findViewById(R.id.perc_ausente)).setText(arredondaValor(abateListado.getAcabamento().getPercentualAusente().replaceAll("%", "")) + "%");
             } else {
                 ((TableRow) dialog.findViewById(R.id.linha_ausente)).setVisibility(View.GONE);
             }
@@ -392,7 +386,7 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
             if (Integer.parseInt(abateListado.getAcabamento().getQtdeEscassoMenos()) > 0) {
                 ((TableRow) dialog.findViewById(R.id.linha_escasso_menos)).setVisibility(View.VISIBLE);
                 ((TextView) dialog.findViewById(R.id.qtd_escasso_menos)).setText(abateListado.getAcabamento().getQtdeEscassoMenos());
-                ((TextView) dialog.findViewById(R.id.perc_escasso_menos)).setText(arredontaValor(abateListado.getAcabamento().getPercentualEscassoMenos().replaceAll("%", "")) + "%");
+                ((TextView) dialog.findViewById(R.id.perc_escasso_menos)).setText(arredondaValor(abateListado.getAcabamento().getPercentualEscassoMenos().replaceAll("%", "")) + "%");
             } else {
                 ((TableRow) dialog.findViewById(R.id.linha_escasso_menos)).setVisibility(View.GONE);
             }
@@ -400,7 +394,7 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
             if (Integer.parseInt(abateListado.getAcabamento().getQtdeEscasso()) > 0) {
                 ((TableRow) dialog.findViewById(R.id.linha_escasso)).setVisibility(View.VISIBLE);
                 ((TextView) dialog.findViewById(R.id.qtd_escasso)).setText(abateListado.getAcabamento().getQtdeEscasso());
-                ((TextView) dialog.findViewById(R.id.perc_escasso)).setText(arredontaValor(abateListado.getAcabamento().getPercentualEscasso().replaceAll("%", "")) + "%");
+                ((TextView) dialog.findViewById(R.id.perc_escasso)).setText(arredondaValor(abateListado.getAcabamento().getPercentualEscasso().replaceAll("%", "")) + "%");
             } else {
                 ((TableRow) dialog.findViewById(R.id.linha_escasso)).setVisibility(View.GONE);
             }
@@ -408,7 +402,7 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
             if (Integer.parseInt(abateListado.getAcabamento().getQtdeMediano()) > 0) {
                 ((TableRow) dialog.findViewById(R.id.linha_mediano)).setVisibility(View.VISIBLE);
                 ((TextView) dialog.findViewById(R.id.qtd_mediano)).setText(abateListado.getAcabamento().getQtdeMediano());
-                ((TextView) dialog.findViewById(R.id.perc_mediano)).setText(arredontaValor(abateListado.getAcabamento().getPercentualMediano().replaceAll("%", "")) + "%");
+                ((TextView) dialog.findViewById(R.id.perc_mediano)).setText(arredondaValor(abateListado.getAcabamento().getPercentualMediano().replaceAll("%", "")) + "%");
             } else {
                 ((TableRow) dialog.findViewById(R.id.linha_mediano)).setVisibility(View.GONE);
             }
@@ -416,7 +410,7 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
             if (Integer.parseInt(abateListado.getAcabamento().getQtdeUniforme()) > 0) {
                 ((TableRow) dialog.findViewById(R.id.linha_Uniforme)).setVisibility(View.VISIBLE);
                 ((TextView) dialog.findViewById(R.id.qtd_uniforme)).setText(abateListado.getAcabamento().getQtdeUniforme());
-                ((TextView) dialog.findViewById(R.id.perc_uniforme)).setText(arredontaValor(abateListado.getAcabamento().getPercentualUniforme().replaceAll("%", "")) + "%");
+                ((TextView) dialog.findViewById(R.id.perc_uniforme)).setText(arredondaValor(abateListado.getAcabamento().getPercentualUniforme().replaceAll("%", "")) + "%");
             } else {
                 ((TableRow) dialog.findViewById(R.id.linha_Uniforme)).setVisibility(View.GONE);
             }
@@ -424,7 +418,7 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
             if (Integer.parseInt(abateListado.getAcabamento().getQtdeExcessivo()) > 0) {
                 ((TableRow) dialog.findViewById(R.id.linha_excessivo)).setVisibility(View.VISIBLE);
                 ((TextView) dialog.findViewById(R.id.qtd_excessivo)).setText(abateListado.getAcabamento().getQtdeExcessivo());
-                ((TextView) dialog.findViewById(R.id.perc_excessivo)).setText(arredontaValor(abateListado.getAcabamento().getQtdeExcessivo().replaceAll("%", "")) + "%");
+                ((TextView) dialog.findViewById(R.id.perc_excessivo)).setText(arredondaValor(abateListado.getAcabamento().getPercentualExcessivo().replaceAll("%", "")) + "%");
             } else {
                 ((TableRow) dialog.findViewById(R.id.linha_excessivo)).setVisibility(View.GONE);
             }
@@ -441,7 +435,7 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
             if (Integer.parseInt(abateListado.getMaturidade().getQtdeZeroDentes()) > 0) {
                 ((TableRow) dialog.findViewById(R.id.linha_0_dentes)).setVisibility(View.VISIBLE);
                 ((TextView) dialog.findViewById(R.id.qtd_0_dentes)).setText(abateListado.getMaturidade().getQtdeZeroDentes());
-                ((TextView) dialog.findViewById(R.id.perc_0_dentes)).setText(arredontaValor(abateListado.getMaturidade().getPercentualZeroDentes().replaceAll("%", "")) + "%");
+                ((TextView) dialog.findViewById(R.id.perc_0_dentes)).setText(arredondaValor(abateListado.getMaturidade().getPercentualZeroDentes().replaceAll("%", "")) + "%");
             } else {
                 ((TableRow) dialog.findViewById(R.id.linha_0_dentes)).setVisibility(View.GONE);
             }
@@ -449,7 +443,7 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
             if (Integer.parseInt(abateListado.getMaturidade().getQtdeDoisDentes()) > 0) {
                 ((TableRow) dialog.findViewById(R.id.linha_2_dentes)).setVisibility(View.VISIBLE);
                 ((TextView) dialog.findViewById(R.id.qtd_2_dentes)).setText(abateListado.getMaturidade().getQtdeDoisDentes());
-                ((TextView) dialog.findViewById(R.id.perc_2_dentes)).setText(arredontaValor(abateListado.getMaturidade().getPercentualDoisDentes().replaceAll("%", "")) + "%");
+                ((TextView) dialog.findViewById(R.id.perc_2_dentes)).setText(arredondaValor(abateListado.getMaturidade().getPercentualDoisDentes().replaceAll("%", "")) + "%");
             } else {
                 ((TableRow) dialog.findViewById(R.id.linha_2_dentes)).setVisibility(View.GONE);
             }
@@ -457,7 +451,7 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
             if (Integer.parseInt(abateListado.getMaturidade().getQtdeQuatroDentes()) > 0) {
                 ((TableRow) dialog.findViewById(R.id.linha_4_dentes)).setVisibility(View.VISIBLE);
                 ((TextView) dialog.findViewById(R.id.qtd_4_dentes)).setText(abateListado.getMaturidade().getQtdeQuatroDentes());
-                ((TextView) dialog.findViewById(R.id.perc_4_dentes)).setText(arredontaValor(abateListado.getMaturidade().getPercentualQuatroDentes().replaceAll("%", "")) + "%");
+                ((TextView) dialog.findViewById(R.id.perc_4_dentes)).setText(arredondaValor(abateListado.getMaturidade().getPercentualQuatroDentes().replaceAll("%", "")) + "%");
             } else {
                 ((TableRow) dialog.findViewById(R.id.linha_4_dentes)).setVisibility(View.GONE);
             }
@@ -465,7 +459,7 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
             if (Integer.parseInt(abateListado.getMaturidade().getQtdeSeisDentes()) > 0) {
                 ((TableRow) dialog.findViewById(R.id.linha_6_dentes)).setVisibility(View.VISIBLE);
                 ((TextView) dialog.findViewById(R.id.qtd_6_dentes)).setText(abateListado.getMaturidade().getQtdeSeisDentes());
-                ((TextView) dialog.findViewById(R.id.perc_6_dentes)).setText(arredontaValor(abateListado.getMaturidade().getPercentualSeisDentes().replaceAll("%", "")) + "%");
+                ((TextView) dialog.findViewById(R.id.perc_6_dentes)).setText(arredondaValor(abateListado.getMaturidade().getPercentualSeisDentes().replaceAll("%", "")) + "%");
             } else {
                 ((TableRow) dialog.findViewById(R.id.linha_6_dentes)).setVisibility(View.GONE);
             }
@@ -473,7 +467,7 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
             if (Integer.parseInt(abateListado.getMaturidade().getQtdeOitoDentes()) > 0) {
                 ((TableRow) dialog.findViewById(R.id.linha_8_dentes)).setVisibility(View.VISIBLE);
                 ((TextView) dialog.findViewById(R.id.qtd_8_dentes)).setText(abateListado.getMaturidade().getQtdeOitoDentes());
-                ((TextView) dialog.findViewById(R.id.perc_8_dentes)).setText(arredontaValor(abateListado.getMaturidade().getPercentualOitoDentes().replaceAll("%", "")) + "%");
+                ((TextView) dialog.findViewById(R.id.perc_8_dentes)).setText(arredondaValor(abateListado.getMaturidade().getPercentualOitoDentes().replaceAll("%", "")) + "%");
             } else {
                 ((TableRow) dialog.findViewById(R.id.linha_8_dentes)).setVisibility(View.GONE);
             }

@@ -320,7 +320,7 @@
                     android:id="@+id/txt_peso_carcaca"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Peso carcaça:258,98kg (17,27@)"
+                    android:text="Peso carcaça: 258,98kg (17,27@)"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                     android:textSize="16sp"
                     android:textColor="@color/grey_60" />
@@ -1232,7 +1232,7 @@
                     android:layout_height="wrap_content"
                     android:text="Penalização total: R$ 15.109,46 (+ R$ 3,43/@)"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                    android:textColor="@color/grey_60"
+                    android:textColor="@color/colorTextAbsent"
                     android:textStyle="bold" />
 
                 <View

@@ -1,35 +1,19 @@
 package com.cesarbassani.pecbr.repository;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.cesarbassani.pecbr.R;
 import com.cesarbassani.pecbr.config.ConfiguracaoFirebase;
-import com.cesarbassani.pecbr.config.GlideApp;
-import com.cesarbassani.pecbr.constants.GuestConstants;
 import com.cesarbassani.pecbr.model.Abate;
 import com.cesarbassani.pecbr.model.Bonificacao;
 import com.cesarbassani.pecbr.model.Penalizacao;
-import com.cesarbassani.pecbr.utils.Tools;
 import com.cesarbassani.pecbr.views.ViewPDFActivity;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
@@ -40,7 +24,6 @@ import com.itextpdf.text.Element;
 import com.itextpdf.text.ExceptionConverter;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
-import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
@@ -61,6 +44,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import static com.cesarbassani.pecbr.utils.Tools.arredondaValor;
 
 /**
  * Created by cesarbassani on 18/02/18.
@@ -175,6 +160,10 @@ public class TemplatePDF extends PdfPageEventHelper {
         }
     }
 
+    public Float calcularMedidaPDF() {
+        return tamanhoTela;
+    }
+
     public void addFormulario(Abate abate) throws DocumentException {
 
         storageReference = ConfiguracaoFirebase.getFirebaseStorage();
@@ -190,7 +179,7 @@ public class TemplatePDF extends PdfPageEventHelper {
 
         LineSeparator lineSeparator = new LineSeparator();
         lineSeparator.setLineColor(new BaseColor(0, 0, 0, 68));
-        lineSeparator.setPercentage(60);
+        lineSeparator.setPercentage(100);
         lineSeparator.setAlignment(0);
         // Adding Line Breakable Space....
 
@@ -254,58 +243,134 @@ public class TemplatePDF extends PdfPageEventHelper {
             document.add(p);
         }
 
-        Paragraph dadosDoRendimento = new Paragraph(new Chunk("Dados do Rendimento", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-        document.add(dadosDoRendimento);
+        //Rendimento
 
-        if (!abate.getRendimento().getPesoFazendaKilo().equals("0.0")) {
-            Paragraph pesoFazenda = new Paragraph(new Chunk("Peso fazenda: " + abate.getRendimento().getPesoFazendaKilo() + "Kg (" + abate.getRendimento().getPesoFazendaArroba() + "@)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-            document.add(pesoFazenda);
-        }
+        document.add(pTable);
 
-        Paragraph pesoCarcaca = new Paragraph(new Chunk("Peso carcaça: " + abate.getRendimento().getPesoCarcacaKilo() + "Kg (" + abate.getRendimento().getPesoCarcacaArroba() + "@)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-        document.add(pesoCarcaca);
+        PdfPTable rendimentoTable = criarTabela(1);
 
-        if (!abate.getRendimento().getRendimentoCarcaça().equals("0.0")) {
-            Paragraph rendimento = new Paragraph(new Chunk("Rendimento: " + abate.getRendimento().getRendimentoCarcaça() + "%", new Font(urSubtitulo, mValueFontSize, Font.BOLD, BaseColor.BLACK)));
-            document.add(rendimento);
-        }
+        PdfPCell tituloRendimento = criaCellInTable(new Paragraph("Dados do Rendimento", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+        rendimentoTable.addCell(tituloRendimento);
 
-        if (!abate.getRendimento().getRendimentoEstimado().equals("-")) {
-            Paragraph rendimentoEstimado = new Paragraph(new Chunk("Rendimento Estimado: " + abate.getRendimento().getRendimentoEstimado(), new Font(urTexto, 16.0f, Font.NORMAL, BaseColor.BLACK)));
-            document.add(rendimentoEstimado);
-        }
+        PdfPCell pesoFazendaCell = criaCellInTable(new Paragraph("Peso fazenda: " + abate.getRendimento().getPesoFazendaKilo() + "Kg (" + abate.getRendimento().getPesoFazendaArroba() + "@)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+        if (!abate.getRendimento().getPesoFazendaKilo().equals("0.0"))
+            rendimentoTable.addCell(pesoFazendaCell);
 
-        document.add(p);
+        PdfPCell pesoCarcacaCell = criaCellInTable(new Paragraph("Peso carcaça: " + abate.getRendimento().getPesoCarcacaKilo() + "Kg (" + abate.getRendimento().getPesoCarcacaArroba() + "@)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+        if (!abate.getRendimento().getPesoCarcacaKilo().equals("0.0"))
+            rendimentoTable.addCell(pesoCarcacaCell);
+
+        PdfPCell rendimentoCell = criaCellInTable(new Paragraph("Rendimento: " + abate.getRendimento().getRendimentoCarcaça() + "%", new Font(urSubtitulo, mValueFontSize, Font.BOLD, BaseColor.BLACK)));
+        if (!abate.getRendimento().getRendimentoCarcaça().equals("0.0"))
+            rendimentoTable.addCell(rendimentoCell);
+
+        PdfPCell rendimentoEstimadoCell = criaCellInTable(new Paragraph("Rendimento Estimado: " + abate.getRendimento().getRendimentoEstimado(), new Font(urTexto, 16.0f, Font.NORMAL, BaseColor.BLACK)));
+        if (!abate.getRendimento().getRendimentoEstimado().equals("-"))
+            rendimentoTable.addCell(rendimentoEstimadoCell);
+
+        PdfPCell espacoFinalTabelaRendimento = criaCellFinalSpace(new Paragraph(" ", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+        rendimentoTable.addCell(espacoFinalTabelaRendimento);
+
+        tamanhoTela += rendimentoTable.getTotalHeight();
+
+        document.add(rendimentoTable);
+
+//        Paragraph dadosDoRendimento = new Paragraph(new Chunk("Dados do Rendimento", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//        document.add(dadosDoRendimento);
+//
+//        if (!abate.getRendimento().getPesoFazendaKilo().equals("0.0")) {
+//            Paragraph pesoFazenda = new Paragraph(new Chunk("Peso fazenda: " + abate.getRendimento().getPesoFazendaKilo() + "Kg (" + abate.getRendimento().getPesoFazendaArroba() + "@)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//            document.add(pesoFazenda);
+//        }
+//
+//        Paragraph pesoCarcaca = new Paragraph(new Chunk("Peso carcaça: " + abate.getRendimento().getPesoCarcacaKilo() + "Kg (" + abate.getRendimento().getPesoCarcacaArroba() + "@)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//        document.add(pesoCarcaca);
+//
+//        if (!abate.getRendimento().getRendimentoCarcaça().equals("0.0")) {
+//            Paragraph rendimento = new Paragraph(new Chunk("Rendimento: " + abate.getRendimento().getRendimentoCarcaça() + "%", new Font(urSubtitulo, mValueFontSize, Font.BOLD, BaseColor.BLACK)));
+//            document.add(rendimento);
+//        }
+//
+//        if (!abate.getRendimento().getRendimentoEstimado().equals("-")) {
+//            Paragraph rendimentoEstimado = new Paragraph(new Chunk("Rendimento Estimado: " + abate.getRendimento().getRendimentoEstimado(), new Font(urTexto, 16.0f, Font.NORMAL, BaseColor.BLACK)));
+//            document.add(rendimentoEstimado);
+//        }
+
+//        document.add(p);
 
         int somaBezerros = (Integer.parseInt(abate.getCategoria().getQtdeBezerrosGrandes()) + Integer.parseInt(abate.getCategoria().getQtdeBezerrosMedios()) + Integer.parseInt(abate.getCategoria().getQtdeBezerrosPequenos()));
         if (somaBezerros > 0) {
-            Paragraph bezerros = new Paragraph(new Chunk("Bezerros", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-            document.add(bezerros);
+
+            document.add(pTable);
+
+            PdfPTable bezerrosTable = criarTabela(1);
+
+            PdfPCell tituloBezerros = criaCellInTable(new Paragraph("Bezerros", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            bezerrosTable.addCell(tituloBezerros);
+
+//            Paragraph bezerros = new Paragraph(new Chunk("Bezerros", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//            document.add(bezerros);
 
             if (Integer.parseInt(abate.getCategoria().getQtdeBezerrosPequenos()) > 0) {
-                Paragraph bezerrosPequenos = new Paragraph(new Chunk("Pequeno - " + abate.getCategoria().getQtdeBezerrosPequenos(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(bezerrosPequenos);
+
+                PdfPCell bezerrosPequenos = criaCellInTable(new Paragraph("Pequeno - " + abate.getCategoria().getQtdeBezerrosPequenos(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                bezerrosTable.addCell(bezerrosPequenos);
+
+//                Paragraph bezerrosPequenos = new Paragraph(new Chunk("Pequeno - " + abate.getCategoria().getQtdeBezerrosPequenos(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                document.add(bezerrosPequenos);
             }
 
             if (Integer.parseInt(abate.getCategoria().getQtdeBezerrosMedios()) > 0) {
-                Paragraph bezerrosMedios = new Paragraph(new Chunk("Médio - " + abate.getCategoria().getQtdeBezerrosMedios(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(bezerrosMedios);
+
+                PdfPCell bezerrosMedios = criaCellInTable(new Paragraph("Médio - " + abate.getCategoria().getQtdeBezerrosMedios(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                bezerrosTable.addCell(bezerrosMedios);
+
+//                Paragraph bezerrosMedios = new Paragraph(new Chunk("Médio - " + abate.getCategoria().getQtdeBezerrosMedios(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                document.add(bezerrosMedios);
             }
 
             if (Integer.parseInt(abate.getCategoria().getQtdeBezerrosGrandes()) > 0) {
-                Paragraph bezerrosGrandes = new Paragraph(new Chunk("Grande - " + abate.getCategoria().getQtdeBezerrosGrandes(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(bezerrosGrandes);
+
+                PdfPCell bezerrosGrandes = criaCellInTable(new Paragraph("Grande - " + abate.getCategoria().getQtdeBezerrosGrandes(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                bezerrosTable.addCell(bezerrosGrandes);
+
+//                Paragraph bezerrosGrandes = new Paragraph(new Chunk("Grande - " + abate.getCategoria().getQtdeBezerrosGrandes(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                document.add(bezerrosGrandes);
             }
 
-            document.add(p);
+            PdfPCell espacoFinalTabelaBezerros = criaCellFinalSpace(new Paragraph(" ", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            bezerrosTable.addCell(espacoFinalTabelaBezerros);
+
+            tamanhoTela += bezerrosTable.getTotalHeight();
+
+            document.add(bezerrosTable);
+
+//            document.add(p);
 
         } else if (abate.getCategoria().getCategoria().equals("Vacas") || abate.getCategoria().getCategoria().equals("Novilhas") || abate.getCategoria().getCategoria().equals("Vacas e Novilhas")) {
-            Paragraph bezerros = new Paragraph(new Chunk("Bezerros", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-            document.add(bezerros);
-            Paragraph semBezerros = new Paragraph(new Chunk("Nenhum bezerro", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-            document.add(semBezerros);
 
-            document.add(p);
+            PdfPTable bezerrosTable = criarTabela(1);
+
+            PdfPCell tituloBezerros = criaCellInTable(new Paragraph("Bezerros", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            bezerrosTable.addCell(tituloBezerros);
+
+//            Paragraph bezerros = new Paragraph(new Chunk("Bezerros", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//            document.add(bezerros);
+
+            PdfPCell semBezerros = criaCellInTable(new Paragraph("Nenhum bezerro", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            rendimentoTable.addCell(semBezerros);
+
+//            Paragraph semBezerros = new Paragraph(new Chunk("Nenhum bezerro", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//            document.add(semBezerros);
+
+            PdfPCell espacoFinalTabelaBezerros = criaCellFinalSpace(new Paragraph(" ", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            bezerrosTable.addCell(espacoFinalTabelaBezerros);
+
+            tamanhoTela += bezerrosTable.getTotalHeight();
+
+            document.add(bezerrosTable);
+
+//            document.add(p);
         }
 
         int somaAcabamento = (Integer.parseInt(abate.getAcabamento().getQtdeAusente()) + Integer.parseInt(abate.getAcabamento().getQtdeEscasso()) + Integer.parseInt(abate.getAcabamento().getQtdeEscassoMenos()) + Integer.parseInt(abate.getAcabamento().getQtdeMediano()) + Integer.parseInt(abate.getAcabamento().getQtdeUniforme()) + Integer.parseInt(abate.getAcabamento().getQtdeExcessivo()));
@@ -315,13 +380,7 @@ public class TemplatePDF extends PdfPageEventHelper {
 //            Paragraph acabamento = new Paragraph(new Chunk("Acabamento", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
 //            document.add(acabamento);
 
-            PdfPTable acabamentoTable = new PdfPTable(3);
-            acabamentoTable.setHorizontalAlignment(Element.ALIGN_LEFT);
-            acabamentoTable.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-//            acabamentoTable.setTotalWidth((PageSize.A4.getWidth() - document.leftMargin()
-//                    - document.rightMargin()) * acabamentoTable.getWidthPercentage() / 100);
-            acabamentoTable.setWidthPercentage(100);
-            acabamentoTable.setKeepTogether(true);
+            PdfPTable acabamentoTable = criarTabela(3);
 
             PdfPCell tituloAcabamento = new PdfPCell(new Paragraph("Acabamento", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
             tituloAcabamento.setBorder(PdfPCell.NO_BORDER);
@@ -354,42 +413,42 @@ public class TemplatePDF extends PdfPageEventHelper {
 
             if (Integer.parseInt(abate.getAcabamento().getQtdeAusente()) > 0) {
 
-                tabelaAcabamento(acabamentoTable, abate.getAcabamento().getQtdeAusente(), "Ausente", abate.getAcabamento().getPercentualAusente());
+                tabelaAcabamento(acabamentoTable, abate.getAcabamento().getQtdeAusente(), "Ausente", arredondaValor(abate.getAcabamento().getPercentualAusente().replaceAll("%", "")) + "%");
 
 //                Paragraph acabamentoAusente = new Paragraph(new Chunk("Ausente - " + abate.getAcabamento().getQtdeAusente() + " " + validaQuantidade(Integer.parseInt(abate.getAcabamento().getQtdeAusente())) + " (" + abate.getAcabamento().getPercentualAusente() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
 //                document.add(acabamentoAusente);
             }
 
             if (Integer.parseInt(abate.getAcabamento().getQtdeEscassoMenos()) > 0) {
-                tabelaAcabamento(acabamentoTable, abate.getAcabamento().getQtdeEscassoMenos(), "Escasso Menos", abate.getAcabamento().getPercentualEscassoMenos());
+                tabelaAcabamento(acabamentoTable, abate.getAcabamento().getQtdeEscassoMenos(), "Escasso Menos", arredondaValor(abate.getAcabamento().getPercentualEscassoMenos().replaceAll("%", "")) + "%");
 
 //                Paragraph acabamentoEscassoMenos = new Paragraph(new Chunk("Escasso Menos - " + abate.getAcabamento().getQtdeEscassoMenos() + " " + validaQuantidade(Integer.parseInt(abate.getAcabamento().getQtdeEscassoMenos())) + " (" + abate.getAcabamento().getPercentualEscassoMenos() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
 //                document.add(acabamentoEscassoMenos);
             }
 
             if (Integer.parseInt(abate.getAcabamento().getQtdeEscasso()) > 0) {
-                tabelaAcabamento(acabamentoTable, abate.getAcabamento().getQtdeEscasso(), "Escasso", abate.getAcabamento().getPercentualEscasso());
+                tabelaAcabamento(acabamentoTable, abate.getAcabamento().getQtdeEscasso(), "Escasso", arredondaValor(abate.getAcabamento().getPercentualEscasso().replaceAll("%", "")) + "%");
 
 //                Paragraph acabamentoEscasso = new Paragraph(new Chunk("Escasso - " + abate.getAcabamento().getQtdeEscasso() + " " + validaQuantidade(Integer.parseInt(abate.getAcabamento().getQtdeEscasso())) + " (" + abate.getAcabamento().getPercentualEscasso() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
 //                document.add(acabamentoEscasso);
             }
 
             if (Integer.parseInt(abate.getAcabamento().getQtdeMediano()) > 0) {
-                tabelaAcabamento(acabamentoTable, abate.getAcabamento().getQtdeMediano(), "Mediano", abate.getAcabamento().getPercentualMediano());
+                tabelaAcabamento(acabamentoTable, abate.getAcabamento().getQtdeMediano(), "Mediano", arredondaValor(abate.getAcabamento().getPercentualMediano().replaceAll("%", "")) + "%");
 
 //                Paragraph acabamentoMediano = new Paragraph(new Chunk("Mediano - " + abate.getAcabamento().getQtdeMediano() + " " + validaQuantidade(Integer.parseInt(abate.getAcabamento().getQtdeMediano())) + " (" + abate.getAcabamento().getPercentualMediano() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
 //                document.add(acabamentoMediano);
             }
 
             if (Integer.parseInt(abate.getAcabamento().getQtdeUniforme()) > 0) {
-                tabelaAcabamento(acabamentoTable, abate.getAcabamento().getQtdeUniforme(), "Uniforme", abate.getAcabamento().getPercentualUniforme());
+                tabelaAcabamento(acabamentoTable, abate.getAcabamento().getQtdeUniforme(), "Uniforme", arredondaValor(abate.getAcabamento().getPercentualUniforme().replaceAll("%", "")) + "%");
 
 //                Paragraph acabamentoUniforme = new Paragraph(new Chunk("Uniforme - " + abate.getAcabamento().getQtdeUniforme() + " " + validaQuantidade(Integer.parseInt(abate.getAcabamento().getQtdeUniforme())) + " (" + abate.getAcabamento().getPercentualUniforme() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
 //                document.add(acabamentoUniforme);
             }
 
             if (Integer.parseInt(abate.getAcabamento().getQtdeExcessivo()) > 0) {
-                tabelaAcabamento(acabamentoTable, abate.getAcabamento().getQtdeExcessivo(), "Excessivo", abate.getAcabamento().getPercentualExcessivo());
+                tabelaAcabamento(acabamentoTable, abate.getAcabamento().getQtdeExcessivo(), "Excessivo", arredondaValor(abate.getAcabamento().getPercentualExcessivo().replaceAll("%", "")) + "%");
 
 //                Paragraph acabamentoExcessivo = new Paragraph(new Chunk("Excessivo - " + abate.getAcabamento().getQtdeExcessivo() + " " + validaQuantidade(Integer.parseInt(abate.getAcabamento().getQtdeExcessivo())) + " (" + abate.getAcabamento().getPercentualExcessivo() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
 //                document.add(acabamentoExcessivo);
@@ -404,18 +463,14 @@ public class TemplatePDF extends PdfPageEventHelper {
             finalTabelaAcabamento.setPaddingBottom(5f);
             acabamentoTable.addCell(finalTabelaAcabamento);
 
-            PdfPCell espacoFinalTabelaAcabamento = new PdfPCell(new Paragraph(" ", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-            espacoFinalTabelaAcabamento.setBorder(PdfPCell.NO_BORDER);
-            espacoFinalTabelaAcabamento.setColspan(3);
-            espacoFinalTabelaAcabamento.setUseBorderPadding(true);
-            espacoFinalTabelaAcabamento.setPaddingBottom(5f);
+            PdfPCell espacoFinalTabelaAcabamento = criaCellFinalSpace(new Paragraph(" ", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
             acabamentoTable.addCell(espacoFinalTabelaAcabamento);
 
-            acabamentoTable.getTotalHeight();
+            tamanhoTela += acabamentoTable.getTotalHeight();
+            acabamentoTable.calculateHeights();
 
             document.add(acabamentoTable);
 
-            document.add(p);
         }
 
         int somaMaturidade = (Integer.parseInt(abate.getMaturidade().getQtdeZeroDentes()) + Integer.parseInt(abate.getMaturidade().getQtdeDoisDentes()) + Integer.parseInt(abate.getMaturidade().getQtdeQuatroDentes()) + Integer.parseInt(abate.getMaturidade().getQtdeSeisDentes()) + Integer.parseInt(abate.getMaturidade().getQtdeOitoDentes()));
@@ -425,11 +480,7 @@ public class TemplatePDF extends PdfPageEventHelper {
 
             document.add(pTable);
 
-            PdfPTable maturidadeTable = new PdfPTable(3);
-            maturidadeTable.setHorizontalAlignment(Element.ALIGN_LEFT);
-            maturidadeTable.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-            maturidadeTable.setWidthPercentage(100);
-            maturidadeTable.setKeepTogether(true);
+            PdfPTable maturidadeTable = criarTabela(3);
 
             PdfPCell tituloMaturidade = new PdfPCell(new Paragraph("Maturidade", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
             tituloMaturidade.setBorder(PdfPCell.NO_BORDER);
@@ -462,35 +513,35 @@ public class TemplatePDF extends PdfPageEventHelper {
 
             if (Integer.parseInt(abate.getMaturidade().getQtdeZeroDentes()) > 0) {
 
-                tabelaMaturidade(maturidadeTable, abate.getMaturidade().getQtdeZeroDentes(), "0", abate.getMaturidade().getPercentualZeroDentes());
+                tabelaMaturidade(maturidadeTable, abate.getMaturidade().getQtdeZeroDentes(), "0", arredondaValor(abate.getMaturidade().getPercentualZeroDentes().replaceAll("%", "")) + "%");
 
 //                Paragraph maturidadeZeroDentes = new Paragraph(new Chunk("0 dentes - " + abate.getMaturidade().getQtdeZeroDentes() + " " + validaQuantidade(Integer.parseInt(abate.getMaturidade().getQtdeZeroDentes())) + " (" + abate.getMaturidade().getPercentualZeroDentes() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
 //                document.add(maturidadeZeroDentes);
             }
 
             if (Integer.parseInt(abate.getMaturidade().getQtdeDoisDentes()) > 0) {
-                tabelaMaturidade(maturidadeTable, abate.getMaturidade().getQtdeDoisDentes(), "2", abate.getMaturidade().getPercentualDoisDentes());
+                tabelaMaturidade(maturidadeTable, abate.getMaturidade().getQtdeDoisDentes(), "2", arredondaValor(abate.getMaturidade().getPercentualDoisDentes().replaceAll("%", "")) + "%");
 
 //                Paragraph maturidadeDoisDentes = new Paragraph(new Chunk("2 dentes - " + abate.getMaturidade().getQtdeDoisDentes() + " " + validaQuantidade(Integer.parseInt(abate.getMaturidade().getQtdeDoisDentes())) + " (" + abate.getMaturidade().getPercentualDoisDentes() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
 //                document.add(maturidadeDoisDentes);
             }
 
             if (Integer.parseInt(abate.getMaturidade().getQtdeQuatroDentes()) > 0) {
-                tabelaMaturidade(maturidadeTable, abate.getMaturidade().getQtdeQuatroDentes(), "4", abate.getMaturidade().getPercentualQuatroDentes());
+                tabelaMaturidade(maturidadeTable, abate.getMaturidade().getQtdeQuatroDentes(), "4", arredondaValor(abate.getMaturidade().getPercentualQuatroDentes().replaceAll("%", "")) + "%");
 
 //                Paragraph maturidadeQuatroDentes = new Paragraph(new Chunk("4 dentes - " + abate.getMaturidade().getQtdeQuatroDentes() + " " + validaQuantidade(Integer.parseInt(abate.getMaturidade().getQtdeQuatroDentes())) + " (" + abate.getMaturidade().getPercentualQuatroDentes() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
 //                document.add(maturidadeQuatroDentes);
             }
 
             if (Integer.parseInt(abate.getMaturidade().getQtdeSeisDentes()) > 0) {
-                tabelaMaturidade(maturidadeTable, abate.getMaturidade().getQtdeSeisDentes(), "6", abate.getMaturidade().getPercentualSeisDentes());
+                tabelaMaturidade(maturidadeTable, abate.getMaturidade().getQtdeSeisDentes(), "6", arredondaValor(abate.getMaturidade().getPercentualSeisDentes().replaceAll("%", "")) + "%");
 
 //                Paragraph maturidadeSeisDentes = new Paragraph(new Chunk("6 dentes - " + abate.getMaturidade().getQtdeSeisDentes() + " " + validaQuantidade(Integer.parseInt(abate.getMaturidade().getQtdeSeisDentes())) + " (" + abate.getMaturidade().getPercentualSeisDentes() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
 //                document.add(maturidadeSeisDentes);
             }
 
             if (Integer.parseInt(abate.getMaturidade().getQtdeOitoDentes()) > 0) {
-                tabelaMaturidade(maturidadeTable, abate.getMaturidade().getQtdeOitoDentes(), "8", abate.getMaturidade().getPercentualOitoDentes());
+                tabelaMaturidade(maturidadeTable, abate.getMaturidade().getQtdeOitoDentes(), "8", arredondaValor(abate.getMaturidade().getPercentualOitoDentes().replaceAll("%", "")) + "%");
 
 //                Paragraph maturidadeOitoDentes = new Paragraph(new Chunk("8 dentes - " + abate.getMaturidade().getQtdeOitoDentes() + " " + validaQuantidade(Integer.parseInt(abate.getMaturidade().getQtdeOitoDentes())) + " (" + abate.getMaturidade().getPercentualOitoDentes() + ")", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
 //                document.add(maturidadeOitoDentes);
@@ -505,193 +556,351 @@ public class TemplatePDF extends PdfPageEventHelper {
             finalTabelaMaturidade.setPaddingBottom(5f);
             maturidadeTable.addCell(finalTabelaMaturidade);
 
-            PdfPCell espacoFinalTabelaMaturidade = new PdfPCell(new Paragraph(" ", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-            espacoFinalTabelaMaturidade.setBorder(PdfPCell.NO_BORDER);
-            espacoFinalTabelaMaturidade.setColspan(3);
-            espacoFinalTabelaMaturidade.setUseBorderPadding(true);
-            espacoFinalTabelaMaturidade.setPaddingBottom(5f);
+
+            PdfPCell espacoFinalTabelaMaturidade = criaCellFinalSpace(new Paragraph(" ", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
             maturidadeTable.addCell(espacoFinalTabelaMaturidade);
+
+            tamanhoTela += maturidadeTable.getTotalHeight();
 
             document.add(maturidadeTable);
 
-            document.add(p);
+//            document.add(p);
 
         }
 
-//        document.add(Chunk.NEXTPAGE);
-
         if (abate.getBonificacoes().size() > 0) {
 
-            Paragraph bonificacoes = new Paragraph(new Chunk("Bonificação", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-            document.add(bonificacoes);
+            PdfPTable bonificacaoTable = criarTabela(1);
+
+            PdfPCell tituloBonificacao = criaCellInTable(new Paragraph("Bonificação", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            bonificacaoTable.addCell(tituloBonificacao);
+
+//            Paragraph bonificacoes = new Paragraph(new Chunk("Bonificação", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//            document.add(bonificacoes);
 
             for (Bonificacao bonificacao : abate.getBonificacoes()) {
-                Paragraph bonificacaoTipo = new Paragraph(new Chunk(bonificacao.getTipo(), new Font(urTexto, mValueFontSize, Font.BOLDITALIC, BaseColor.BLACK)));
-                document.add(bonificacaoTipo);
 
-                Paragraph bonificacaoQtde = new Paragraph(new Chunk(bonificacao.getQtde(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(bonificacaoQtde);
+                PdfPCell bonificacaoTipo = criaCellInTable(new Paragraph(bonificacao.getTipo(), new Font(urTexto, mValueFontSize, Font.BOLDITALIC, BaseColor.BLACK)));
+                bonificacaoTable.addCell(bonificacaoTipo);
+
+//                Paragraph bonificacaoTipo = new Paragraph(new Chunk(bonificacao.getTipo(), new Font(urTexto, mValueFontSize, Font.BOLDITALIC, BaseColor.BLACK)));
+//                document.add(bonificacaoTipo);
+
+                PdfPCell bonificacaoQtde = criaCellInTable(new Paragraph(bonificacao.getQtde(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                bonificacaoTable.addCell(bonificacaoQtde);
+
+//                Paragraph bonificacaoQtde = new Paragraph(new Chunk(bonificacao.getQtde(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                document.add(bonificacaoQtde);
 
                 if (bonificacao.getTotal() != null) {
-                    Paragraph bonificacaoTotal = new Paragraph(new Chunk("Total: R$ " + formatDecimal(Double.valueOf(bonificacao.getTotal())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                    document.add(bonificacaoTotal);
+
+                    PdfPCell bonificacaoTotal = criaCellInTable(new Paragraph("Total: R$ " + formatDecimal(Double.valueOf(bonificacao.getTotal())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                    bonificacaoTable.addCell(bonificacaoTotal);
+
+//                    Paragraph bonificacaoTotal = new Paragraph(new Chunk("Total: R$ " + formatDecimal(Double.valueOf(bonificacao.getTotal())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                    document.add(bonificacaoTotal);
                     totalBonificacao += Double.valueOf(bonificacao.getTotal());
 
-                    Paragraph bonificacaoMedia = new Paragraph(String.valueOf(new Chunk("Média no lote: R$ " + formatDecimal(Double.valueOf(bonificacao.getMediaLote())) + "/@)")), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK));
-                    document.add(bonificacaoMedia);
+                    PdfPCell bonificacaoMedia = criaCellInTable(new Paragraph("Média no lote: R$ " + formatDecimal(Double.valueOf(bonificacao.getMediaLote())) + "/@)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                    bonificacaoTable.addCell(bonificacaoMedia);
+
+//                    Paragraph bonificacaoMedia = new Paragraph(String.valueOf(new Chunk("Média no lote: R$ " + formatDecimal(Double.valueOf(bonificacao.getMediaLote())) + "/@)")), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK));
+//                    document.add(bonificacaoMedia);
                     mediaTotalBonificacao += Double.valueOf(bonificacao.getMediaLote());
                 }
 
                 if (!bonificacao.getObservacoes().equals("")) {
 
-                    Paragraph observacoesBonificacao = new Paragraph(new Chunk(bonificacao.getObservacoes(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                    document.add(observacoesBonificacao);
+                    PdfPCell observacoesBonificacao = criaCellInTable(new Paragraph(bonificacao.getObservacoes(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                    bonificacaoTable.addCell(observacoesBonificacao);
+
+//                    Paragraph observacoesBonificacao = new Paragraph(new Chunk(bonificacao.getObservacoes(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                    document.add(observacoesBonificacao);
                 }
 
-                document.add(new Paragraph(""));
-                document.add(new Chunk(lineSeparator));
-                document.add(new Paragraph(""));
+                PdfPCell espacobonificacaoSeparador = criaCellFinalSpace(new Paragraph(new Chunk(lineSeparator)));
+                bonificacaoTable.addCell(espacobonificacaoSeparador);
+
+//                document.add(new Paragraph(""));
+//                document.add(new Chunk(lineSeparator));
+//                document.add(new Paragraph(""));
             }
 
             if (totalBonificacao > 0.0) {
-                Paragraph bonificacaoTotalGeral = new Paragraph(String.valueOf(new Chunk("Bonificação total: R$ " + formatDecimal(totalBonificacao) + " (+ R$ " + formatDecimal(mediaTotalBonificacao) + "/@)")), new Font(urTexto, mValueFontSize, Font.BOLD, BaseColor.BLACK));
-                document.add(bonificacaoTotalGeral);
+
+                PdfPCell bonificacaoTotalGeral = criaCellInTable(new Paragraph("Bonificação total: R$ " + formatDecimal(totalBonificacao) + " (+ R$ " + formatDecimal(mediaTotalBonificacao) + "/@)", new Font(urTexto, mValueFontSize, Font.BOLD, BaseColor.BLACK)));
+                bonificacaoTable.addCell(bonificacaoTotalGeral);
+
+//                Paragraph bonificacaoTotalGeral = new Paragraph(String.valueOf(new Chunk("Bonificação total: R$ " + formatDecimal(totalBonificacao) + " (+ R$ " + formatDecimal(mediaTotalBonificacao) + "/@)")), new Font(urTexto, mValueFontSize, Font.BOLD, BaseColor.BLACK));
+//                document.add(bonificacaoTotalGeral);
             }
 
-            document.add(p);
+            PdfPCell espacoFinalTabelaBonificacao = criaCellFinalSpace(new Paragraph(" ", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            bonificacaoTable.addCell(espacoFinalTabelaBonificacao);
+
+            tamanhoTela += bonificacaoTable.getTotalHeight();
+
+            document.add(bonificacaoTable);
+
+//            document.add(p);
 
         }
 
 
         if (abate.getPenalizacoes().size() > 0) {
 
-            Paragraph penalizacoes = new Paragraph(new Chunk("Penalização", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-            document.add(penalizacoes);
+            PdfPTable penalizacaoTable = criarTabela(1);
+
+            PdfPCell penalizacoes = criaCellInTable(new Paragraph("Penalização", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            penalizacaoTable.addCell(penalizacoes);
+
+//            Paragraph penalizacoes = new Paragraph(new Chunk("Penalização", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//            document.add(penalizacoes);
 
             for (Penalizacao penalizacao : abate.getPenalizacoes()) {
-                Paragraph penalizacaoDescricao = new Paragraph(new Chunk(penalizacao.getDescricao(), new Font(urTexto, mValueFontSize, Font.ITALIC, BaseColor.BLACK)));
-                document.add(penalizacaoDescricao);
 
-                Paragraph penalizacaoQtde = new Paragraph(new Chunk(penalizacao.getQuantidade(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(penalizacaoQtde);
+                PdfPCell penalizacaoDescricao = criaCellInTable(new Paragraph(penalizacao.getDescricao(), new Font(urTexto, mValueFontSize, Font.ITALIC, BaseColor.BLACK)));
+                penalizacaoTable.addCell(penalizacaoDescricao);
+
+//                Paragraph penalizacaoDescricao = new Paragraph(new Chunk(penalizacao.getDescricao(), new Font(urTexto, mValueFontSize, Font.ITALIC, BaseColor.BLACK)));
+//                document.add(penalizacaoDescricao);
+
+                PdfPCell penalizacaoQtde = criaCellInTable(new Paragraph(penalizacao.getQuantidade(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                penalizacaoTable.addCell(penalizacaoQtde);
+
+//                Paragraph penalizacaoQtde = new Paragraph(new Chunk(penalizacao.getQuantidade(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                document.add(penalizacaoQtde);
 
                 if (penalizacao.getTotal() != null) {
-                    Paragraph penalizacaoTotal = new Paragraph(new Chunk("Total: R$ " + formatDecimal(Double.valueOf(penalizacao.getTotal())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.RED)));
-                    document.add(penalizacaoTotal);
+
+                    PdfPCell penalizacaoTotal = criaCellInTable(new Paragraph("Total: R$ " + formatDecimal(Double.valueOf(penalizacao.getTotal())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.RED)));
+                    penalizacaoTable.addCell(penalizacaoTotal);
+
+//                    Paragraph penalizacaoTotal = new Paragraph(new Chunk("Total: R$ " + formatDecimal(Double.valueOf(penalizacao.getTotal())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.RED)));
+//                    document.add(penalizacaoTotal);
                     totalPenalizacao += Double.valueOf(penalizacao.getTotal());
 
-                    Paragraph penalizacaoMedia = new Paragraph(new Chunk("Média no lote: " + formatDecimal(Double.valueOf(penalizacao.getMedia())) + "/@)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.RED)));
-                    document.add(penalizacaoMedia);
+                    PdfPCell penalizacaoMedia = criaCellInTable(new Paragraph("Média no lote: " + formatDecimal(Double.valueOf(penalizacao.getMedia())) + "/@)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.RED)));
+                    penalizacaoTable.addCell(penalizacaoMedia);
+
+//                    Paragraph penalizacaoMedia = new Paragraph(new Chunk("Média no lote: " + formatDecimal(Double.valueOf(penalizacao.getMedia())) + "/@)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.RED)));
+//                    document.add(penalizacaoMedia);
                     mediaTotalPenalizacao += Double.valueOf(penalizacao.getMedia());
                 }
 
                 if (!penalizacao.getObservacoes().equals("")) {
 
-                    Paragraph observacoesPenalizacao = new Paragraph(new Chunk(penalizacao.getObservacoes(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                    document.add(observacoesPenalizacao);
+                    PdfPCell observacoesPenalizacao = criaCellInTable(new Paragraph(penalizacao.getObservacoes(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                    penalizacaoTable.addCell(observacoesPenalizacao);
+
+//                    Paragraph observacoesPenalizacao = new Paragraph(new Chunk(penalizacao.getObservacoes(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                    document.add(observacoesPenalizacao);
                 }
 
-                document.add(new Paragraph(""));
-                document.add(new Chunk(lineSeparator));
-                document.add(new Paragraph(""));
+                PdfPCell espacoPenalizacaoSeparador = criaCellFinalSpace(new Paragraph(new Chunk(lineSeparator)));
+                penalizacaoTable.addCell(espacoPenalizacaoSeparador);
+
+//                document.add(new Paragraph(""));
+//                document.add(new Chunk(lineSeparator));
+//                document.add(new Paragraph(""));
             }
 
             if (totalPenalizacao > 0.0) {
-                Paragraph penalizacaoTotalGeral = new Paragraph(String.valueOf(new Chunk("Penalização total: R$ " + formatDecimal(totalPenalizacao) + " (- R$ " + formatDecimal(mediaTotalPenalizacao) + "/@)")), new Font(urTexto, mValueFontSize, Font.BOLD, BaseColor.RED));
-                document.add(penalizacaoTotalGeral);
+
+                PdfPCell penalizacaoTotalGeral = criaCellInTable(new Paragraph("Penalização total: R$ " + formatDecimal(totalPenalizacao) + " (- R$ " + formatDecimal(mediaTotalPenalizacao) + "/@)", new Font(urTexto, mValueFontSize, Font.BOLD, BaseColor.RED)));
+                penalizacaoTable.addCell(penalizacaoTotalGeral);
+
+//                Paragraph penalizacaoTotalGeral = new Paragraph(String.valueOf(new Chunk("Penalização total: R$ " + formatDecimal(totalPenalizacao) + " (- R$ " + formatDecimal(mediaTotalPenalizacao) + "/@)")), new Font(urTexto, mValueFontSize, Font.BOLD, BaseColor.RED));
+//                document.add(penalizacaoTotalGeral);
             }
 
-            document.add(p);
+            PdfPCell espacoFinalTabelaPenalizacao = criaCellFinalSpace(new Paragraph(" ", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            penalizacaoTable.addCell(espacoFinalTabelaPenalizacao);
+
+            tamanhoTela += penalizacaoTable.getTotalHeight();
+
+            document.add(penalizacaoTable);
+
+//            document.add(p);
         }
 
         if (!abate.getAcerto().getTotalLiquido().equals("") || !abate.getAcerto().getArrobaNegociada().equals("")) {
 
-            if (!abate.getAcerto().getTotalLiquido().equals("")) {
+            PdfPTable acertoTable = criarTabela(1);
 
-                Paragraph acerto = new Paragraph(new Chunk("Acerto", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(acerto);
+            if (!abate.getAcerto().getTotalLiquido().equals("")) {
+                PdfPCell acerto = criaCellInTable(new Paragraph("Acerto", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                acertoTable.addCell(acerto);
+
+//                Paragraph acerto = new Paragraph(new Chunk("Acerto", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                document.add(acerto);
 
                 if (!abate.getAcerto().getArrobaNegociada().equals("")) {
-                    Paragraph acertoArrobaNogociada = new Paragraph(new Chunk("@ Negociada: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getArrobaNegociada())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                    document.add(acertoArrobaNogociada);
+                    PdfPCell acertoArrobaNogociada = criaCellInTable(new Paragraph("@ Negociada: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getArrobaNegociada())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                    acertoTable.addCell(acertoArrobaNogociada);
+
+//                    Paragraph acertoArrobaNogociada = new Paragraph(new Chunk("@ Negociada: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getArrobaNegociada())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                    document.add(acertoArrobaNogociada);
                 }
 
                 if (!abate.getAcerto().getTotalBruto().equals("")) {
-                    Paragraph acertoTotalBruto = new Paragraph(new Chunk("Total Bruto: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getTotalBruto())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                    document.add(acertoTotalBruto);
+                    PdfPCell acertoTotalBruto = criaCellInTable(new Paragraph("Total Bruto: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getTotalBruto())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                    acertoTable.addCell(acertoTotalBruto);
+
+//                    Paragraph acertoTotalBruto = new Paragraph(new Chunk("Total Bruto: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getTotalBruto())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                    document.add(acertoTotalBruto);
                 }
 
                 if (!abate.getAcerto().getTotalLiquido().equals("")) {
-                    Paragraph acertoTotalLiquido = new Paragraph(new Chunk("Total Líquido: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getTotalLiquido())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                    document.add(acertoTotalLiquido);
+                    PdfPCell acertoTotalLiquido = criaCellInTable(new Paragraph("Total Líquido: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getTotalLiquido())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                    acertoTable.addCell(acertoTotalLiquido);
+
+//                    Paragraph acertoTotalLiquido = new Paragraph(new Chunk("Total Líquido: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getTotalLiquido())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                    document.add(acertoTotalLiquido);
                 }
 
                 if (!abate.getAcerto().getArrobaRecebidaComFunrural().equals("0.0")) {
-                    Paragraph acertoArrobaRecebidaComFunrural = new Paragraph(new Chunk("Valor da @ com Funrural: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getArrobaRecebidaComFunrural())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                    document.add(acertoArrobaRecebidaComFunrural);
+                    PdfPCell acertoArrobaRecebidaComFunrural = criaCellInTable(new Paragraph("Valor da @ com Funrural: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getArrobaRecebidaComFunrural())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                    acertoTable.addCell(acertoArrobaRecebidaComFunrural);
+
+//                    Paragraph acertoArrobaRecebidaComFunrural = new Paragraph(new Chunk("Valor da @ com Funrural: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getArrobaRecebidaComFunrural())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                    document.add(acertoArrobaRecebidaComFunrural);
                 }
 
                 if (!abate.getAcerto().getArrobaRecebida().equals("")) {
-                    Paragraph acertoArrobaRecebida = new Paragraph(new Chunk("@ Recebida: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getArrobaRecebida())) + " (Livre de Funrural)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                    document.add(acertoArrobaRecebida);
+                    PdfPCell acertoArrobaRecebida = criaCellInTable(new Paragraph("@ Recebida: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getArrobaRecebida())) + " (Livre de Funrural)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                    acertoTable.addCell(acertoArrobaRecebida);
+
+//                    Paragraph acertoArrobaRecebida = new Paragraph(new Chunk("@ Recebida: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getArrobaRecebida())) + " (Livre de Funrural)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                    document.add(acertoArrobaRecebida);
                 }
 
                 if (!(abate.getAcerto().getPrazo() == null) && abate.getAcerto().getPrazo().equals("A prazo")) {
-                    Paragraph formaDePagamento = new Paragraph(new Chunk("Forma de pagamento: " + abate.getAcerto().getPrazo() + " (" + abate.getAcerto().getDias() + " dias)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                    document.add(formaDePagamento);
+                    PdfPCell formaDePagamento = criaCellInTable(new Paragraph("Forma de pagamento: " + abate.getAcerto().getPrazo() + " (" + abate.getAcerto().getDias() + " dias)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                    acertoTable.addCell(formaDePagamento);
+
+//                    Paragraph formaDePagamento = new Paragraph(new Chunk("Forma de pagamento: " + abate.getAcerto().getPrazo() + " (" + abate.getAcerto().getDias() + " dias)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                    document.add(formaDePagamento);
+
                 } else if (!(abate.getAcerto().getPrazo() == null) && abate.getAcerto().getPrazo().equals("À vista")) {
-                    Paragraph formaDePagamento = new Paragraph(new Chunk("Forma de pagamento: " + abate.getAcerto().getPrazo(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                    document.add(formaDePagamento);
+                    PdfPCell formaDePagamento = criaCellInTable(new Paragraph("Forma de pagamento: " + abate.getAcerto().getPrazo(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                    acertoTable.addCell(formaDePagamento);
+
+//                    Paragraph formaDePagamento = new Paragraph(new Chunk("Forma de pagamento: " + abate.getAcerto().getPrazo(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                    document.add(formaDePagamento);
                 }
 
-                document.add(p);
+                PdfPCell espacoFinalTabelaAcerto = criaCellFinalSpace(new Paragraph(" ", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                acertoTable.addCell(espacoFinalTabelaAcerto);
+
+                tamanhoTela += acertoTable.getTotalHeight();
+
+                document.add(acertoTable);
+
+//                document.add(p);
 
             } else if (!abate.getAcerto().getArrobaNegociada().equals("")) {
-                Paragraph acerto = new Paragraph(new Chunk("Acerto", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(acerto);
+                PdfPCell acerto = criaCellInTable(new Paragraph("Acerto", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                acertoTable.addCell(acerto);
 
-                Paragraph acertoArrobaNogociada = new Paragraph(new Chunk("@ Negociada: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getArrobaNegociada())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(acertoArrobaNogociada);
+//                Paragraph acerto = new Paragraph(new Chunk("Acerto", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                document.add(acerto);
+
+                PdfPCell acertoArrobaNogociada = criaCellInTable(new Paragraph("@ Negociada: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getArrobaNegociada())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                acertoTable.addCell(acertoArrobaNogociada);
+
+//                Paragraph acertoArrobaNogociada = new Paragraph(new Chunk("@ Negociada: R$ " + formatDecimal(Double.valueOf(abate.getAcerto().getArrobaNegociada())), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                document.add(acertoArrobaNogociada);
 
                 if (!(abate.getAcerto().getPrazo() == null) && abate.getAcerto().getPrazo().equals("A prazo")) {
-                    Paragraph formaDePagamento = new Paragraph(new Chunk("Forma de pagamento: " + abate.getAcerto().getPrazo() + " (" + abate.getAcerto().getDias() + " dias)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                    document.add(formaDePagamento);
+                    PdfPCell formaDePagamento = criaCellInTable(new Paragraph("Forma de pagamento: " + abate.getAcerto().getPrazo() + " (" + abate.getAcerto().getDias() + " dias)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                    acertoTable.addCell(formaDePagamento);
+
+//                    Paragraph formaDePagamento = new Paragraph(new Chunk("Forma de pagamento: " + abate.getAcerto().getPrazo() + " (" + abate.getAcerto().getDias() + " dias)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                    document.add(formaDePagamento);
+
                 } else if (!(abate.getAcerto().getPrazo() == null) && abate.getAcerto().getPrazo().equals("À vista")) {
-                    Paragraph formaDePagamento = new Paragraph(new Chunk("Forma de pagamento: " + abate.getAcerto().getPrazo(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                    document.add(formaDePagamento);
+                    PdfPCell formaDePagamento = criaCellInTable(new Paragraph("Forma de pagamento: " + abate.getAcerto().getPrazo(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                    acertoTable.addCell(formaDePagamento);
+
+//                    Paragraph formaDePagamento = new Paragraph(new Chunk("Forma de pagamento: " + abate.getAcerto().getPrazo(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                    document.add(formaDePagamento);
                 }
 
-                document.add(p);
+                PdfPCell espacoFinalTabelaAcerto = criaCellFinalSpace(new Paragraph(" ", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                acertoTable.addCell(espacoFinalTabelaAcerto);
+
+                tamanhoTela += acertoTable.getTotalHeight();
+
+                document.add(acertoTable);
+
+//                document.add(p);
             }
         } else if (!(abate.getAcerto().getPrazo() == null) && !(abate.getAcerto().getPrazo().equals(""))) {
-            Paragraph acerto = new Paragraph(new Chunk("Acerto", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-            document.add(acerto);
+            PdfPTable acertoTable = criarTabela(1);
+
+            PdfPCell acerto = criaCellInTable(new Paragraph("Acerto", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            acertoTable.addCell(acerto);
+
+//            Paragraph acerto = new Paragraph(new Chunk("Acerto", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//            document.add(acerto);
 
             if (!(abate.getAcerto().getPrazo() == null) && abate.getAcerto().getPrazo().equals("A prazo")) {
-                Paragraph formaDePagamento = new Paragraph(new Chunk("Forma de pagamento: " + abate.getAcerto().getPrazo() + " (" + abate.getAcerto().getDias() + " dias)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(formaDePagamento);
+                PdfPCell formaDePagamento = criaCellInTable(new Paragraph("Forma de pagamento: " + abate.getAcerto().getPrazo() + " (" + abate.getAcerto().getDias() + " dias)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                acertoTable.addCell(formaDePagamento);
+
+//                Paragraph formaDePagamento = new Paragraph(new Chunk("Forma de pagamento: " + abate.getAcerto().getPrazo() + " (" + abate.getAcerto().getDias() + " dias)", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                document.add(formaDePagamento);
+
             } else if (!(abate.getAcerto().getPrazo() == null) && abate.getAcerto().getPrazo().equals("À vista")) {
-                Paragraph formaDePagamento = new Paragraph(new Chunk("Forma de pagamento: " + abate.getAcerto().getPrazo(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-                document.add(formaDePagamento);
+                PdfPCell formaDePagamento = criaCellInTable(new Paragraph("Forma de pagamento: " + abate.getAcerto().getPrazo(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+                acertoTable.addCell(formaDePagamento);
+
+//                Paragraph formaDePagamento = new Paragraph(new Chunk("Forma de pagamento: " + abate.getAcerto().getPrazo(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//                document.add(formaDePagamento);
             }
 
-            document.add(p);
+            PdfPCell espacoFinalTabelaAcerto = criaCellFinalSpace(new Paragraph(" ", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            acertoTable.addCell(espacoFinalTabelaAcerto);
+
+            tamanhoTela += acertoTable.getTotalHeight();
+
+            document.add(acertoTable);
+
+//            document.add(p);
         }
 
         if (!abate.getObservacoes().equals("")) {
-            Paragraph observacoes = new Paragraph(new Chunk("Observações", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-            document.add(observacoes);
+            PdfPTable observacoesTable = criarTabela(1);
 
-            Paragraph observacoesAbate = new Paragraph(new Chunk(abate.getObservacoes(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-            document.add(observacoesAbate);
+            PdfPCell observacoes = criaCellInTable(new Paragraph("Observações", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            observacoesTable.addCell(observacoes);
 
-            document.add(p);
+//            Paragraph observacoes = new Paragraph(new Chunk("Observações", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//            document.add(observacoes);
+
+            Paragraph paragrafoObservacoes = new Paragraph(new Chunk(abate.getObservacoes(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//            paragrafoObservacoes.setMultipliedLeading(6);
+
+            PdfPCell observacoesAbate = criaCellInTable(paragrafoObservacoes);
+            observacoesAbate.setLeading(0, 1.5f);
+            observacoesTable.addCell(observacoesAbate);
+
+//            Paragraph observacoesAbate = new Paragraph(new Chunk(abate.getObservacoes(), new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+//            document.add(observacoesAbate);
+
+            PdfPCell espacoFinalTabelaObservacoes = criaCellFinalSpace(new Paragraph(" ", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
+            observacoesTable.addCell(espacoFinalTabelaObservacoes);
+
+            tamanhoTela += observacoesTable.getTotalHeight();
+
+            document.add(observacoesTable);
+
+//            document.add(p);
         }
 
         if (imageLote != null) {
 //            document.add(Chunk.NEXTPAGE);
-            document.add(new Paragraph(""));
-            document.add(new Paragraph(""));
             Paragraph fotosLote = new Paragraph(new Chunk("Fotos do Abate", new Font(urSubtitulo, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
             document.add(fotosLote);
 
@@ -736,7 +945,41 @@ public class TemplatePDF extends PdfPageEventHelper {
 
         }
 
+        totalBonificacao = 0.0;
+        mediaTotalBonificacao = 0.0;
+        totalPenalizacao = 0.0;
+        mediaTotalPenalizacao = 0.0;
+
         addFooter(pdfWriter);
+    }
+
+    private PdfPCell criaCellFinalSpace(Paragraph paragraph) {
+        PdfPCell cellSpace = new PdfPCell(paragraph);
+        cellSpace.setBorder(PdfPCell.NO_BORDER);
+        cellSpace.setColspan(3);
+        cellSpace.setUseBorderPadding(true);
+        cellSpace.setPaddingBottom(5f);
+
+        return cellSpace;
+    }
+
+    private PdfPTable criarTabela(int numeroDeColunas) {
+        PdfPTable table = new PdfPTable(numeroDeColunas);
+        table.setHorizontalAlignment(Element.ALIGN_LEFT);
+        table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+        table.setTotalWidth((document.getPageSize().getWidth() - document.leftMargin() - document.rightMargin()));
+        table.setLockedWidth(true);
+        table.setKeepTogether(true);
+
+        return table;
+    }
+
+    private PdfPCell criaCellInTable(Paragraph paragraph) {
+        PdfPCell cell = new PdfPCell(paragraph);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        cell.setPaddingBottom(5f);
+
+        return cell;
     }
 
     public void tabelaMaturidade(PdfPTable maturidadeTable, String qtdAnimais, String qtdDentes, String percentual) {
@@ -753,7 +996,7 @@ public class TemplatePDF extends PdfPageEventHelper {
         maturidadeTable.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
         maturidadeTable.addCell(textMaturidade);
 
-        PdfPCell textMaturidadeQtd = new PdfPCell(new Paragraph(qtdDentes, new Font(urTexto, mHeadingFontSize, Font.NORMAL, BaseColor.BLACK)));
+        PdfPCell textMaturidadeQtd = new PdfPCell(new Paragraph(qtdAnimais, new Font(urTexto, mHeadingFontSize, Font.NORMAL, BaseColor.BLACK)));
 //                textMaturidade.setVerticalAlignment(Element.ALIGN_LEFT);
         textMaturidadeQtd.setBorder(PdfPCell.NO_BORDER);
         textMaturidadeQtd.setBorderWidthBottom(0.5f);
@@ -788,7 +1031,7 @@ public class TemplatePDF extends PdfPageEventHelper {
 
         if (tipoAcabamento.equals("Ausente") || tipoAcabamento.equals("Escasso Menos")) {
             corFonteAcabamento = BaseColor.RED;
-        }else {
+        } else {
             corFonteAcabamento = BaseColor.BLACK;
         }
 
@@ -1183,11 +1426,12 @@ public class TemplatePDF extends PdfPageEventHelper {
     }
 
 
-    private  class SolidBorder extends CustomBorder {
+    private class SolidBorder extends CustomBorder {
 
         public SolidBorder(int border) {
             super(border);
         }
+
         public void setLineDash(PdfContentByte canvas) {
             canvas.setLineDash(1, 1);
         }
@@ -1195,9 +1439,11 @@ public class TemplatePDF extends PdfPageEventHelper {
 
     abstract class CustomBorder implements PdfPCellEvent {
         private int border = 0;
+
         public CustomBorder(int border) {
             this.border = border;
         }
+
         public void cellLayout(PdfPCell cell, Rectangle position,
                                PdfContentByte[] canvases) {
             PdfContentByte canvas = canvases[PdfPTable.LINECANVAS];

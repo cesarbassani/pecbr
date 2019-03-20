@@ -304,7 +304,7 @@ public class Tools {
         return df.format(valor);
     }
 
-    public static String arredontaValor(String valor) {
+    public static String arredondaValor(String valor) {
         return String.valueOf(Math.round(Double.parseDouble(valor)));
     }
 
