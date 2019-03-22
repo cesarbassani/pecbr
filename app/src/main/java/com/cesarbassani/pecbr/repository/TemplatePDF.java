@@ -83,8 +83,8 @@ public class TemplatePDF extends PdfPageEventHelper {
      * Variables for further use....
      */
     BaseColor mColorAccent = new BaseColor(189, 167, 128, 255);
-    float mHeadingFontSize = 20.0f;
-    float mValueFontSize = 20.0f;
+    float mHeadingFontSize = 22.0f;
+    float mValueFontSize = 22.0f;
 
     /**
      * How to USE FONT....
