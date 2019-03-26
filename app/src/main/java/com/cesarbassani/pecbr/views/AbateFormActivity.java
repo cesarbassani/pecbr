@@ -965,7 +965,13 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         if (abate.getFotoLote() != null)
             tamanhoPDF += 1000f;
 
-        templatePDF.openDocument(tamanhoPDF);
+        if (tamanhoPDF >= 1200f) {
+            templatePDF.openDocument(tamanhoPDF);
+        } else {
+            tamanhoPDF = 1200f;
+            templatePDF.openDocument(tamanhoPDF);
+        }
+
 //        templatePDF.addTitles("RESUMO DE ABATE - PECBR", "Data: ", dateString);
         templatePDF.addTitles("RESUMO DE ABATE - PECBR", "Data: ", txt_data_abate.getText().toString());
 //        templatePDF.onStartPage();
@@ -1814,7 +1820,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
                 if (!this.mViewHolder.txtCategoria.getText().toString().trim().isEmpty()) {
                     Double somaPesoBezerros;
-                    if (abate.getId() == null) {
+                    if (abate == null) {
                         somaPesoBezerros = (Double.valueOf(edt_pequeno.getText().toString()) * 8) + (Double.valueOf(edt_medio.getText().toString()) * 16) + (Double.valueOf(edt_grande.getText().toString()) * 32);
                     } else {
                         somaPesoBezerros = (Double.valueOf(((TextView) findViewById(R.id.tv_bezerros_pequeno)).getText().toString()) * 8) + (Double.valueOf(((TextView) findViewById(R.id.tv_bezerros_medio)).getText().toString()) * 16) + (Double.valueOf(((TextView) findViewById(R.id.tv_bezerros_grande)).getText().toString()) * 32);
