@@ -358,7 +358,7 @@ public class TemplatePDF extends PdfPageEventHelper {
 //            document.add(bezerros);
 
             PdfPCell semBezerros = criaCellInTable(new Paragraph("Nenhum bezerro", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
-            rendimentoTable.addCell(semBezerros);
+            bezerrosTable.addCell(semBezerros);
 
 //            Paragraph semBezerros = new Paragraph(new Chunk("Nenhum bezerro", new Font(urTexto, mValueFontSize, Font.NORMAL, BaseColor.BLACK)));
 //            document.add(semBezerros);
