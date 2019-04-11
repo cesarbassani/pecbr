@@ -716,7 +716,7 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
             mediaTotalLote = totalPenalizacao / pesoTotalDoLote;
             mediaTotalLote = Double.valueOf(String.format(Locale.US, "%.2f", mediaTotalLote));
 
-            return ("Penalização total: R$" + formatDecimal(totalPenalizacao) + " (+ R$ " + mediaTotalLote + "/@)");
+            return ("Penalização total: R$" + formatDecimal(totalPenalizacao) + " (- R$ " + mediaTotalLote + "/@)");
         } else
             return " - ";
     }

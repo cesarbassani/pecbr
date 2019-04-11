@@ -1230,7 +1230,7 @@
                     android:id="@+id/text_penalizacao_total"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Penalização total: R$ 15.109,46 (+ R$ 3,43/@)"
+                    android:text="Penalização total: R$ 15.109,46 (- R$ 3,43/@)"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                     android:textColor="@color/colorTextAbsent"
                     android:textStyle="bold" />
