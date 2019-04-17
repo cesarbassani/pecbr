@@ -25,6 +25,7 @@ import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -47,6 +48,7 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -351,7 +353,23 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         edit_acerto_valor_antecipacao = findViewById(R.id.edit_acerto_valor_antecipacao);
         edit_arroba_negociada = findViewById(R.id.edit_arroba_negociada);
         edit_arroba_recebida = findViewById(R.id.edit_arroba_recebida);
+
         edit_observacoes = findViewById(R.id.edit_observacoes);
+        edit_observacoes.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (v.getId() == R.id.edit_observacoes) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                        case MotionEvent.ACTION_UP:
+                            v.getParent().requestDisallowInterceptTouchEvent(false);
+                            break;
+                    }
+                }
+                return false;
+            }
+        });
+
         edit_arroba_negociada_a_prazo = findViewById(R.id.edit_arroba_negociada_a_prazo);
 
         btn_rendimento_carcaca = findViewById(R.id.btn_rendimento_carcaca);
