@@ -2164,6 +2164,21 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         edit_penalizacao_desconto = dialog.findViewById(R.id.edit_penalizacao_desconto);
         edit_penalizacao_observacoes = dialog.findViewById(R.id.edit_penalizacao_observacoes);
 
+        edit_penalizacao_observacoes.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (v.getId() == R.id.edit_penalizacao_observacoes) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                        case MotionEvent.ACTION_UP:
+                            v.getParent().requestDisallowInterceptTouchEvent(false);
+                            break;
+                    }
+                }
+                return false;
+            }
+        });
+
         edit_quantidade_animais_penalizacao = dialog.findViewById(R.id.edit_quantidade_animais_penalizacao);
 //        edit_penalizacao_total = dialog.findViewById(R.id.edit_penalizacao_total);
 //        edit_penalizacao_media_do_lote = dialog.findViewById(R.id.edit_penalizacao_media_do_lote);
@@ -2503,6 +2518,21 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         edit_peso_animais_bonificacao = dialog.findViewById(R.id.edit_peso_animais_bonificacao);
         edit_valor_bonificacao = dialog.findViewById(R.id.edit_valor_bonificacao);
         edit_bonificacao_observacoes = dialog.findViewById(R.id.edit_bonificacao_observacoes);
+
+        edit_bonificacao_observacoes.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (v.getId() == R.id.edit_bonificacao_observacoes) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                        case MotionEvent.ACTION_UP:
+                            v.getParent().requestDisallowInterceptTouchEvent(false);
+                            break;
+                    }
+                }
+                return false;
+            }
+        });
 
         adapterParciaisBonificacao = new AdapterParciaisBonificacoesPersonalizado(parciaisBonificacao, this);
         listViewParcialBonificacao.setAdapter(adapterParciaisBonificacao);
