@@ -77,6 +77,7 @@ import com.cesarbassani.pecbr.model.Maturidade;
 import com.cesarbassani.pecbr.model.ParcialBonificacao;
 import com.cesarbassani.pecbr.model.ParcialPenalizacao;
 import com.cesarbassani.pecbr.model.Penalizacao;
+import com.cesarbassani.pecbr.model.Produtor;
 import com.cesarbassani.pecbr.model.Rendimento;
 import com.cesarbassani.pecbr.model.Usuario;
 import com.cesarbassani.pecbr.repository.TemplatePDF;
@@ -236,17 +237,27 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
     private ValueEventListener valueEventListenerUsuarios;
     private AppCompatSpinner spinnerTecnico;
     private AppCompatSpinner spinnerFrigorifico;
+    private AppCompatSpinner spinnerPropriedade;
+    private AppCompatSpinner spinnerProdutor;
     private ArrayAdapter<Usuario> usuariosAdapter;
     private ArrayAdapter<String> frigorificoAdapter;
+    private ArrayAdapter<String> propriedadeAdapter;
+    private ArrayAdapter<String> produtorAdapter;
 
     private Abate abate = new Abate();
     private ArrayList<String> frigorificos = new ArrayList<>();
+    private ArrayList<String> propriedades = new ArrayList<>();
+    private ArrayList<String> produtores = new ArrayList<>();
 
     private ImageView image_lote;
     private StorageReference storageReference;
     private DatabaseReference abateRef;
     private DatabaseReference frigorificoRef;
+    private DatabaseReference propriedadeRef;
+    private DatabaseReference produtorRef;
     private ValueEventListener valueEventListenerFrigorificos;
+    private ValueEventListener valueEventListenerPropriedades;
+    private ValueEventListener valueEventListenerProdutores;
 
     private Bitmap imagemLote;
     private boolean fotoDoAbate = false;
@@ -258,8 +269,12 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
     private TextView txt_data_abate;
     private ImageButton datePickerAbate;
     private boolean frigorificoEncontrado = false;
+    private boolean propriedadeEncontrada = false;
+    private boolean produtorEncontrado = false;
     private ImageView adicionar_frigorifico;
+    private ImageView adicionar_produtor;
     private EditText edit_novo_frigorifico;
+    private EditText edit_novo_produtor;
     private Float pageSizeAbatePDF = 0f;
 
     @Override
@@ -279,7 +294,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
         parent_view = findViewById(android.R.id.content);
 
-        this.mViewHolder.mEditNomeCliente = findViewById(R.id.edit_nome_cliente);
+//        this.mViewHolder.mEditNomeCliente = findViewById(R.id.edit_nome_cliente);
 //        this.mViewHolder.mEditDocument = findViewById(R.id.edit_document);
         this.mViewHolder.mEditFazenda = findViewById(R.id.edit_fazenda);
 //        this.mViewHolder.mButtonSave = findViewById(R.id.button_save);
@@ -564,6 +579,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
     private void initComponent() {
 
         frigorificoRef = ConfiguracaoFirebase.getFirebaseDatabase().child("frigorificos");
+        produtorRef = ConfiguracaoFirebase.getFirebaseDatabase().child("produtores");
 
         txt_data_abate = findViewById(R.id.txt_data_abate);
 
@@ -579,13 +595,31 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         spinnerTecnico.setAdapter(usuariosAdapter);
         spinnerTecnico.setSelection(0);
 
-        String[] listaFrigorificos = getResources().getStringArray(R.array.frigorifico);
+//        String[] listaFrigorificos = getResources().getStringArray(R.array.frigorifico);
         spinnerFrigorifico = findViewById(R.id.spn_nome_frigorifico);
         frigorificoAdapter = new ArrayAdapter<>(AbateFormActivity.this, R.layout.simple_spinner_item, frigorificos);
         frigorificoAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
 
         spinnerFrigorifico.setAdapter(frigorificoAdapter);
         spinnerFrigorifico.setSelection(0);
+
+        spinnerProdutor = findViewById(R.id.spn_nome_produtor);
+        produtorAdapter = new ArrayAdapter<>(AbateFormActivity.this, R.layout.simple_spinner_item, produtores);
+        produtorAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+        spinnerProdutor.setAdapter(produtorAdapter);
+        spinnerProdutor.setSelection(0);
+
+        spinnerProdutor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         spinnerTecnico.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -612,6 +646,25 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         });
 
         adicionar_frigorifico = findViewById(R.id.adicionar_frigorifico);
+        adicionar_produtor = findViewById(R.id.adicionar_produtor);
+
+        adicionar_produtor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showProdutorDialog();
+
+                FirebaseInstanceId.getInstance().getInstanceId()
+                        .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                if (!task.isSuccessful()) {
+                                    Log.w(TAG, "getInstanceId failed", task.getException());
+                                    return;
+                                }
+                            }
+                        });
+            }
+        });
 
         adicionar_frigorifico.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -697,6 +750,60 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         return frigorificoSalvo;
     }
 
+    private void showProdutorDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+        dialog.setContentView(R.layout.dialog_event_produtor);
+        dialog.setCancelable(false);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        edit_novo_produtor = dialog.findViewById(R.id.edit_novo_produtor);
+
+        ((ImageButton) dialog.findViewById(R.id.bt_close)).
+
+                setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+        ((Button) dialog.findViewById(R.id.bt_save)).
+
+                setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        Produtor produtorGerado = inicializaProdutor();
+
+                        if (produtorGerado.getId() == null) {
+                            produtorGerado.salvar();
+                        } else {
+                            produtorGerado.atualizar();
+                        }
+
+                        dialog.dismiss();
+                    }
+                });
+
+        dialog.show();
+        dialog.getWindow().
+
+                setAttributes(lp);
+    }
+
+    private Produtor inicializaProdutor() {
+
+        Produtor produtorSalvo = new Produtor();
+
+        produtorSalvo.setNomeProdutor(edit_novo_produtor.getText().toString().trim().toUpperCase());
+
+        return produtorSalvo;
+    }
+
     private void dialogDatePickerLight(final ImageButton bt) {
         Calendar cur_calender = Calendar.getInstance();
         final DatePickerDialog datePicker = DatePickerDialog.newInstance(
@@ -740,6 +847,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         recuperaUsuarios();
         recuperarFrigorificos();
+        recuperarProdutores();
     }
 
     private void recuperarFrigorificos() {
@@ -782,6 +890,46 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
     }
 
+    private void recuperarProdutores() {
+
+        produtorEncontrado = false;
+
+        valueEventListenerProdutores = produtorRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                produtores.clear();
+
+                for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                    Produtor produtorBuscado = dados.getValue(Produtor.class);
+                    produtorBuscado.setId(dados.getKey());
+                    produtores.add(produtorBuscado.getNomeProdutor());
+
+//                    if (frigorificoBuscado.getNomeFrigorifico().equals(txtDataCotacao.getText().toString())) {
+//                        cotacao = cotacaoBuscada;
+//                        cotacaoEncontrada = true;
+//                    }
+                }
+
+                if (produtorAdapter != null) {
+                    produtorAdapter.notifyDataSetChanged();
+                }
+
+                for (int i = 0; i < produtores.size(); i++) {
+                    if (produtores.get(i).equalsIgnoreCase(abate.getProdutor())) {
+                        spinnerProdutor.setSelection(i);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     private void atualizaSpinnerTecnico(ArrayList<Usuario> usuarios) {
         if (abate.getTecnico() != null) {
             int posicaoArray = 0;
@@ -804,6 +952,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         super.onStop();
         usuarioRef.removeEventListener(valueEventListenerUsuarios);
         frigorificoRef.removeEventListener(valueEventListenerFrigorificos);
+        produtorRef.removeEventListener(valueEventListenerProdutores);
     }
 
     private void recuperaUsuarios() {

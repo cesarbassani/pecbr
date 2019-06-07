@@ -31,6 +31,7 @@ public class Abate implements Serializable, Parcelable {
     private String observacoes;
     private String dataAbate;
     private String fotoLote;
+    private String produtor;
 
     public Abate() {
     }
@@ -38,6 +39,7 @@ public class Abate implements Serializable, Parcelable {
     protected Abate(Parcel in) {
         id = in.readString();
         frigorifico = in.readString();
+        produtor = in.readString();
         observacoes = in.readString();
         dataAbate = in.readString();
         fotoLote = in.readString();
@@ -88,6 +90,7 @@ public class Abate implements Serializable, Parcelable {
         HashMap<String, Object> abateMap = new HashMap<>();
         abateMap.put("tecnico", getTecnico());
         abateMap.put("frigorifico", getFrigorifico());
+        abateMap.put("produtor", getProdutor());
         abateMap.put("dataAbate", getDataAbate());
         abateMap.put("lote", getLote());
         abateMap.put("categoria", getCategoria());
@@ -215,6 +218,14 @@ public class Abate implements Serializable, Parcelable {
         this.fotoLote = fotoLote;
     }
 
+    public String getProdutor() {
+        return produtor;
+    }
+
+    public void setProdutor(String produtor) {
+        this.produtor = produtor;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -224,6 +235,7 @@ public class Abate implements Serializable, Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(frigorifico);
+        dest.writeString(produtor);
         dest.writeString(observacoes);
         dest.writeString(dataAbate);
         dest.writeString(fotoLote);
