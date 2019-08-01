@@ -182,10 +182,10 @@
                     <android.support.v7.widget.AppCompatSpinner
                         android:id="@+id/spn_nome_frigorifico"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="40dp"
                         android:layout_below="@+id/text_nome_frigorifico"
                         android:layout_marginRight="5dp"
+                        android:layout_weight="1"
                         android:background="@drawable/edit_text_border"
                         android:spinnerMode="dialog" />
 
@@ -194,32 +194,51 @@
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_weight="0.15"
-                        android:src="@drawable/ic_add"
-                        android:background="@drawable/edit_text_border"/>
+                        android:background="@drawable/edit_text_border"
+                        android:src="@drawable/ic_add" />
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/text_cadastro"
+                <LinearLayout
+                    android:id="@+id/layout_cliente_titulo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/lt_frigorifico"
-                    android:layout_marginBottom="5dp"
-                    android:text="@string/cliente"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/text_cadastro"
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="@string/cliente"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btn_dialog_clientes"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/buttonshape"
+                        android:text="+"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/text_nome_fazendeiro"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/text_cadastro"
+                    android:layout_below="@+id/layout_cliente_titulo"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentLeft="true"
                     android:text="Nome" />
 
-                <EditText
-                    android:id="@+id/edit_nome_cliente"
+                <pl.utkala.searchablespinner.SearchableSpinner
+                    android:id="@+id/spn_nome_cliente"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_below="@+id/text_nome_fazendeiro"
@@ -230,13 +249,15 @@
                     android:inputType="text"
                     android:paddingStart="10dp"
                     android:paddingLeft="10dp"
+                    app:closeText="Fechar"
+                    app:dialogTitle="Selecione o nome"
                     android:textSize="18sp" />
 
                 <LinearLayout
                     android:id="@+id/layout_text_fazenda_qtde"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/edit_nome_cliente"
+                    android:layout_below="@+id/spn_nome_cliente"
                     android:orientation="horizontal">
 
                     <TextView
@@ -261,8 +282,8 @@
                     android:layout_below="@+id/layout_text_fazenda_qtde"
                     android:orientation="horizontal">
 
-                    <EditText
-                        android:id="@+id/edit_fazenda"
+                    <pl.utkala.searchablespinner.SearchableSpinner
+                        android:id="@+id/spn_fazenda"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_marginRight="10dp"
@@ -274,7 +295,7 @@
                         android:id="@+id/edit_quantidade_animais"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
-                        android:layout_alignTop="@+id/edit_fazenda"
+                        android:layout_alignTop="@+id/spn_fazenda"
                         android:layout_weight="1"
                         android:background="@drawable/edit_text_border"
                         android:gravity="center"
@@ -301,8 +322,8 @@
 
                     <Button
                         android:id="@+id/btn_dialog_categorias"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:layout_marginTop="12dp"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/buttonshape"

@@ -22,6 +22,10 @@ android {
     packagingOptions {
         exclude 'META-INF/proguard/androidx-annotations.pro'
     }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
 }
 
 dependencies {
@@ -92,6 +96,8 @@ dependencies {
 
     //JustifiedTextView
     implementation 'com.codesgood:justifiedtextview:1.1.0'
+
+    implementation 'com.github.DonMat:searchablespinner:v1.0.1'
 
 }
 

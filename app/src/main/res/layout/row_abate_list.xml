@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.balysv.materialripple.MaterialRippleLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.balysv.materialripple.MaterialRippleLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/RippleStyleBlack"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -16,29 +15,37 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingLeft="7dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingLeft="7dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imageUser"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginLeft="@dimen/spacing_large"
-            android:layout_marginRight="@dimen/spacing_large"
-            android:src="@drawable/padrao" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageUser"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="@dimen/spacing_large"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="@dimen/spacing_large"
+                android:src="@drawable/padrao" />
 
             <TextView
                 android:id="@+id/text_data_abate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:text="01 Dez"
-                android:layout_marginTop="10dp"
                 android:textAlignment="center"
-                android:textSize="10sp"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption" />
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                android:textSize="10sp" />
+
+            <View
+                android:id="@+id/statusAbate"
+                android:layout_width="30dp"
+                android:layout_height="3dp"
+                android:layout_marginTop="7dp"
+                android:background="@color/colorTextPresent"
+                android:layout_gravity="center"/>
 
         </LinearLayout>
 
@@ -75,8 +82,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/spacing_middle"
                     android:layout_marginRight="@dimen/spacing_middle"
-                    android:paddingTop="@dimen/spacing_small"
                     android:maxLines="2"
+                    android:paddingTop="@dimen/spacing_small"
                     android:text="@string/nome_fazenda"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="@color/grey_40" />

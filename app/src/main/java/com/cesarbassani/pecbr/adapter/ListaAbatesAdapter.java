@@ -11,10 +11,8 @@ import android.view.ViewGroup;
 import com.cesarbassani.pecbr.R;
 import com.cesarbassani.pecbr.config.ConfiguracaoFirebase;
 import com.cesarbassani.pecbr.config.GlideApp;
-import com.cesarbassani.pecbr.helper.UsuarioFirebase;
 import com.cesarbassani.pecbr.helper.ValidacaoHelper;
 import com.cesarbassani.pecbr.model.Abate;
-import com.cesarbassani.pecbr.listener.OnAbateListenerInteractionListener;
 import com.cesarbassani.pecbr.model.Usuario;
 import com.cesarbassani.pecbr.viewholder.AbateViewHolder;
 import com.google.firebase.auth.FirebaseUser;
@@ -60,6 +58,11 @@ public class ListaAbatesAdapter extends RecyclerView.Adapter<AbateViewHolder> {
         holder.lote.setText("Lote: " + abate.getLote().getQtdeAnimaisLote() + " " + ValidacaoHelper.validaQuantidade(Integer.parseInt(abate.getLote().getQtdeAnimaisLote())));
         holder.frigorifico.setText("Frigorífico " + abate.getFrigorifico());
         holder.categoria_racial.setText(abate.getCategoria().getCategoria() + " - " +  abate.getCategoria().getRacial());
+        if (abate.getStatus() == true) {
+            holder.statusBar.setBackgroundResource(R.color.colorTextPresent);
+        } else {
+            holder.statusBar.setBackgroundResource(R.color.red_400);
+        }
 
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
         Date dataFormatada = new Date();

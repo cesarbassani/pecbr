@@ -57,11 +57,18 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 
 import static com.cesarbassani.pecbr.utils.Tools.*;
@@ -231,6 +238,28 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
 //                        }).start();
 //                    }
 //                });
+
+                if (abates.get(position).getStatus() == false) {
+                    alertDialog.setNeutralButton("Finalizado", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            abate = abates.get(position);
+                            abate.setStatus(true);
+                            abate.atualizar();
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+                } else {
+                    alertDialog.setNeutralButton("Aberto", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            abate = abates.get(position);
+                            abate.setStatus(false);
+                            abate.atualizar();
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+                }
 
                 alertDialog.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     @Override
@@ -837,6 +866,8 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
                     abate.setId(dados.getKey());
                     abates.add(abate);
                 }
+
+//                Collections.sort(abates, Collections.reverseOrder());
 
                 adapter.notifyDataSetChanged();
             }

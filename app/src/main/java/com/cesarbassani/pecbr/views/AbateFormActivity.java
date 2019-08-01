@@ -25,7 +25,6 @@ import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -48,7 +47,6 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,7 +66,7 @@ import com.cesarbassani.pecbr.model.Acabamento;
 import com.cesarbassani.pecbr.model.Acerto;
 import com.cesarbassani.pecbr.model.Bonificacao;
 import com.cesarbassani.pecbr.model.Categoria;
-import com.cesarbassani.pecbr.model.Cotacao;
+import com.cesarbassani.pecbr.model.Cliente;
 import com.cesarbassani.pecbr.model.Event;
 import com.cesarbassani.pecbr.model.Frigorifico;
 import com.cesarbassani.pecbr.model.GuestEntity;
@@ -101,15 +99,15 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import pl.utkala.searchablespinner.SearchableSpinner;
+
 import static android.support.constraint.Constraints.TAG;
 import static android.widget.Toast.LENGTH_SHORT;
-import static com.cesarbassani.pecbr.utils.Tools.formatDecimal;
 
 public class AbateFormActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, TextWatcher, AdapterView.OnItemClickListener {
 
@@ -236,17 +234,31 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
     private ValueEventListener valueEventListenerUsuarios;
     private AppCompatSpinner spinnerTecnico;
     private AppCompatSpinner spinnerFrigorifico;
+//    private AppCompatSpinner spinnerCliente;
+//    private AppCompatSpinner spinnerPropriedade;
+    private SearchableSpinner spinnerPropriedade;
+    private SearchableSpinner spinnerCliente;
     private ArrayAdapter<Usuario> usuariosAdapter;
     private ArrayAdapter<String> frigorificoAdapter;
+    private ArrayAdapter<String> clienteAdapter;
+    private ArrayAdapter<String> propriedadeAdapter;
+
+    private String nomeClienteSelecionado;
+    private String nomePropriedadeSelecionada;
 
     private Abate abate = new Abate();
     private ArrayList<String> frigorificos = new ArrayList<>();
+    private ArrayList<Cliente> clientes = new ArrayList<>();
+    private ArrayList<String> clientesNomes = new ArrayList<>();
+    private ArrayList<String> propriedades = new ArrayList<>();
 
     private ImageView image_lote;
     private StorageReference storageReference;
     private DatabaseReference abateRef;
     private DatabaseReference frigorificoRef;
+    private DatabaseReference clienteRef;
     private ValueEventListener valueEventListenerFrigorificos;
+    private ValueEventListener valueEventListenerClientes;
 
     private Bitmap imagemLote;
     private boolean fotoDoAbate = false;
@@ -258,8 +270,13 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
     private TextView txt_data_abate;
     private ImageButton datePickerAbate;
     private boolean frigorificoEncontrado = false;
+    private boolean clienteEncontrado = false;
+    private boolean propriedadeEncontrada = false;
     private ImageView adicionar_frigorifico;
+    private Button adicionar_cliente;
     private EditText edit_novo_frigorifico;
+    private EditText edit_novo_cliente;
+    private EditText edit_nova_propriedade;
     private Float pageSizeAbatePDF = 0f;
 
     @Override
@@ -279,9 +296,9 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
         parent_view = findViewById(android.R.id.content);
 
-        this.mViewHolder.mEditNomeCliente = findViewById(R.id.edit_nome_cliente);
+//        this.mViewHolder.mEditNomeCliente = findViewById(R.id.edit_nome_cliente);
 //        this.mViewHolder.mEditDocument = findViewById(R.id.edit_document);
-        this.mViewHolder.mEditFazenda = findViewById(R.id.edit_fazenda);
+//        this.mViewHolder.mEditFazenda = findViewById(R.id.edit_fazenda);
 //        this.mViewHolder.mButtonSave = findViewById(R.id.button_save);
         this.mViewHolder.mQtdeAnimais = findViewById(R.id.edit_quantidade_animais);
 
@@ -564,6 +581,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
     private void initComponent() {
 
         frigorificoRef = ConfiguracaoFirebase.getFirebaseDatabase().child("frigorificos");
+        clienteRef = ConfiguracaoFirebase.getFirebaseDatabase().child("clientes");
 
         txt_data_abate = findViewById(R.id.txt_data_abate);
 
@@ -581,11 +599,23 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
         String[] listaFrigorificos = getResources().getStringArray(R.array.frigorifico);
         spinnerFrigorifico = findViewById(R.id.spn_nome_frigorifico);
+        spinnerCliente = findViewById(R.id.spn_nome_cliente);
+        spinnerPropriedade = findViewById(R.id.spn_fazenda);
+
         frigorificoAdapter = new ArrayAdapter<>(AbateFormActivity.this, R.layout.simple_spinner_item, frigorificos);
         frigorificoAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
-
         spinnerFrigorifico.setAdapter(frigorificoAdapter);
         spinnerFrigorifico.setSelection(0);
+
+        clienteAdapter = new ArrayAdapter<>(AbateFormActivity.this, R.layout.simple_spinner_item, clientesNomes);
+        clienteAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+        spinnerCliente.setAdapter(clienteAdapter);
+        spinnerCliente.setSelection(0);
+
+        propriedadeAdapter = new ArrayAdapter<>(AbateFormActivity.this, R.layout.simple_spinner_item, propriedades);
+        propriedadeAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+        spinnerPropriedade.setAdapter(propriedadeAdapter);
+        spinnerPropriedade.setSelection(0);
 
         spinnerTecnico.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -611,12 +641,55 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
+        spinnerCliente.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                nomeClienteSelecionado = spinnerCliente.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        spinnerPropriedade.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                nomePropriedadeSelecionada = spinnerPropriedade.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         adicionar_frigorifico = findViewById(R.id.adicionar_frigorifico);
+        adicionar_cliente = findViewById(R.id.btn_dialog_clientes);
 
         adicionar_frigorifico.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showFrigorificoDialog();
+
+                FirebaseInstanceId.getInstance().getInstanceId()
+                        .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                if (!task.isSuccessful()) {
+                                    Log.w(TAG, "getInstanceId failed", task.getException());
+                                    return;
+                                }
+                            }
+                        });
+            }
+        });
+
+        adicionar_cliente.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showClienteDialog(nomeClienteSelecionado, nomePropriedadeSelecionada);
 
                 FirebaseInstanceId.getInstance().getInstanceId()
                         .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
@@ -697,6 +770,66 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         return frigorificoSalvo;
     }
 
+    private void showClienteDialog(String nomeCliente, String nomePropriedade) {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+        dialog.setContentView(R.layout.dialog_event_cliente);
+        dialog.setCancelable(false);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        edit_novo_cliente = dialog.findViewById(R.id.edit_novo_cliente);
+        edit_novo_cliente.setText(nomeCliente);
+        edit_nova_propriedade = dialog.findViewById(R.id.edit_nova_propriedade);
+        edit_nova_propriedade.setText(nomePropriedade);
+
+        ((ImageButton) dialog.findViewById(R.id.bt_close)).
+
+                setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+        ((Button) dialog.findViewById(R.id.bt_save)).
+
+                setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        Cliente clienteGerado = inicializaCliente();
+
+                        if (clienteGerado.getId() == null) {
+                            clienteGerado.salvar();
+                        } else {
+                            clienteGerado.atualizar();
+                        }
+                        recuperarClientes(edit_novo_cliente.getText().toString());
+                        recuperarPropriedades(edit_nova_propriedade.getText().toString());
+
+                        dialog.dismiss();
+                    }
+                });
+
+        dialog.show();
+        dialog.getWindow().
+
+                setAttributes(lp);
+    }
+
+    private Cliente inicializaCliente() {
+
+        Cliente clienteSalvo = new Cliente();
+
+        clienteSalvo.setnomeCliente(edit_novo_cliente.getText().toString().trim());
+        clienteSalvo.setPropriedade(edit_nova_propriedade.getText().toString().trim());
+
+        return clienteSalvo;
+    }
+
     private void dialogDatePickerLight(final ImageButton bt) {
         Calendar cur_calender = Calendar.getInstance();
         final DatePickerDialog datePicker = DatePickerDialog.newInstance(
@@ -740,6 +873,8 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         recuperaUsuarios();
         recuperarFrigorificos();
+        recuperarClientes("");
+        recuperarPropriedades("");
     }
 
     private void recuperarFrigorificos() {
@@ -782,6 +917,90 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
     }
 
+    private void recuperarClientes(String nomeCliente) {
+
+        clienteEncontrado = false;
+        final String[] nome = {nomeCliente};
+
+        valueEventListenerClientes = clienteRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                clientesNomes.clear();
+
+                for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                    Cliente clienteBuscado = dados.getValue(Cliente.class);
+                    clienteBuscado.setId(dados.getKey());
+                    clientesNomes.add(clienteBuscado.getnomeCliente());
+                }
+
+                if (clienteAdapter != null) {
+                    clienteAdapter.notifyDataSetChanged();
+                }
+
+                for (int i = 0; i < clientesNomes.size(); i++) {
+                    if (abate.getCliente() != null) {
+                        nome[0] = abate.getCliente().getnomeCliente();
+                    } else if (abate.getLote() != null){
+                        nome[0] = abate.getLote().getNomeCliente();
+                    }
+
+                    if (clientesNomes.get(i).equalsIgnoreCase(nome[0])) {
+                        spinnerCliente.setSelection(i);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void recuperarPropriedades(String nomePropriedade) {
+
+        propriedadeEncontrada = false;
+        final String[] propriedade = {nomePropriedade};
+
+        valueEventListenerClientes = clienteRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                propriedades.clear();
+
+                for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                    Cliente clienteBuscado = dados.getValue(Cliente.class);
+                    clienteBuscado.setId(dados.getKey());
+                    propriedades.add(clienteBuscado.getPropriedade());
+                }
+
+                if (propriedadeAdapter != null) {
+                    propriedadeAdapter.notifyDataSetChanged();
+                }
+
+                for (int i = 0; i < propriedades.size(); i++) {
+
+                    if (abate.getCliente() != null) {
+                        propriedade[0] = abate.getCliente().getPropriedade();
+                    } else if (abate.getLote() != null) {
+                        propriedade[0] = abate.getLote().getPropriedade();
+                    }
+                    if (propriedades.get(i).equalsIgnoreCase(propriedade[0])) {
+                        spinnerPropriedade.setSelection(i);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     private void atualizaSpinnerTecnico(ArrayList<Usuario> usuarios) {
         if (abate.getTecnico() != null) {
             int posicaoArray = 0;
@@ -804,6 +1023,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         super.onStop();
         usuarioRef.removeEventListener(valueEventListenerUsuarios);
         frigorificoRef.removeEventListener(valueEventListenerFrigorificos);
+        clienteRef.removeEventListener(valueEventListenerClientes);
     }
 
     private void recuperaUsuarios() {
@@ -1028,17 +1248,25 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
         Usuario tecnico = new Usuario();
 
+        abate.setStatus(false);
+
         if (spinnerTecnico.getSelectedItem() != null)
             tecnico = (Usuario) spinnerTecnico.getSelectedItem();
 
         abate.setTecnico(tecnico);
         abate.setFrigorifico(spinnerFrigorifico.getSelectedItem().toString());
+
+        Cliente cliente = new Cliente();
+        cliente.setnomeCliente(spinnerCliente.getSelectedItem().toString());
+        cliente.setPropriedade(spinnerPropriedade.getSelectedItem().toString());
+
+        abate.setCliente(cliente);
 //        abate.setDataAbate(dateString);
         abate.setDataAbate(txt_data_abate.getText().toString());
 
         Lote lote = new Lote();
-        lote.setNomeCliente(this.mViewHolder.mEditNomeCliente.getText().toString());
-        lote.setPropriedade(this.mViewHolder.mEditFazenda.getText().toString());
+        lote.setNomeCliente(cliente.getnomeCliente());
+        lote.setPropriedade(cliente.getPropriedade());
         lote.setQtdeAnimaisLote(this.mViewHolder.mQtdeAnimais.getText().toString());
 
         Categoria categoria = new Categoria();
@@ -1205,8 +1433,8 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
         txt_data_abate.setText(abate.getDataAbate());
 
-        this.mViewHolder.mEditNomeCliente.setText(abate.getLote().getNomeCliente());
-        this.mViewHolder.mEditFazenda.setText(abate.getLote().getPropriedade());
+//        this.mViewHolder.mEditNomeCliente.setText(abate.getLote().getNomeCliente());
+//        this.mViewHolder.mEditFazenda.setText(abate.getLote().getPropriedade());
         this.mViewHolder.mQtdeAnimais.setText(abate.getLote().getQtdeAnimaisLote());
 
         //Rendimento

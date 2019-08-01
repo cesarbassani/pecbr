@@ -19,6 +19,7 @@ public class AbateViewHolder extends RecyclerView.ViewHolder{
 
     public CircleImageView foto;
     public TextView nomeCliente, fazenda, frigorifico, categoria_racial, lote, dataAbate;
+    public View statusBar;
 
     public AbateViewHolder(View itemView, Context context) {
         super(itemView);
@@ -30,6 +31,7 @@ public class AbateViewHolder extends RecyclerView.ViewHolder{
         categoria_racial = itemView.findViewById(R.id.categoria_racial);
         lote = itemView.findViewById(R.id.lote);
         dataAbate = itemView.findViewById(R.id.text_data_abate);
+        statusBar = itemView.findViewById(R.id.statusAbate);
 
     }
 

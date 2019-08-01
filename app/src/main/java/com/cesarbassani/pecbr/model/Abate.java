@@ -31,6 +31,8 @@ public class Abate implements Serializable, Parcelable {
     private String observacoes;
     private String dataAbate;
     private String fotoLote;
+    private Cliente cliente;
+    private boolean status = true;
 
     public Abate() {
     }
@@ -42,6 +44,7 @@ public class Abate implements Serializable, Parcelable {
         dataAbate = in.readString();
         fotoLote = in.readString();
         tecnico = in.readParcelable(Usuario.class.getClassLoader());
+        cliente = in.readParcelable(Cliente.class.getClassLoader());
         lote = in.readParcelable(Lote.class.getClassLoader());
         categoria = in.readParcelable(Categoria.class.getClassLoader());
         rendimento = in.readParcelable(Rendimento.class.getClassLoader());
@@ -50,6 +53,7 @@ public class Abate implements Serializable, Parcelable {
         acerto = in.readParcelable(Acerto.class.getClassLoader());
         bonificacoes = in.readArrayList(Bonificacao.class.getClassLoader());
         penalizacoes = in.readArrayList(Penalizacao.class.getClassLoader());
+        status = in.readByte() != 0;
     }
 
     public static final Creator<Abate> CREATOR = new Creator<Abate>() {
@@ -87,6 +91,7 @@ public class Abate implements Serializable, Parcelable {
     private Map<String, Object> converterParaMap() {
         HashMap<String, Object> abateMap = new HashMap<>();
         abateMap.put("tecnico", getTecnico());
+        abateMap.put("cliente", getCliente());
         abateMap.put("frigorifico", getFrigorifico());
         abateMap.put("dataAbate", getDataAbate());
         abateMap.put("lote", getLote());
@@ -99,6 +104,7 @@ public class Abate implements Serializable, Parcelable {
         abateMap.put("acerto", getAcerto());
         abateMap.put("observacoes", getObservacoes());
         abateMap.put("fotoLote", getFotoLote());
+        abateMap.put("status", getStatus());
 
         return abateMap;
     }
@@ -215,6 +221,22 @@ public class Abate implements Serializable, Parcelable {
         this.fotoLote = fotoLote;
     }
 
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -228,6 +250,7 @@ public class Abate implements Serializable, Parcelable {
         dest.writeString(dataAbate);
         dest.writeString(fotoLote);
         dest.writeParcelable(tecnico, flags);
+        dest.writeParcelable(cliente, flags);
         dest.writeParcelable(lote, flags);
         dest.writeParcelable(categoria, flags);
         dest.writeParcelable(rendimento, flags);
@@ -238,5 +261,6 @@ public class Abate implements Serializable, Parcelable {
         dest.writeArray(objectsBonificacoes);
         Object[] objectsPenalizacoes = penalizacoes.toArray();
         dest.writeArray(objectsPenalizacoes);
+        dest.writeByte((byte) (status ? 1 : 0));
     }
 }
