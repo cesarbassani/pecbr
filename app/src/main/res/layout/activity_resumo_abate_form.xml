@@ -288,6 +288,8 @@
                         android:layout_height="40dp"
                         android:layout_marginRight="10dp"
                         android:layout_weight="3"
+                        app:closeText="Fechar"
+                        app:dialogTitle="Selecione a propriedade"
                         android:background="@drawable/edit_text_border"
                         android:inputType="text" />
 

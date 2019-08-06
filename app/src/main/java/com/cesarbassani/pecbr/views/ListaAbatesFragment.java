@@ -54,6 +54,8 @@ import com.cesarbassani.pecbr.model.Bonificacao;
 import com.cesarbassani.pecbr.model.Penalizacao;
 import com.cesarbassani.pecbr.model.Usuario;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -96,6 +98,9 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
     private StorageReference imageRef;
     private ContentResolver contentResolver;
     private LinearLayoutManager linearLayoutManager;
+
+    private FirebaseAuth auth;
+    private boolean supervisor = false;
 
     private Bitmap imagemLote;
     private Uri path;
@@ -170,6 +175,9 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
 
     private void initComponent(View view) {
 
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+
         FloatingActionButton floatingActionButton = ((MainActivity) getActivity()).getFloatingActionButton();
 
         if (floatingActionButton != null) {
@@ -197,6 +205,10 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
 
         adapter = new ListaAbatesAdapter(abates, context, usuarios);
         recyclerViewListaAbates.setAdapter(adapter);
+
+        if (user.getEmail().equals("joaoalvaro@pecbr.com") || user.getEmail().equals("c.fantini@pecbr.com")) {
+            supervisor = true;
+        }
 
         //Evento de click
         recyclerViewListaAbates.addOnItemTouchListener(new RecyclerItemClickListener(context, recyclerViewListaAbates, new RecyclerItemClickListener.OnItemClickListener() {
@@ -239,7 +251,7 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
 //                    }
 //                });
 
-                if (abates.get(position).getStatus() == false) {
+                if (abates.get(position).getStatus() == false && supervisor) {
                     alertDialog.setNeutralButton("Finalizado", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -249,7 +261,7 @@ public class ListaAbatesFragment extends Fragment implements SearchView.OnQueryT
                             adapter.notifyDataSetChanged();
                         }
                     });
-                } else {
+                } else if (supervisor){
                     alertDialog.setNeutralButton("Aberto", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
