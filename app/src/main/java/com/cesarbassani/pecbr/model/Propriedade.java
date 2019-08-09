@@ -10,27 +10,24 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class Cliente implements Serializable, Parcelable {
+public class Propriedade implements Serializable, Parcelable {
 
     private String id;
-    private String nomeCliente;
-//    private List<Propriedade> propriedades;
+    private String nomePropriedade;
 
-    public Cliente() {
+    public Propriedade() {
     }
 
-    public Cliente(Parcel in) {
+    public Propriedade(Parcel in) {
         this.id = in.readString();
-        this.nomeCliente = in.readString();
-//        this.propriedades = in.readArrayList(Propriedade.class.getClassLoader());
+        this.nomePropriedade = in.readString();
     }
 
     public void salvar() {
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("clientes");
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("propriedades");
         String id = databaseReference.push().getKey();
         databaseReference.child(id).setValue(this);
     }
@@ -38,7 +35,7 @@ public class Cliente implements Serializable, Parcelable {
     public void atualizar() {
         DatabaseReference database = ConfiguracaoFirebase.getFirebaseDatabase();
 
-        DatabaseReference clientesRef = database.child("clientes")
+        DatabaseReference clientesRef = database.child("propriedades")
                 .child(getId());
 
         Map<String, Object> valoresCliente = converterParaMap();
@@ -46,23 +43,22 @@ public class Cliente implements Serializable, Parcelable {
         clientesRef.updateChildren(valoresCliente);
     }
 
-    public static final Creator<Cliente> CREATOR = new Creator<Cliente>() {
+    public static final Creator<Propriedade> CREATOR = new Creator<Propriedade>() {
         @Override
-        public Cliente createFromParcel(Parcel in) {
-            return new Cliente(in);
+        public Propriedade createFromParcel(Parcel in) {
+            return new Propriedade(in);
         }
 
         @Override
-        public Cliente[] newArray(int size) {
-            return new Cliente[size];
+        public Propriedade[] newArray(int size) {
+            return new Propriedade[size];
         }
     };
 
     @Exclude
     private Map<String, Object> converterParaMap() {
         HashMap<String, Object> clienteMap = new HashMap<>();
-        clienteMap.put("nomeCliente", getnomeCliente());
-//        clienteMap.put("propriedades", getPropriedades());
+        clienteMap.put("nomePropriedade", getNomePropriedade());
 
         return clienteMap;
     }
@@ -76,21 +72,13 @@ public class Cliente implements Serializable, Parcelable {
         this.id = id;
     }
 
-    public String getnomeCliente() {
-        return nomeCliente;
+    public String getNomePropriedade() {
+        return nomePropriedade;
     }
 
-    public void setnomeCliente(String getnomeCliente) {
-        this.nomeCliente = getnomeCliente;
+    public void setNomePropriedade(String nomePropriedade) {
+        this.nomePropriedade = nomePropriedade;
     }
-
-//    public List<Propriedade> getPropriedades() {
-//        return propriedades;
-//    }
-
-//    public void setPropriedades(List<Propriedade> propriedades) {
-//        this.propriedades = propriedades;
-//    }
 
     @Override
     public int describeContents() {
@@ -100,13 +88,11 @@ public class Cliente implements Serializable, Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
-        dest.writeString(nomeCliente);
-//        Object[] objectsPropriedades = propriedades.toArray();
-//        dest.writeArray(objectsPropriedades);
+        dest.writeString(nomePropriedade);
     }
 
     @Override
     public String toString() {
-        return nomeCliente;
+        return nomePropriedade;
     }
 }

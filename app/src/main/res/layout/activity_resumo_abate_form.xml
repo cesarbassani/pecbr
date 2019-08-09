@@ -210,22 +210,42 @@
                         android:id="@+id/text_cadastro"
                         android:layout_width="70dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
                         android:text="@string/cliente"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
-                    <Button
-                        android:id="@+id/btn_dialog_clientes"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="@drawable/buttonshape"
-                        android:text="+"
-                        android:textColor="#FFFFFF"
-                        android:textSize="16sp" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <Button
+                            android:id="@+id/btn_dialog_clientes"
+                            android:layout_width="100dp"
+                            android:layout_height="25dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_toLeftOf="@+id/btn_dialog_propriedades"
+                            android:background="@drawable/buttonshapestend"
+                            android:text="@string/cliente"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp" />
+
+                        <Button
+                            android:id="@+id/btn_dialog_propriedades"
+                            android:layout_width="100dp"
+                            android:layout_height="25dp"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_alignParentRight="true"
+                            android:background="@drawable/buttonshapestend"
+                            android:text="@string/propriedade"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
+
                 </LinearLayout>
 
                 <TextView
@@ -249,9 +269,9 @@
                     android:inputType="text"
                     android:paddingStart="10dp"
                     android:paddingLeft="10dp"
+                    android:textSize="18sp"
                     app:closeText="Fechar"
-                    app:dialogTitle="Selecione o nome"
-                    android:textSize="18sp" />
+                    app:dialogTitle="Selecione o nome" />
 
                 <LinearLayout
                     android:id="@+id/layout_text_fazenda_qtde"
@@ -288,10 +308,10 @@
                         android:layout_height="40dp"
                         android:layout_marginRight="10dp"
                         android:layout_weight="3"
-                        app:closeText="Fechar"
-                        app:dialogTitle="Selecione a propriedade"
                         android:background="@drawable/edit_text_border"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        app:closeText="Fechar"
+                        app:dialogTitle="Selecione a propriedade" />
 
                     <EditText
                         android:id="@+id/edit_quantidade_animais"

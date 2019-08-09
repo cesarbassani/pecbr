@@ -29,7 +29,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="@string/cliente"
+                android:text="@string/propriedade"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
                 android:textColor="@android:color/white" />
 
@@ -79,7 +79,7 @@
                         android:id="@+id/text_data_cotacao"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Cadastrar novo Cliente"
+                        android:text="Cadastrar nova Propriedade"
                         android:textSize="18sp" />
 
                     <View
@@ -93,21 +93,17 @@
                         android:layout_marginEnd="5dp"
                         android:layout_marginRight="5dp"
                         android:layout_marginBottom="1dp"
-                        android:text="Nome"
+                        android:text="Propriedade"
                         android:textStyle="bold" />
 
                     <EditText
-                        android:id="@+id/edit_novo_cliente"
+                        android:id="@+id/edit_nova_propriedade"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_marginRight="5dp"
                         android:background="@drawable/edit_text_border"
                         android:inputType="text"
                         android:textColor="@color/grey_60" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/spacing_large" />
 
                 </LinearLayout>
 

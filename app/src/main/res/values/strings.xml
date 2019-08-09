@@ -103,6 +103,8 @@
     <string name="err_msg_parcialBonificacao">Adicione um tipo de bonificação para calcular!</string>
     <string name="err_msg_parcialPenalizacao">Adicione um tipo de penalização para salvar!</string>
     <string name="err_msg_BonificacaoCalculada">Calcule o total e a media no lote!</string>
+    <string name="err_msg_clienteValidado">Escreva o nome do cliente para salvar.</string>
+    <string name="err_msg_propriedadeValidada">Escreva o nome da propriedade para salvar.</string>
     <string name="err_msg_qtde_ParcialBonificacao">Informe a quantidade de animais bonificados para adicionar uma parcial de bonificação!</string>
     <string name="err_msg_qtde_ParcialBonificacao_excedida">A quantidade de animais bonificados informada é maior que a quantidade de animais do lote!</string>
     <string name="err_msg_valoresParcialBonificacao">Informe o valor para adicionar uma parcial de bonificação!</string>
@@ -128,4 +130,5 @@
     </string>
 
     <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
+    <string name="propriedade">Propriedade</string>
 </resources>

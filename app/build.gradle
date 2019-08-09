@@ -89,8 +89,6 @@ dependencies {
     //Biblioteca Android About Page
     implementation 'com.github.medyo:android-about-page:1.2.4'
 
-//    implementation 'com.google.firebase:firebase-messaging:17.0.0:15.0.0'
-
     //MPAndroidChart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
 

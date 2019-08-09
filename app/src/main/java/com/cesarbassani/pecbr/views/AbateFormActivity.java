@@ -11,13 +11,13 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.AppCompatSeekBar;
@@ -75,6 +75,7 @@ import com.cesarbassani.pecbr.model.Maturidade;
 import com.cesarbassani.pecbr.model.ParcialBonificacao;
 import com.cesarbassani.pecbr.model.ParcialPenalizacao;
 import com.cesarbassani.pecbr.model.Penalizacao;
+import com.cesarbassani.pecbr.model.Propriedade;
 import com.cesarbassani.pecbr.model.Rendimento;
 import com.cesarbassani.pecbr.model.Usuario;
 import com.cesarbassani.pecbr.repository.TemplatePDF;
@@ -234,7 +235,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
     private ValueEventListener valueEventListenerUsuarios;
     private AppCompatSpinner spinnerTecnico;
     private AppCompatSpinner spinnerFrigorifico;
-//    private AppCompatSpinner spinnerCliente;
+    //    private AppCompatSpinner spinnerCliente;
 //    private AppCompatSpinner spinnerPropriedade;
     private SearchableSpinner spinnerPropriedade;
     private SearchableSpinner spinnerCliente;
@@ -250,15 +251,17 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
     private ArrayList<String> frigorificos = new ArrayList<>();
     private ArrayList<Cliente> clientes = new ArrayList<>();
     private ArrayList<String> clientesNomes = new ArrayList<>();
-    private ArrayList<String> propriedades = new ArrayList<>();
+    private ArrayList<String> propriedadesNomes = new ArrayList<>();
 
     private ImageView image_lote;
     private StorageReference storageReference;
     private DatabaseReference abateRef;
     private DatabaseReference frigorificoRef;
     private DatabaseReference clienteRef;
+    private DatabaseReference propriedadeRef;
     private ValueEventListener valueEventListenerFrigorificos;
     private ValueEventListener valueEventListenerClientes;
+    private ValueEventListener valueEventListenerPropriedades;
 
     private Bitmap imagemLote;
     private boolean fotoDoAbate = false;
@@ -274,10 +277,13 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
     private boolean propriedadeEncontrada = false;
     private ImageView adicionar_frigorifico;
     private Button adicionar_cliente;
+    private Button adicionar_propriedade;
     private EditText edit_novo_frigorifico;
     private EditText edit_novo_cliente;
     private EditText edit_nova_propriedade;
     private Float pageSizeAbatePDF = 0f;
+
+    private String nomeCliente;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -582,6 +588,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
         frigorificoRef = ConfiguracaoFirebase.getFirebaseDatabase().child("frigorificos");
         clienteRef = ConfiguracaoFirebase.getFirebaseDatabase().child("clientes");
+        propriedadeRef = ConfiguracaoFirebase.getFirebaseDatabase().child("propriedades");
 
         txt_data_abate = findViewById(R.id.txt_data_abate);
 
@@ -612,7 +619,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         spinnerCliente.setAdapter(clienteAdapter);
         spinnerCliente.setSelection(0);
 
-        propriedadeAdapter = new ArrayAdapter<>(AbateFormActivity.this, R.layout.simple_spinner_item, propriedades);
+        propriedadeAdapter = new ArrayAdapter<>(AbateFormActivity.this, R.layout.simple_spinner_item, propriedadesNomes);
         propriedadeAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         spinnerPropriedade.setAdapter(propriedadeAdapter);
         spinnerPropriedade.setSelection(0);
@@ -667,6 +674,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
         adicionar_frigorifico = findViewById(R.id.adicionar_frigorifico);
         adicionar_cliente = findViewById(R.id.btn_dialog_clientes);
+        adicionar_propriedade = findViewById(R.id.btn_dialog_propriedades);
 
         adicionar_frigorifico.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -689,7 +697,25 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         adicionar_cliente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showClienteDialog(nomeClienteSelecionado, nomePropriedadeSelecionada);
+                showClienteDialog();
+
+                FirebaseInstanceId.getInstance().getInstanceId()
+                        .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                if (!task.isSuccessful()) {
+                                    Log.w(TAG, "getInstanceId failed", task.getException());
+                                    return;
+                                }
+                            }
+                        });
+            }
+        });
+
+        adicionar_propriedade.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPropriedadeDialog();
 
                 FirebaseInstanceId.getInstance().getInstanceId()
                         .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
@@ -770,7 +796,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         return frigorificoSalvo;
     }
 
-    private void showClienteDialog(String nomeCliente, String nomePropriedade) {
+    private void showClienteDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
         dialog.setContentView(R.layout.dialog_event_cliente);
@@ -782,9 +808,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
         edit_novo_cliente = dialog.findViewById(R.id.edit_novo_cliente);
-        edit_novo_cliente.setText(nomeCliente);
-        edit_nova_propriedade = dialog.findViewById(R.id.edit_nova_propriedade);
-        edit_nova_propriedade.setText(nomePropriedade);
+//        edit_novo_cliente.setText(nomeCliente);
 
         ((ImageButton) dialog.findViewById(R.id.bt_close)).
 
@@ -803,14 +827,28 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
                         Cliente clienteGerado = inicializaCliente();
 
                         if (clienteGerado.getId() == null) {
-                            clienteGerado.salvar();
+                            if (!edit_novo_cliente.getText().toString().trim().equals("")) {
+                                clienteGerado.salvar();
+                                recuperarClientes(edit_novo_cliente.getText().toString());
+
+                                dialog.dismiss();
+                            } else {
+                                View layout = getLayoutInflater().inflate(R.layout.toast_custom, (ViewGroup) findViewById(R.id.custom_toast_layout_id));
+                                TextView text = layout.findViewById(R.id.text);
+                                text.setText(R.string.err_msg_clienteValidado);
+
+                                Toast toast = new Toast(getApplicationContext());
+                                toast.setDuration(Toast.LENGTH_LONG);
+                                toast.setView(layout);
+                                toast.show();
+                                edit_novo_cliente.requestFocus();
+                            }
                         } else {
                             clienteGerado.atualizar();
-                        }
-                        recuperarClientes(edit_novo_cliente.getText().toString());
-                        recuperarPropriedades(edit_nova_propriedade.getText().toString());
+                            recuperarClientes(edit_novo_cliente.getText().toString());
 
-                        dialog.dismiss();
+                            dialog.dismiss();
+                        }
                     }
                 });
 
@@ -825,9 +863,79 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         Cliente clienteSalvo = new Cliente();
 
         clienteSalvo.setnomeCliente(edit_novo_cliente.getText().toString().trim());
-        clienteSalvo.setPropriedade(edit_nova_propriedade.getText().toString().trim());
 
         return clienteSalvo;
+    }
+
+    private void showPropriedadeDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+        dialog.setContentView(R.layout.dialog_event_propriedade);
+        dialog.setCancelable(false);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        edit_nova_propriedade = dialog.findViewById(R.id.edit_nova_propriedade);
+//        edit_nova_propriedade.setText(nomePropriedade);
+
+        ((ImageButton) dialog.findViewById(R.id.bt_close)).
+
+                setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+        ((Button) dialog.findViewById(R.id.bt_save)).
+
+                setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        Propriedade propriedadeGerada = inicializaPropriedade();
+
+                        if (propriedadeGerada.getId() == null) {
+                            if (!edit_nova_propriedade.getText().toString().trim().equals("")) {
+                                propriedadeGerada.salvar();
+                                recuperarPropriedades(edit_nova_propriedade.getText().toString());
+
+                                dialog.dismiss();
+                            } else {
+                                View layout = getLayoutInflater().inflate(R.layout.toast_custom, (ViewGroup) findViewById(R.id.custom_toast_layout_id));
+                                TextView text = layout.findViewById(R.id.text);
+                                text.setText(R.string.err_msg_propriedadeValidada);
+
+                                Toast toast = new Toast(getApplicationContext());
+                                toast.setDuration(Toast.LENGTH_LONG);
+                                toast.setView(layout);
+                                toast.show();
+                                edit_nova_propriedade.requestFocus();
+                            }
+                        } else {
+                            propriedadeGerada.atualizar();
+                            recuperarPropriedades(edit_nova_propriedade.getText().toString());
+
+                            dialog.dismiss();
+                        }
+                    }
+                });
+
+        dialog.show();
+        dialog.getWindow().
+
+                setAttributes(lp);
+    }
+
+    private Propriedade inicializaPropriedade() {
+
+        Propriedade propriedadeSalva = new Propriedade();
+
+        propriedadeSalva.setNomePropriedade(edit_nova_propriedade.getText().toString().trim());
+
+        return propriedadeSalva;
     }
 
     private void dialogDatePickerLight(final ImageButton bt) {
@@ -917,10 +1025,10 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
     }
 
-    private void recuperarClientes(String nomeCliente) {
+    private void recuperarClientes(String nome) {
 
         clienteEncontrado = false;
-        final String[] nome = {nomeCliente};
+        this.nomeCliente = nome;
 
         valueEventListenerClientes = clienteRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -940,12 +1048,12 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
                 for (int i = 0; i < clientesNomes.size(); i++) {
                     if (abate.getCliente() != null) {
-                        nome[0] = abate.getCliente().getnomeCliente();
-                    } else if (abate.getLote() != null){
-                        nome[0] = abate.getLote().getNomeCliente();
+                        nomeCliente = abate.getCliente().getnomeCliente();
+                    } else if (abate.getLote() != null) {
+                        nomeCliente = abate.getLote().getNomeCliente();
                     }
 
-                    if (clientesNomes.get(i).equalsIgnoreCase(nome[0])) {
+                    if (clientesNomes.get(i).equalsIgnoreCase(nomeCliente)) {
                         spinnerCliente.setSelection(i);
                     }
                 }
@@ -962,32 +1070,32 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
     private void recuperarPropriedades(String nomePropriedade) {
 
         propriedadeEncontrada = false;
-        final String[] propriedade = {nomePropriedade};
+        final String[] propriedadeNome = {nomePropriedade};
 
-        valueEventListenerClientes = clienteRef.addValueEventListener(new ValueEventListener() {
+        valueEventListenerPropriedades = propriedadeRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                propriedades.clear();
+                propriedadesNomes.clear();
 
                 for (DataSnapshot dados : dataSnapshot.getChildren()) {
-                    Cliente clienteBuscado = dados.getValue(Cliente.class);
-                    clienteBuscado.setId(dados.getKey());
-                    propriedades.add(clienteBuscado.getPropriedade());
+                    Propriedade propriedadeBuscada = dados.getValue(Propriedade.class);
+                    propriedadeBuscada.setId(dados.getKey());
+                    propriedadesNomes.add(propriedadeBuscada.getNomePropriedade());
                 }
 
                 if (propriedadeAdapter != null) {
                     propriedadeAdapter.notifyDataSetChanged();
                 }
 
-                for (int i = 0; i < propriedades.size(); i++) {
+                for (int i = 0; i < propriedadesNomes.size(); i++) {
 
-                    if (abate.getCliente() != null) {
-                        propriedade[0] = abate.getCliente().getPropriedade();
+                    if (abate.getPropriedade() != null) {
+                        propriedadeNome[0] = abate.getPropriedade().getNomePropriedade();
                     } else if (abate.getLote() != null) {
-                        propriedade[0] = abate.getLote().getPropriedade();
+                        propriedadeNome[0] = abate.getLote().getPropriedade();
                     }
-                    if (propriedades.get(i).equalsIgnoreCase(propriedade[0])) {
+                    if (propriedadesNomes.get(i).equalsIgnoreCase(propriedadeNome[0])) {
                         spinnerPropriedade.setSelection(i);
                     }
                 }
@@ -1024,6 +1132,7 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
         usuarioRef.removeEventListener(valueEventListenerUsuarios);
         frigorificoRef.removeEventListener(valueEventListenerFrigorificos);
         clienteRef.removeEventListener(valueEventListenerClientes);
+        propriedadeRef.removeEventListener(valueEventListenerPropriedades);
     }
 
     private void recuperaUsuarios() {
@@ -1033,13 +1142,15 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
                 usuarios.clear();
 
-                for (DataSnapshot dados : dataSnapshot.getChildren()) {
-                    Usuario usuario = dados.getValue(Usuario.class);
-                    usuarios.add(usuario);
-                }
+                for (DataSnapshot dados1 : dataSnapshot.getChildren()) {
+                    for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                        Usuario usuario = dados.getValue(Usuario.class);
+                        usuarios.add(usuario);
+                    }
 
-                usuariosAdapter.notifyDataSetChanged();
-                atualizaSpinnerTecnico(usuarios);
+                    usuariosAdapter.notifyDataSetChanged();
+                    atualizaSpinnerTecnico(usuarios);
+                }
             }
 
             @Override
@@ -1258,15 +1369,18 @@ public class AbateFormActivity extends AppCompatActivity implements View.OnClick
 
         Cliente cliente = new Cliente();
         cliente.setnomeCliente(spinnerCliente.getSelectedItem().toString());
-        cliente.setPropriedade(spinnerPropriedade.getSelectedItem().toString());
+//        cliente.setPropriedade(spinnerPropriedade.getSelectedItem().toString());
 
         abate.setCliente(cliente);
 //        abate.setDataAbate(dateString);
         abate.setDataAbate(txt_data_abate.getText().toString());
 
+        Propriedade propriedade = new Propriedade();
+        propriedade.setNomePropriedade(spinnerPropriedade.getSelectedItem().toString());
+
         Lote lote = new Lote();
         lote.setNomeCliente(cliente.getnomeCliente());
-        lote.setPropriedade(cliente.getPropriedade());
+        lote.setPropriedade(propriedade.getNomePropriedade());
         lote.setQtdeAnimaisLote(this.mViewHolder.mQtdeAnimais.getText().toString());
 
         Categoria categoria = new Categoria();

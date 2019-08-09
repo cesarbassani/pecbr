@@ -32,6 +32,7 @@ public class Abate implements Serializable, Parcelable {
     private String dataAbate;
     private String fotoLote;
     private Cliente cliente;
+    private Propriedade propriedade;
     private boolean status = true;
 
     public Abate() {
@@ -45,6 +46,7 @@ public class Abate implements Serializable, Parcelable {
         fotoLote = in.readString();
         tecnico = in.readParcelable(Usuario.class.getClassLoader());
         cliente = in.readParcelable(Cliente.class.getClassLoader());
+        propriedade = in.readParcelable(Cliente.class.getClassLoader());
         lote = in.readParcelable(Lote.class.getClassLoader());
         categoria = in.readParcelable(Categoria.class.getClassLoader());
         rendimento = in.readParcelable(Rendimento.class.getClassLoader());
@@ -92,6 +94,7 @@ public class Abate implements Serializable, Parcelable {
         HashMap<String, Object> abateMap = new HashMap<>();
         abateMap.put("tecnico", getTecnico());
         abateMap.put("cliente", getCliente());
+        abateMap.put("propriedade", getCliente());
         abateMap.put("frigorifico", getFrigorifico());
         abateMap.put("dataAbate", getDataAbate());
         abateMap.put("lote", getLote());
@@ -237,6 +240,14 @@ public class Abate implements Serializable, Parcelable {
         this.status = status;
     }
 
+    public Propriedade getPropriedade() {
+        return propriedade;
+    }
+
+    public void setPropriedade(Propriedade propriedade) {
+        this.propriedade = propriedade;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -251,6 +262,7 @@ public class Abate implements Serializable, Parcelable {
         dest.writeString(fotoLote);
         dest.writeParcelable(tecnico, flags);
         dest.writeParcelable(cliente, flags);
+        dest.writeParcelable(propriedade, flags);
         dest.writeParcelable(lote, flags);
         dest.writeParcelable(categoria, flags);
         dest.writeParcelable(rendimento, flags);
